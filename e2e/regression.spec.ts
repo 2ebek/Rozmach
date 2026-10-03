@@ -351,6 +351,16 @@ test.describe("Kluczowe scenariusze", () => {
     await expect(page.getByRole("heading", { name: "BaWita" })).toHaveCount(0);
   });
 
+  test("karta innowacji: pytania numerowane po kolei, także gdy karta ROPS nie ma któregoś pytania", async ({ page }) => {
+    // Therapy Set nie ma „Czy to działa?”, OSA i ECO puzzle – „Grupy docelowej”
+    for (const id of ["rops-therapy-set", "rops-osa-i-eco-puzzle", "rops-bawita"]) {
+      await open(page, `/zasobnik/${id}`);
+      const numbers = (await page.locator("main dt").allInnerTexts()).map((t) => Number(t.match(/^(\d+)\./)?.[1]));
+      expect(numbers, id).toEqual(numbers.map((_, i) => i + 1));
+      await expect(page.locator("main dt").last()).toHaveText(/\d+\. Autorzy/);
+    }
+  });
+
   test("Zasobnik: link z kategorią ROPS otwiera przefiltrowaną Bibliotekę", async ({ page }) => {
     await open(page, "/zasobnik?kategoria=dla-osob-w-kryzysie-bezdomnosci");
     await expect(page.getByRole("button", { name: /^Osoby w kryzysie bezdomności/ })).toHaveAttribute("aria-pressed", "true");

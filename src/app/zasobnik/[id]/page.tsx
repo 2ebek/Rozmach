@@ -13,13 +13,16 @@ export default async function Page({ params }: { params: { id: string } }) {
   const inn = (await getRepo().listInnovations()).find((i) => i.id === params.id);
   if (!inn) notFound();
 
-  const SECTIONS: [string, string | undefined][] = [
-    ["1. Na czym polega rozwiązanie?", inn.summary],
-    ["2. Jakich problemów dotyczy innowacja?", inn.problem],
-    ["3. Grupa docelowa", inn.targetGroup],
-    ["4. Kto może skorzystać z innowacji?", inn.beneficiaries],
-    ["5. Czy to działa?", inn.evidence],
-  ];
+  // Pytania karty ROPS; niektóre karty nie mają wszystkich (np. „Czy to działa?”) – numerujemy tylko pokazane, jak na stronie ROPS.
+  const SECTIONS = (
+    [
+      ["Na czym polega rozwiązanie?", inn.summary],
+      ["Jakich problemów dotyczy innowacja?", inn.problem],
+      ["Grupa docelowa", inn.targetGroup],
+      ["Kto może skorzystać z innowacji?", inn.beneficiaries],
+      ["Czy to działa?", inn.evidence],
+    ] as [string, string | undefined][]
+  ).filter((s): s is [string, string] => !!s[1]);
 
   const LINKS: { href?: string; icon: IconName; label: string }[] = [
     { href: inn.folderUrl, icon: "search", label: "Dowiedz się więcej (folder PDF)" },
@@ -55,14 +58,16 @@ export default async function Page({ params }: { params: { id: string } }) {
       <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
         <Panel>
           <dl className="space-y-7">
-            {SECTIONS.filter(([, v]) => v).map(([q, v]) => (
+            {SECTIONS.map(([q, v], i) => (
               <div key={q}>
-                <dt className="text-lg font-black text-brand-900">{q}</dt>
+                <dt className="text-lg font-black text-brand-900">
+                  {i + 1}. {q}
+                </dt>
                 <dd className="mt-1 whitespace-pre-line text-slate-800">{v}</dd>
               </div>
             ))}
             <div>
-              <dt className="text-lg font-black text-brand-900">6. Autorzy</dt>
+              <dt className="text-lg font-black text-brand-900">{SECTIONS.length + 1}. Autorzy</dt>
               <dd className="mt-1 text-slate-800">
                 {inn.ropsUrl ? (
                   <>
