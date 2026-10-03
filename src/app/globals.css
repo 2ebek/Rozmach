@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Krój nagłówków z makiety ROZMACH – hostowany lokalnie (bez zapytań do zewnętrznych serwerów). */
+@font-face {
+  font-family: "Momo Trust Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/momo-latin-ext.woff2) format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Momo Trust Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/momo-latin.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+body {
+  background-color: #ffffff;
+}
+
+main h1,
+main h2 {
+  color: #13214f;
+}
+
+/* Krój display ma jedną grubość – bez sztucznego pogrubiania */
+.font-display {
+  font-weight: 400 !important;
+  font-synthesis: none;
+  letter-spacing: -0.01em;
+}
+
+main a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* WCAG 2.4.7: wyraźny, zawsze widoczny fokus (ciemny na jasnym, jasny na ciemnym) */
+:focus-visible {
+  outline: 3px solid #db1e56;
+  outline-offset: 2px;
+}
+.on-dark :focus-visible {
+  outline-color: #ffffff;
+}
+
+/* Wersja kontrastowa (przełącznik w pasku dostępności) – żółte na czarnym, jak w serwisach publicznych */
+html.hc body,
+html.hc header,
+html.hc main,
+html.hc footer,
+html.hc nav,
+html.hc section,
+html.hc aside,
+html.hc div,
+html.hc li,
+html.hc p,
+html.hc span,
+html.hc h1,
+html.hc h2,
+html.hc h3,
+html.hc dt,
+html.hc dd,
+html.hc label {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+html.hc a,
+html.hc a:visited,
+html.hc a * {
+  color: #ff0 !important;
+  background-color: #000 !important;
+}
+html.hc input,
+html.hc textarea,
+html.hc select {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #ff0 !important;
+}
+html.hc button {
+  background: #ff0 !important;
+  color: #000 !important;
+  border-color: #ff0 !important;
+}
+html.hc :focus-visible {
+  outline-color: #ff0;
+}
+
+/* WCAG 2.3.3: szanuj preferencję ograniczenia animacji */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Sekcja na pełną szerokość okna wewnątrz wyśrodkowanego <main> */
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+/* Zainstalowana aplikacja administratora (PWA) – bez nagłówka i stopki serwisu */
+@media (display-mode: standalone) {
+  .site-chrome {
+    display: none !important;
+  }
+}

@@ -1,0 +1,21 @@
+node_modules
+.next
+out
+next-env.d.ts
+*.tsbuildinfo
+.env
+.env.local
+.DS_Store
+
+test-results
+playwright-report
+
+# trwałe dane prototypu (pomysły, wnioski) – tworzone przy pierwszym uruchomieniu z seeda
+data/
+
+# materiały źródłowe spoza kodu: makieta i oryginalne zdjęcia (strona używa wersji z public/img),
+# dokumenty organizatora (ROPS) i stare zrzuty ekranu
+nowy_wyglad/
+screenshoty/
+CRITERIA*.pdf
+za._3._Formularz_aplikacyjny_wzor.pdf
