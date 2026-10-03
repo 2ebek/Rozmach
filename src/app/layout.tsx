@@ -130,12 +130,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </p>
               <ul className="flex gap-6">
                 <li>
-                  <Link href="/o-projekcie#h-koszty" className="hover:text-white hover:underline">
+                  <Link href="/o-projekcie#bezpieczenstwo" className="hover:text-white hover:underline">
                     Prywatność
                   </Link>
                 </li>
                 <li>
-                  <Link href="/o-projekcie" className="hover:text-white hover:underline">
+                  <Link href="/o-projekcie#bezpieczenstwo" className="hover:text-white hover:underline">
                     Dostępność (WCAG 2.1 AA)
                   </Link>
                 </li>

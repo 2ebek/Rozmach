@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import "./zod-pl";
 import { z } from "zod";
 import { rateLimited } from "./rateLimit";
 

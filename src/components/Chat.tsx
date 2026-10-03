@@ -25,7 +25,7 @@ const initials = (name: string) =>
 
 function when(iso: string) {
   const d = new Date(iso);
-  return d.toLocaleString("pl-PL", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+  return d.toLocaleString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
 }
 
 export function Chat({ initial }: { initial: Message[] }) {
@@ -101,7 +101,7 @@ export function Chat({ initial }: { initial: Message[] }) {
             <label htmlFor="chat-author" className="mb-1 block text-sm font-bold text-brand-900">
               Podpis
             </label>
-            <input id="chat-author" required value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Imię, pseudonim lub nazwa organizacji" className={inputCls} />
+            <input id="chat-author" required maxLength={60} value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Imię, pseudonim lub nazwa organizacji" className={inputCls} />
           </div>
           <div>
             <label htmlFor="chat-role" className="mb-1 block text-sm font-bold text-brand-900">
@@ -120,7 +120,7 @@ export function Chat({ initial }: { initial: Message[] }) {
           Wiadomość
         </label>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-          <textarea id="chat-text" required rows={2} value={text} onChange={(e) => setText(e.target.value)} placeholder="Napisz pytanie lub odpowiedź…" className={`${inputCls} flex-1`} />
+          <textarea id="chat-text" required rows={2} maxLength={1000} value={text} onChange={(e) => setText(e.target.value)} placeholder="Napisz pytanie lub odpowiedź…" className={`${inputCls} flex-1`} />
           <button type="submit" className={btnCls}>
             <Icon name="send" className="h-5 w-5" /> Wyślij
           </button>

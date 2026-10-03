@@ -7,7 +7,7 @@ import { getRepo } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
-const fmt = (iso: string) => new Date(iso).toLocaleString("pl-PL", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+const fmt = (iso: string) => new Date(iso).toLocaleString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
 /** Podgląd szczegółów pomysłu w aplikacji administratora (tylko odczyt – decyzje w pełnym panelu). */
 export default async function Page({ params }: { params: { id: string } }) {

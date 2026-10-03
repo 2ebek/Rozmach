@@ -1,6 +1,6 @@
 import { APPLICANT_KIND_LABEL, PREP_MAX_MONTHS, TEST_MAX_MONTHS, declarationsFor, formatPln, spanMonths, sumCosts, type IwsFormT, type PlanRowT } from "@/lib/iws";
 
-const fmtMonth = (m: string) => new Date(`${m}-01T00:00:00`).toLocaleDateString("pl-PL", { month: "long", year: "numeric" });
+const fmtMonth = (m: string) => new Date(`${m}-01T00:00:00`).toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", month: "long", year: "numeric" });
 
 /** Część formularza IWS 2.0 z danymi wnioskodawcy, planem działania i oświadczeniami – tylko w panelu administratora. */
 export function IwsApplicationDetails({ form }: { form: IwsFormT }) {

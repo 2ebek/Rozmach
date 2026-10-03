@@ -126,8 +126,10 @@ export default function Page() {
               ))}
             </ul>
           </div>
-          <div>
-            <SectionTitle kicker="Bezpieczeństwo i dostępność">Zaufanie od pierwszego dnia</SectionTitle>
+          <div id="bezpieczenstwo" className="scroll-mt-6">
+            <SectionTitle id="h-bezpieczenstwo" kicker="Bezpieczeństwo i dostępność">
+              Zaufanie od pierwszego dnia
+            </SectionTitle>
             <ul className="space-y-3 text-slate-800">
               {[
                 ["Minimum danych", "Zgłoszenia nie wymagają danych osobowych – autor używa kodu zgłoszenia zamiast konta."],

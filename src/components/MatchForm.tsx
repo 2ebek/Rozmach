@@ -123,6 +123,7 @@ export function MatchForm({ initialQuery = "", initialArea }: { initialQuery?: s
                 aria-describedby="problem-hint"
                 required
                 minLength={3}
+                maxLength={2000}
                 rows={5}
                 value={text}
                 onChange={(e) => setText(e.target.value)}
@@ -359,7 +360,7 @@ export function MatchForm({ initialQuery = "", initialArea }: { initialQuery?: s
                             <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-600">
                               {s.area && <Dot className={AREA_COLOR[s.area]} />}
                               {s.area ? AREA_LABEL[s.area] : "Bez obszaru"} ·{" "}
-                              {new Date(s.createdAt).toLocaleDateString("pl-PL", { day: "numeric", month: "long" })}
+                              {new Date(s.createdAt).toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long" })}
                             </p>
                           </li>
                         ))}

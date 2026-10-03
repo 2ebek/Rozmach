@@ -162,6 +162,19 @@ test.describe("Kluczowe scenariusze", () => {
     await expect(page.locator("code").first()).toHaveText(/^WN-[A-Z0-9]{6}$/);
   });
 
+  test("daty w czasie polskim niezależnie od strefy przeglądarki i serwera (bez błędów hydracji)", async ({ browser }) => {
+    // Na Vercelu serwer działa w UTC – różne strefy dawały inne godziny w HTML i w przeglądarce (React #418/#425).
+    const ctx = await browser.newContext({ timezoneId: "America/New_York" });
+    const page = await ctx.newPage();
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    for (const path of ["/status?kod=HUB-KINO42", "/komunikacja"]) {
+      await page.goto(path, { waitUntil: "networkidle" });
+    }
+    expect(errors).toEqual([]);
+    await ctx.close();
+  });
+
   test("odrzucona fiszka z komentarzem zespołu: czerwony status i uzasadnienie u autora", async ({ page, browser }) => {
     const title = unique("Fiszka odrzucana");
     await open(page, "/kreator");

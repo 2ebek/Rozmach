@@ -2,6 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Przeglądarki i czytniki RSS pytają o /favicon.ico niezależnie od <link rel="icon"> – podajemy ikonę strony.
+  async rewrites() {
+    return [{ source: "/favicon.ico", destination: "/icon.svg" }];
+  },
   async headers() {
     return [
       {

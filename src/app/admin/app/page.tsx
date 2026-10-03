@@ -8,7 +8,7 @@ import type { IdeaCard } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-const fmt = (iso: string) => new Date(iso).toLocaleString("pl-PL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+const fmt = (iso: string) => new Date(iso).toLocaleString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 function IdeaRow({ idea }: { idea: IdeaCard }) {
   return (

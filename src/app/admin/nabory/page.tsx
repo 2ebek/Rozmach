@@ -12,7 +12,7 @@ import type { Application } from "@/lib/types";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Nabory i wnioski – Hub Innowacji" };
 
-const fmtDate = (d: string) => new Date(d).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" });
+const fmtDate = (d: string) => new Date(d).toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long", year: "numeric" });
 
 const APP_ACTIONS: { status: Application["status"]; label: string; cls: string }[] = [
   { status: "w-ocenie", label: "Przekaż do oceny", cls: actionCls.secondary },

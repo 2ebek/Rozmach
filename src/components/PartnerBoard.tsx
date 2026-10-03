@@ -99,7 +99,7 @@ export function PartnerBoard({ initial }: { initial: PartnerOffer[] }) {
           </div>
         </fieldset>
         <Field id="p-org" label="Instytucja lub podpis">
-          <input id="p-org" required value={org} onChange={(e) => setOrg(e.target.value)} className={inputCls} />
+          <input id="p-org" required maxLength={80} value={org} onChange={(e) => setOrg(e.target.value)} className={inputCls} />
         </Field>
         <Field id="p-role" label="Kim jesteś?">
           <select id="p-role" value={role} onChange={(e) => setRole(e.target.value as Role)} className={inputCls}>
@@ -123,7 +123,7 @@ export function PartnerBoard({ initial }: { initial: PartnerOffer[] }) {
           </select>
         </Field>
         <Field id="p-text" label={kind === "szukam" ? "Kogo szukasz i do czego?" : "Co możesz zaoferować?"}>
-          <textarea id="p-text" required rows={3} value={text} onChange={(e) => setText(e.target.value)} className={inputCls} />
+          <textarea id="p-text" required rows={3} maxLength={600} value={text} onChange={(e) => setText(e.target.value)} className={inputCls} />
         </Field>
         <button type="submit" className={`${btnCls} w-full`}>
           <Icon name="users" className="h-5 w-5" /> Opublikuj

@@ -9,7 +9,7 @@ import { getRepo } from "@/lib/store";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Pomysły – Hub Innowacji" };
 
-const fmt = (iso: string) => new Date(iso).toLocaleDateString("pl-PL", { day: "numeric", month: "short", year: "numeric" });
+const fmt = (iso: string) => new Date(iso).toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "short", year: "numeric" });
 
 export default async function Page() {
   const repo = getRepo();

@@ -13,8 +13,8 @@ import type { HubEvent, IdeaCard } from "@/lib/types";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Panel administratora – Hub Innowacji" };
 
-const fmt = (iso: string) => new Date(iso).toLocaleDateString("pl-PL", { day: "numeric", month: "short" });
-const fmtTime = (iso: string) => new Date(iso).toLocaleString("pl-PL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+const fmt = (iso: string) => new Date(iso).toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "short" });
+const fmtTime = (iso: string) => new Date(iso).toLocaleString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 const EVENT_ICON: Record<HubEvent["kind"], IconName> = {
   idea: "bulb",

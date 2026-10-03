@@ -118,7 +118,7 @@ const FAQ = [
   },
 ];
 
-const fmtDate = (d: string) => new Date(d).toLocaleDateString("pl-PL", { day: "numeric", month: "long" });
+const fmtDate = (d: string) => new Date(d).toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long" });
 const kicker = "text-[0.8rem] font-bold uppercase tracking-wide text-brand-900";
 const big = "font-display leading-[1.02] text-brand-900";
 const pill = "inline-flex rounded-full border border-line bg-white px-3 py-1 text-[0.8rem] font-semibold text-brand-900";

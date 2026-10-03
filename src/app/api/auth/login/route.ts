@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import "@/lib/zod-pl";
 import { z } from "zod";
 import { rateLimited } from "@/lib/rateLimit";
 import { ADMIN_COOKIE, adminPassword, tokenFor } from "@/lib/session";

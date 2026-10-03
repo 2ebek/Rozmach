@@ -10,7 +10,7 @@ import { getRepo } from "@/lib/store";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Generator wniosków – Hub Innowacji" };
 
-const fmtDate = (d: string) => new Date(d).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" });
+const fmtDate = (d: string) => new Date(d).toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long", year: "numeric" });
 
 export default async function Page({ searchParams }: { searchParams: { nabor?: string; fiszka?: string } }) {
   const nabory = await getRepo().listNabory();

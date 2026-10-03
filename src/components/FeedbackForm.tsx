@@ -111,7 +111,7 @@ export function FeedbackForm({ innovations }: { innovations: Innovation[] }) {
         </fieldset>
 
         <Field id="fb-comment" label="3. Uwagi i propozycje usprawnień (opcjonalnie)">
-          <textarea id="fb-comment" rows={4} value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Co działa dobrze? Co warto zmienić?" className={inputCls} />
+          <textarea id="fb-comment" rows={4} maxLength={1000} value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Co działa dobrze? Co warto zmienić?" className={inputCls} />
         </Field>
 
         <label className={`flex cursor-pointer items-center gap-4 rounded-xl border-2 p-4 transition ${focusRing} ${wantsToTest ? "border-emerald-700 bg-emerald-50" : "border-slate-200 hover:border-slate-400"}`}>

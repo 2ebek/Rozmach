@@ -70,7 +70,7 @@ export default async function Page({ searchParams }: { searchParams: { kod?: str
                 <p className="text-sm font-bold uppercase tracking-wider text-accent">{found.kind === "idea" ? "Fiszka pomysłu" : "Wniosek w naborze"}</p>
                 <h2 className="mt-1 text-2xl font-black">{found.item.title}</h2>
                 <p className="text-sm text-slate-600">
-                  Kod {found.item.code} · wysłano {new Date(found.item.createdAt).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" })}
+                  Kod {found.item.code} · wysłano {new Date(found.item.createdAt).toLocaleDateString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long", year: "numeric" })}
                 </p>
               </div>
               <Badge className={statusCls}>{statusLabel}</Badge>

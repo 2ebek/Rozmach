@@ -6,7 +6,7 @@ import type { ThreadMessage } from "@/lib/types";
 import { Icon } from "./Icon";
 import { Status, btnCls, inputCls } from "./ui";
 
-const fmt = (iso: string) => new Date(iso).toLocaleString("pl-PL", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+const fmt = (iso: string) => new Date(iso).toLocaleString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
 
 /**
  * Wątek zgłoszenia (ścieżka odpowiedzi). Ten sam komponent dla autora i administratora –
@@ -63,7 +63,7 @@ export function ThreadView({ code, thread, as }: { code: string; thread: ThreadM
           <label htmlFor={`reply-${code}`} className="mb-1 block text-sm font-bold text-brand-900">
             {as === "admin" ? "Odpowiedz autorowi" : "Twoja odpowiedź"}
           </label>
-          <textarea id={`reply-${code}`} required rows={2} value={text} onChange={(e) => setText(e.target.value)} className={inputCls} />
+          <textarea id={`reply-${code}`} required rows={2} maxLength={1000} value={text} onChange={(e) => setText(e.target.value)} className={inputCls} />
         </div>
         <button type="submit" disabled={busy} className={btnCls}>
           <Icon name="send" className="h-5 w-5" /> Wyślij

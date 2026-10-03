@@ -42,11 +42,11 @@ export function AssistantPanel({ kind, inputLabel, inputPlaceholder, contextLabe
     <div className="grid gap-8 lg:grid-cols-2">
       <form onSubmit={onSubmit} className="space-y-5">
         <Field id={`${kind}-input`} label={inputLabel}>
-          <textarea id={`${kind}-input`} required rows={5} value={input} onChange={(e) => setInput(e.target.value)} placeholder={inputPlaceholder} className={inputCls} />
+          <textarea id={`${kind}-input`} required rows={5} maxLength={2000} value={input} onChange={(e) => setInput(e.target.value)} placeholder={inputPlaceholder} className={inputCls} />
         </Field>
         {contextLabel && (
           <Field id={`${kind}-ctx`} label={contextLabel}>
-            <textarea id={`${kind}-ctx`} rows={4} value={context} onChange={(e) => setContext(e.target.value)} placeholder={contextPlaceholder} className={inputCls} />
+            <textarea id={`${kind}-ctx`} rows={4} maxLength={1000} value={context} onChange={(e) => setContext(e.target.value)} placeholder={contextPlaceholder} className={inputCls} />
           </Field>
         )}
         <button type="submit" disabled={loading} className={btnCls}>
