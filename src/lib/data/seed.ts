@@ -2,6 +2,7 @@ import type { Challenge, IdeaCard, Innovation, Nabor, Resource } from "../types"
 import { challengeIndicator } from "../ioss";
 import { iwsQuestions } from "../iws";
 import { AREAS } from "../labels";
+import examples from "./fiszki-przykladowe.json";
 import { ropsInnovations } from "./rops-biblioteka";
 
 /** Innowacje z Biblioteki Innowacji Społecznych ROPS (rops-biblioteka.ts). */
@@ -163,5 +164,26 @@ export function seedIdeas(): IdeaCard[] {
       status: "zaakceptowany",
       thread: [{ from: "admin", text: "Pomysł zaakceptowany – zapraszamy do naboru „Razem przeciw samotności”.", createdAt: daysAgo(5) }],
     },
+    ...exampleIdeas(),
   ];
+}
+
+/**
+ * Fiszki przykładowe dla jurorów (fiszki-przykladowe.json) – pełna treść IWS 2.0, różne statusy, rozmowy i komentarze zespołu.
+ * Dane fikcyjne; liczby w diagnozach to prawdziwe wskaźniki z Obserwatora Statystyk Społecznych ROPS.
+ */
+export function exampleIdeas(): IdeaCard[] {
+  return examples.map(({ daysAgo: d, thread, innovativeness, change, vision, authors, adminComment, ...rest }) => ({
+    ...rest,
+    category: rest.category as IdeaCard["category"],
+    stage: rest.stage as IdeaCard["stage"],
+    status: rest.status as IdeaCard["status"],
+    ...(innovativeness ? { innovativeness } : {}),
+    ...(change ? { change } : {}),
+    ...(vision ? { vision } : {}),
+    ...(authors ? { authors } : {}),
+    ...(adminComment ? { adminComment } : {}),
+    createdAt: daysAgo(d),
+    thread: thread.map((m) => ({ from: m.from as "admin" | "author", text: m.text, createdAt: daysAgo(m.daysAgo) })),
+  }));
 }

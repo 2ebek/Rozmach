@@ -1,6 +1,23 @@
 import { describe, expect, it } from "vitest";
 import { AREAS } from "../labels";
 import { ropsInnovations } from "./rops-biblioteka";
+import { exampleIdeas, seedIdeas } from "./seed";
+
+describe("fiszki przykładowe dla jurorów", () => {
+  it("mają unikalne kody z alfabetu kodów, pola wymagane i co najmniej po jednej fiszce w każdym statusie", () => {
+    const all = seedIdeas();
+    const ex = exampleIdeas();
+    expect(new Set(all.map((i) => i.code)).size).toBe(all.length);
+    for (const i of ex) {
+      expect(i.code).toMatch(/^HUB-[ABCDEFGHJKMNPQRSTUVWXYZ2-9]{6}$/);
+      expect(i.title && i.essence && i.audience && i.problem && i.category).toBeTruthy();
+      expect(i.thread.every((m) => m.createdAt <= new Date().toISOString())).toBe(true);
+    }
+    expect(new Set(ex.map((i) => i.status))).toEqual(new Set(["nowy", "w-weryfikacji", "zaakceptowany", "odrzucony"]));
+    // odrzucona fiszka ma uzasadnienie zespołu
+    expect(ex.find((i) => i.status === "odrzucony")?.adminComment).toBeTruthy();
+  });
+});
 
 describe("dane z Biblioteki Innowacji Społecznych ROPS", () => {
   it("obejmują wszystkie 9 kategorii ROPS i tylko je", () => {

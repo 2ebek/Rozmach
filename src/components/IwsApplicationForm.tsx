@@ -47,7 +47,7 @@ const EXAMPLE = {
     name: "Fundacja Przykładowa (dane fikcyjne)",
     krs: "",
     regon: "123456785",
-    nip: "5260250274",
+    nip: "1234563218",
     address: "ul. Przykładowa 10",
     postalCode: "30-002",
     city: "Kraków",

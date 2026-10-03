@@ -6,6 +6,7 @@ vi.mock("web-push", () => ({
 }));
 
 const { getRepo } = await import("./store");
+const { seedIdeas } = await import("./data/seed");
 
 /** Symulacja restartu serwera: nowy obiekt repozytorium czyta dane z pliku od nowa. */
 function restart() {
@@ -23,7 +24,7 @@ const fields = { title: "Ogród sensoryczny", essence: "Ogród dla osób z niepe
 describe("pomysły w repozytorium – dane dynamiczne i trwałe", () => {
   it("startowe pomysły pochodzą z magazynu (seed), a nie z kodu repozytorium", async () => {
     const ideas = await getRepo().listIdeas();
-    expect(ideas.map((i) => i.code)).toEqual(["HUB-DEMO23", "HUB-KINO42", "HUB-LAWK57"]);
+    expect(ideas.map((i) => i.code)).toEqual(seedIdeas().map((i) => i.code));
     expect(fs.existsSync(process.env.HUB_DATA_FILE!)).toBe(true);
   });
 
