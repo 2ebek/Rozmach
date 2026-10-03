@@ -53,44 +53,32 @@ main a {
 }
 
 /* Wersja kontrastowa (przełącznik w pasku dostępności) – żółte na czarnym, jak w serwisach publicznych */
+/* Wszystkie elementy (także legend, summary, strong, time, tabele, listy) – nie tylko wybrane znaczniki. */
+/* :where() – niska specyficzność, żeby reguły dla linków i przycisków niżej miały pierwszeństwo */
 html.hc body,
-html.hc header,
-html.hc main,
-html.hc footer,
-html.hc nav,
-html.hc section,
-html.hc aside,
-html.hc div,
-html.hc li,
-html.hc p,
-html.hc span,
-html.hc h1,
-html.hc h2,
-html.hc h3,
-html.hc dt,
-html.hc dd,
-html.hc label {
+html.hc body :where(*:not(svg, svg *, img)) {
   background-color: #000 !important;
   color: #fff !important;
   border-color: #fff !important;
 }
 html.hc a,
 html.hc a:visited,
-html.hc a * {
+html.hc a :where(*:not(svg, svg *, img)) {
   color: #ff0 !important;
-  background-color: #000 !important;
 }
 html.hc input,
 html.hc textarea,
 html.hc select {
-  background-color: #000 !important;
-  color: #fff !important;
+  border-color: #ff0 !important;
+}
+html.hc button,
+html.hc button :where(*:not(svg, svg *, img)) {
+  background-color: #ff0 !important;
+  color: #000 !important;
   border-color: #ff0 !important;
 }
 html.hc button {
-  background: #ff0 !important;
-  color: #000 !important;
-  border-color: #ff0 !important;
+  background-image: none !important;
 }
 html.hc :focus-visible {
   outline-color: #ff0;

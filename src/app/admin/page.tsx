@@ -66,7 +66,7 @@ export default async function Page({ searchParams }: { searchParams: { kolejka?:
 
   const KPI: { icon: IconName; value: string | number; label: string; tint: string }[] = [
     { icon: "search", value: needs.length, label: "zgłoszonych potrzeb", tint: "bg-brand-50 text-brand-700" },
-    { icon: "bulb", value: pending.length, label: "fiszek do przejrzenia (nowe i do weryfikacji)", tint: "bg-rose-50 text-accent" },
+    { icon: "bulb", value: pending.length, label: "fiszek do przejrzenia (nowe i do weryfikacji)", tint: "bg-rose-50 text-accent-ink" },
     { icon: "flask", value: testers, label: "chętnych do testów", tint: "bg-orange-50 text-orange-800" },
     { icon: "star", value: avg, label: "średnia ocena innowacji", tint: "bg-emerald-50 text-emerald-800" },
   ];
@@ -145,7 +145,7 @@ export default async function Page({ searchParams }: { searchParams: { kolejka?:
           <ul className="mt-5 divide-y divide-slate-200">
             {events.slice(0, 8).map((e) => (
               <li key={e.id} className={`flex items-center gap-4 py-3 ${e.read ? "" : "font-bold"}`}>
-                <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg ${e.read ? "bg-mist text-slate-600" : "bg-rose-50 text-accent"}`}>
+                <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg ${e.read ? "bg-mist text-slate-600" : "bg-rose-50 text-accent-ink"}`}>
                   <Icon name={EVENT_ICON[e.kind]} className="h-4 w-4" />
                 </span>
                 <span className="min-w-0 flex-1">

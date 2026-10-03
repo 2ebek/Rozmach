@@ -67,7 +67,7 @@ export const ropsInnovations: Innovation[] = [
     "published": true,
     "project": "Inkubator Włączenia Społecznego",
     "ropsUrl": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-seniorow,merkury",
-    "videoUrl": "https://www.youtube.com/watch?v=BK6a8fjELR0&amp;t=48s",
+    "videoUrl": "https://www.youtube.com/watch?v=BK6a8fjELR0&t=48s",
     "folderUrl": "https://rops.krakow.pl/mpliki/IS/BIBLIOTEKA_INNOWACJI_SPOECZNYCH/ROPS_Folder_IN_Merkury_v4_www.pdf",
     "materialsUrl": "https://rops.krakow.pl/pliki/IS/bibloteka/merkury.zip",
     "license": "CC BY 4.0"
@@ -461,7 +461,7 @@ export const ropsInnovations: Innovation[] = [
     "published": true,
     "project": "Inkubator Włączenia Społecznego",
     "ropsUrl": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-dzieci-mlodziezy-i-rodziny,edki-kredki-terapeutyczne",
-    "videoUrl": "https://www.youtube.com/watch?v=ev173g-d_vA&amp;t=5s",
+    "videoUrl": "https://www.youtube.com/watch?v=ev173g-d_vA&t=5s",
     "folderUrl": "https://rops.krakow.pl/mpliki/IS/BIBLIOTEKA_INNOWACJI_SPOECZNYCH/ROPS_Folder_IN_Edki_v6_www.pdf",
     "materialsUrl": "https://rops.krakow.pl/pliki/IS/bibloteka/terapeutycznekredki.zip",
     "license": "CC BY 4.0"
@@ -933,7 +933,7 @@ export const ropsInnovations: Innovation[] = [
     "published": true,
     "project": "Małopolski Inkubator Innowacji Społecznych",
     "ropsUrl": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-osob-o-ograniczonej-mobilnosci,uniodziez",
-    "videoUrl": "https://www.youtube.com/watch?v=hBY1SnqLXV0&amp;t=23s",
+    "videoUrl": "https://www.youtube.com/watch?v=hBY1SnqLXV0&t=23s",
     "folderUrl": "https://rops.krakow.pl/mpliki/IS/BIBLIOTEKA_INNOWACJI_SPOECZNYCH/09_Model_unidziez.pdf",
     "materialsUrl": "https://rops.krakow.pl/pliki/IS/bibloteka/uniodziez.zip",
     "license": "©"

@@ -39,7 +39,11 @@ const decode = (s) =>
     .replace(/&oacute;/g, "ó")
     .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)));
 const text = (html) => decode(html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
-const abs = (u) => (u ? (u.startsWith("http") ? u : BASE + (u.startsWith("/") ? u : "/" + u)) : undefined);
+const abs = (u) => {
+  if (!u) return undefined;
+  u = decode(u); // np. &amp; w adresach filmów YouTube
+  return u.startsWith("http") ? u : BASE + (u.startsWith("/") ? u : "/" + u);
+};
 /** Ucina sekcję „Autorzy” (dane osobowe) – na części kart ROPS ma numer 5, a nie 6, i jest doklejona do poprzedniego pytania. */
 const stripAuthors = (s) => s.replace(/\s*\d\.\s*Autor(?:zy|ka|ki)?\b[\s\S]*$/, "");
 const clean = (s, max) => {

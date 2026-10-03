@@ -60,8 +60,13 @@ export const challenges: Challenge[] = [
 export const resources: Resource[] = [
   { id: "res-1", title: "Biblioteka Innowacji Społecznych ROPS – wszystkie kategorie", kind: "poradnik", url: "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/kategorie", areas: [] },
   { id: "res-2", title: "Canva Innowacji Społecznych", kind: "canva", url: "/kreator/canva", areas: [] },
-  { id: "res-3", title: "Jak przetestować pomysł w 4 tygodnie (przykład)", kind: "poradnik", url: "#", areas: [] },
-  { id: "res-4", title: "Raport: usługi społeczne w małych gminach (przykład)", kind: "raport", url: "#", areas: ["dla-seniorow"] },
+  // Materiały ROPS Kraków (strony sprawdzone 4.10.2026)
+  { id: "res-3", title: "Publikacje ze świata innowacji społecznych (ROPS)", kind: "poradnik", url: "https://rops.krakow.pl/innowacje-spoleczne/publikacje-ze-swiata-innowacji", areas: [] },
+  { id: "res-4", title: "Innowacje w małopolskich modelach usług (ROPS)", kind: "poradnik", url: "https://rops.krakow.pl/innowacje-spoleczne/innowacje-w-malopolskich-modelach", areas: [] },
+  { id: "res-5", title: "Raporty z badań ROPS Kraków", kind: "raport", url: "https://rops.krakow.pl/badania-analizy-raporty/raporty-z-badan", areas: [] },
+  { id: "res-6", title: "Ocena zasobów pomocy społecznej w województwie małopolskim", kind: "raport", url: "https://rops.krakow.pl/badania-analizy-raporty/ocena-zasobow-pomocy-spolecznej-w-woj-malopolskim/biezaca-ocena", areas: [] },
+  { id: "res-7", title: "Internetowy Obserwator Statystyk Społecznych – wskaźniki dla gmin i powiatów", kind: "raport", url: "https://obserwator.rops.krakow.pl/", areas: [] },
+  { id: "res-8", title: "Ewaluacja krok po kroku – jak sprawdzić, czy innowacja działa (ROPS)", kind: "poradnik", url: "https://rops.krakow.pl/badania-analizy-raporty/ewaluacja/czym-jest-ewaluacja", areas: [] },
 ];
 
 /**

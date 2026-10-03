@@ -94,7 +94,7 @@ export default function Page() {
                   </Link>
                   <span className="mt-1 flex gap-2">
                     <Badge className="bg-emerald-100 text-emerald-900">działa</Badge>
-                    {m.req && <Badge className="bg-rose-50 text-accent">{m.req}</Badge>}
+                    {m.req && <Badge className="bg-rose-50 text-accent-ink">{m.req}</Badge>}
                   </span>
                 </span>
                 <span className="text-slate-700">{m.what}</span>
@@ -157,7 +157,8 @@ export default function Page() {
           <p className="mb-5 max-w-3xl text-slate-700">
             Dane Hubu mogą zasilać portale gmin, system grantowy czy Mapę Wyzwań. Odpowiedzi w formacie JSON; zdarzenia wysyłane są na webhook.
           </p>
-          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+          {/* przewijany obszar dostępny z klawiatury (WCAG 2.1.1) */}
+          <div className="overflow-x-auto rounded-2xl border border-slate-200" tabIndex={0} role="region" aria-label="Tabela punktów API (przewijana w poziomie)">
             <table className="w-full min-w-[36rem] text-left">
               <caption className="sr-only">Publiczne punkty API</caption>
               <thead className="bg-mist text-sm uppercase tracking-wide text-slate-700">

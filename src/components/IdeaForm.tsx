@@ -405,19 +405,19 @@ export function IdeaForm() {
                 <Dot className={AREA_COLOR[category]} /> <span className="font-bold text-slate-700">{AREA_LABEL[category]}</span>
               </>
             ) : (
-              <span className="text-slate-400">Kategoria ROPS…</span>
+              <span className="text-slate-500">Kategoria ROPS…</span>
             )}
           </p>
-          <p className={`mt-3 line-clamp-4 break-words text-[0.95rem] ${text.essence ? "text-slate-800" : "text-slate-400"}`}>
+          <p className={`mt-3 line-clamp-4 break-words text-[0.95rem] ${text.essence ? "text-slate-800" : "text-slate-500"}`}>
             {text.essence || "Opis innowacji…"}
           </p>
           <p className="mt-3 line-clamp-3 break-words text-sm">
             <span className="font-bold text-slate-700">Problem: </span>
-            <span className={text.problem ? "text-slate-800" : "text-slate-400"}>{text.problem || "…"}</span>
+            <span className={text.problem ? "text-slate-800" : "text-slate-500"}>{text.problem || "…"}</span>
           </p>
           <p className="mt-2 line-clamp-2 break-words text-sm">
             <span className="font-bold text-slate-700">Odbiorcy: </span>
-            <span className={text.audience ? "text-slate-800" : "text-slate-400"}>{text.audience || "…"}</span>
+            <span className={text.audience ? "text-slate-800" : "text-slate-500"}>{text.audience || "…"}</span>
           </p>
           <p className="mt-3 text-xs font-bold text-slate-600">
             Wypełniono {[title, ...FIELDS.map((f) => text[f.key])].filter((x) => x.trim()).length} z 7 punktów formularza

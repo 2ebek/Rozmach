@@ -63,7 +63,7 @@ export function IwsApplicationDetails({ form }: { form: IwsFormT }) {
 
 function PlanTable({ caption, rows }: { caption: string; rows: PlanRowT[] }) {
   return (
-    <div className="mt-3 overflow-x-auto">
+    <div className="mt-3 overflow-x-auto" tabIndex={0} role="region" aria-label="Plan działania (tabela przewijana w poziomie)">
       <table className="w-full min-w-[32rem] text-left text-sm">
         <caption className="mb-1 text-left font-bold text-slate-800">{caption}</caption>
         <thead>

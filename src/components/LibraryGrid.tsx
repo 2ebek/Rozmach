@@ -75,7 +75,7 @@ export function LibraryGrid({ innovations, initialFilter = null }: { innovations
           <div aria-hidden className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-white/10" />
           <div aria-hidden className="absolute -bottom-8 left-8 h-20 w-20 rounded-full bg-sun/50" />
           <p className="relative text-2xl font-black">Twojej innowacji tu brakuje?</p>
-          <p className="relative mt-2 text-white/90">Zgłoś ją w Kreatorze – według tych samych pytań co karta w Bibliotece ROPS.</p>
+          <p className="relative mt-2 text-white">Zgłoś ją w Kreatorze – według tych samych pytań co karta w Bibliotece ROPS.</p>
           <Link href="/kreator" className="relative mt-5 inline-flex w-fit items-center gap-2 rounded-xl bg-white px-5 py-3 font-bold text-accent no-underline hover:bg-brand-50">
             Zgłoś innowację <Icon name="arrow" className="h-4 w-4" />
           </Link>

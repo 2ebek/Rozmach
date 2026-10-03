@@ -14,6 +14,7 @@ const config: Config = {
           900: "#13214f", // granat makiety
         },
         accent: "#db1e56", // malinowy – 4.8:1 z białym tekstem
+        "accent-ink": "#b8174a", // malinowy tekst na jasnoróżowym tle (bg-rose-50) – ≥4.5:1
         sun: "#ff6d2c", // tylko dekoracyjnie (bez tekstu na białym)
         mist: "#f1f4f9",
         ink: "#1b2540",

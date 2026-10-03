@@ -10,7 +10,7 @@ import { Dot, Field, Status, btnCls, inputCls } from "./ui";
 type Filter = "all" | PartnerOffer["kind"];
 
 const KIND = {
-  szukam: { label: "Szukam partnera", cls: "bg-rose-50 text-accent" },
+  szukam: { label: "Szukam partnera", cls: "bg-rose-50 text-accent-ink" },
   oferuje: { label: "Oferuję wsparcie", cls: "bg-emerald-50 text-emerald-800" },
 } as const;
 

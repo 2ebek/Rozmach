@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Dot, Panel } from "@/components/ui";
 import { AREA_COLOR, AREA_LABEL_ROPS, ropsCategoryUrl } from "@/lib/labels";
 import { getRepo } from "@/lib/store";
+import { youtubeEmbed } from "@/lib/video";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     ] as [string, string | undefined][]
   ).filter((s): s is [string, string] => !!s[1]);
 
+  const video = youtubeEmbed(inn.videoUrl);
   const LINKS: { href?: string; icon: IconName; label: string }[] = [
     { href: inn.folderUrl, icon: "search", label: "Dowiedz się więcej (folder PDF)" },
     { href: inn.videoUrl, icon: "play", label: "Zobacz film" },
@@ -57,6 +59,22 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
         <Panel>
+          {video && (
+            <figure className="mb-8">
+              <div className="aspect-video overflow-hidden rounded-xl bg-brand-900">
+                <iframe
+                  src={video}
+                  title={`Film o innowacji „${inn.title}”`}
+                  loading="lazy"
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="h-full w-full"
+                />
+              </div>
+              <figcaption className="mt-2 text-sm text-slate-600">Film o innowacji z materiałów Biblioteki Innowacji Społecznych ROPS.</figcaption>
+            </figure>
+          )}
           <dl className="space-y-7">
             {SECTIONS.map(([q, v], i) => (
               <div key={q}>
