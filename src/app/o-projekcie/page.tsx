@@ -7,8 +7,8 @@ export const metadata = { title: "O projekcie – Hub Innowacji" };
 
 const MODULES = [
   { no: "I", name: "Matchmaking społeczny", req: "obowiązkowy", href: "/dopasuj", what: "Opis problemu → ranking innowacji z wyjaśnieniem (wspólne słowa), podobne przypadki innych mieszkańców, informacje o wyzwaniu." },
-  { no: "II", name: "Zasobnik wiedzy", req: "", href: "/zasobnik", what: "Wyzwania ze wskaźnikami, Biblioteka Innowacji z filtrem i miejscem na filmy, materiały. Trendy potrzeb tylko dla administratora." },
-  { no: "III", name: "Kreator pomysłów", req: "", href: "/kreator", what: "Fiszka z kodem zgłoszenia, Canva innowacji, asystent kreatora, generator wniosków dopasowany do pytań każdego naboru." },
+  { no: "II", name: "Zasobnik wiedzy", req: "", href: "/zasobnik", what: "Wyzwania z prawdziwymi wskaźnikami z Obserwatora Statystyk Społecznych ROPS, Biblioteka Innowacji z filtrem i miejscem na filmy, materiały. Trendy potrzeb tylko dla administratora." },
+  { no: "III", name: "Kreator pomysłów", req: "", href: "/kreator", what: "Fiszka z kodem zgłoszenia i danymi IOSS dla gminy do diagnozy problemu, Canva innowacji, asystent kreatora, generator wniosków dopasowany do pytań każdego naboru." },
   { no: "IV", name: "Tester innowacji", req: "", href: "/tester", what: "Zgłoszenie do testów, ocena gwiazdkowa, uwagi i propozycje usprawnień." },
   { no: "V", name: "Platforma aktywnej komunikacji", req: "", href: "/komunikacja", what: "Forum z rolami (ROPS, mentorzy, JST, NGO, mieszkańcy), giełda partnerstw, wątki zgłoszeń admin ↔ autor." },
   { no: "VI", name: "Panel administratora", req: "", href: "/admin", what: "Logowanie, powiadomienia, moderacja fiszek i wniosków z odpowiedzią do autora, edycja wiedzy, otwieranie naborów." },
@@ -19,6 +19,7 @@ const API = [
   { method: "GET", path: "/api/innovations", desc: "Opublikowane innowacje (Biblioteka)" },
   { method: "GET", path: "/api/challenges", desc: "Wyzwania regionu ze wskaźnikami" },
   { method: "GET", path: "/api/nabory", desc: "Nabory i ich status" },
+  { method: "GET", path: "/api/ioss?unit=…&area=…", desc: "Wskaźniki IOSS dla gminy lub powiatu (z porównaniem i źródłem)" },
   { method: "POST", path: "/api/match", desc: "Matchmaking: { text, area? } → propozycje, podobne przypadki" },
   { method: "GET", path: "/api/status?code=…", desc: "Status zgłoszenia po kodzie" },
 ];
@@ -213,7 +214,7 @@ export default function Page() {
             <h3 className="text-xl font-black text-brand-900">Niezbędne zasoby</h3>
             <ul className="mt-4 space-y-3 text-slate-800">
               <li>
-                <strong>Redakcja treści (ROPS):</strong> ok. ¼ etatu – moderacja fiszek, odpowiedzi autorom, aktualizacja Biblioteki i wskaźników w panelu.
+                <strong>Redakcja treści (ROPS):</strong> ok. ¼ etatu – moderacja fiszek, odpowiedzi autorom, aktualizacja Biblioteki w panelu; wskaźniki odświeżane skryptem z Obserwatora Statystyk Społecznych ROPS.
               </li>
               <li>
                 <strong>Mentorzy:</strong> dyżury na forum w ramach istniejącej sieci ekspertów Hubu.

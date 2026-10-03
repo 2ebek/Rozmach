@@ -4,7 +4,8 @@ import { defineConfig } from "@playwright/test";
  * Testy E2E w prawdziwej przeglądarce (Microsoft Edge zainstalowany w systemie – bez pobierania przeglądarek).
  * Jeden worker: aplikacja trzyma dane w pamięci, a testy je modyfikują.
  * Uruchomienie: `npm run test:e2e` (użyje działającego `npm run dev` albo sam go uruchomi z HUB_AI=off).
- * Jeśli serwer już działa z kluczem AI, uruchom go z HUB_AI=off – inaczej testy wywołają prawdziwe API.
+ * Najlepiej zatrzymać `npm run dev` przed testami: działający serwer zostanie użyty z jego ustawieniami – z kluczem AI testy
+ * wywołają prawdziwe API, a fiszki testowe trafią do data/hub-data.json zamiast do data/e2e-hub-data.json.
  */
 export default defineConfig({
   testDir: "e2e",
@@ -23,8 +24,9 @@ export default defineConfig({
     command: "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: true,
-    // testy deterministyczne i bez kosztów API – AI wyłączone (dotyczy serwera uruchamianego przez Playwright)
-    env: { HUB_AI: "off" },
+    // testy deterministyczne i bez kosztów API – AI wyłączone (dotyczy serwera uruchamianego przez Playwright);
+    // osobny plik danych, żeby fiszki i wnioski z testów nie trafiały do kolejek w data/hub-data.json
+    env: { HUB_AI: "off", HUB_DATA_FILE: "data/e2e-hub-data.json" },
     timeout: 180_000,
   },
 });

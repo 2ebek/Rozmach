@@ -27,8 +27,8 @@ export interface HubRepository {
   listInnovations(opts?: { includeHidden?: boolean }): Promise<Innovation[]>;
   addInnovation(i: Omit<Innovation, "id">): Promise<Innovation>;
   setInnovationPublished(id: string, published: boolean): Promise<void>;
+  /** Wyzwania regionu ze wskaźnikami IOSS (tylko do odczytu – odświeżane skryptem npm run import:ioss). */
   listChallenges(): Promise<Challenge[]>;
-  setChallengeIndicator(id: string, value: number): Promise<void>;
   listResources(): Promise<Resource[]>;
   // Matchmaking
   addNeed(n: Omit<NeedSubmission, "id" | "createdAt">): Promise<NeedSubmission>;
@@ -74,7 +74,7 @@ const daysAgo = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString
 function createInMemoryRepo(): HubRepository {
   // Kopie danych startowych – redakcja może je modyfikować w panelu administratora.
   const innovations: Innovation[] = seedInnovations.map((i) => ({ ...i }));
-  const challenges: Challenge[] = seedChallenges.map((c) => ({ ...c, indicator: c.indicator && { ...c.indicator } }));
+  const challenges: Challenge[] = seedChallenges;
   const nabory: Nabor[] = seedNabory.map((n) => ({ ...n }));
 
   // Fikcyjne dane startowe, żeby panel trendów i rozmowy nie były puste w demo.
@@ -107,7 +107,7 @@ function createInMemoryRepo(): HubRepository {
   ];
   const events: HubEvent[] = [
     { id: "e1", kind: "idea", text: "Nowa fiszka: „Wymiana usług sąsiedzkich”", href: "/admin#kolejka", createdAt: daysAgo(2), read: false },
-    { id: "e2", kind: "reply", text: "Autor odpowiedział w wątku „Szkolne Kino Seniora”", href: "/admin#kolejka", createdAt: daysAgo(3), read: false },
+    { id: "e2", kind: "reply", text: "Autor odpowiedział w wątku „Szkolne Kino Seniora”", href: "/admin?kolejka=zaakceptowany#kolejka", createdAt: daysAgo(3), read: false },
   ];
 
   const id = (p: string) => `${p}-${crypto.randomUUID()}`;
@@ -133,10 +133,6 @@ function createInMemoryRepo(): HubRepository {
       if (inn) inn.published = published;
     },
     listChallenges: async () => challenges,
-    async setChallengeIndicator(chId, value) {
-      const ch = challenges.find((c) => c.id === chId);
-      if (ch?.indicator) ch.indicator.value = value;
-    },
     listResources: async () => resources,
 
     async addNeed(n) {
@@ -208,11 +204,14 @@ function createInMemoryRepo(): HubRepository {
       return null;
     },
     async addThreadMessage(code, msg) {
-      const target = ideas.find((i) => i.code === code) ?? applications.find((a) => a.code === code);
+      const idea = ideas.find((i) => i.code === code);
+      const target = idea ?? applications.find((a) => a.code === code);
       if (!target) return false;
       target.thread.push({ ...msg, createdAt: now() });
       persist();
-      if (msg.from === "author") emit("reply", `Autor odpowiedział w wątku „${target.title}”`, "/admin#kolejka");
+      // link do kolejki, w której fiszka jest teraz (albo do wniosków)
+      const href = idea ? `/admin?kolejka=${idea.status}#kolejka` : "/admin/nabory";
+      if (msg.from === "author") emit("reply", `Autor odpowiedział w wątku „${target.title}”`, href);
       return true;
     },
 

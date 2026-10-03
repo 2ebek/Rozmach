@@ -112,8 +112,14 @@ test.describe("Kluczowe scenariusze", () => {
     const adminCtx = await browser.newContext();
     const admin = await adminCtx.newPage();
     await loginAsAdmin(admin);
+    // nowa fiszka jest w kolejce „Nieprzejrzane”; po akceptacji przechodzi do „Zaakceptowane”
+    const queues = admin.getByRole("navigation", { name: "Kolejki fiszek" });
+    await expect(queues.getByRole("link", { name: /Nieprzejrzane/ })).toHaveAttribute("aria-current", "page");
     const card = admin.locator("#kolejka li", { has: admin.getByRole("heading", { name: title }) });
     await card.getByRole("button", { name: "Akceptuj" }).click();
+    await expect(card).toHaveCount(0);
+    await queues.getByRole("link", { name: /Zaakceptowane/ }).click();
+    await expect(queues.getByRole("link", { name: /Zaakceptowane/ })).toHaveAttribute("aria-current", "page");
     await expect(card.getByText("Zaakceptowany")).toBeVisible();
     await card.locator("summary").click();
     await card.getByLabel("Odpowiedz autorowi").fill("Gratulacje, zapraszamy do naboru!");
@@ -218,6 +224,38 @@ test.describe("Kluczowe scenariusze", () => {
     await expect(page.locator('[data-coach="opis"]')).toContainText("Do rozwinięcia");
     await expect(page.getByText("Podobne innowacje w Bibliotece ROPS")).toBeVisible();
     await expect(page.getByRole("link", { name: /Merkury/ })).toBeVisible();
+  });
+
+  test("fiszka: prawdziwe dane IOSS dla gminy przy diagnozie – wstawienie, cofnięcie i propozycja asystenta", async ({ page }) => {
+    await open(page, "/kreator");
+    await page.locator("#idea-title").fill("Kino Seniora");
+    await page.locator("#idea-category").selectOption("dla-seniorow");
+    await page.locator("#idea-place").selectOption("g-bochenski-drwinia");
+    const panel = page.locator("[data-ioss]");
+    await expect(panel.getByText("Udział osób w wieku 60+ w liczbie ludności", { exact: true })).toBeVisible();
+    await expect(panel.getByText(/powiat bocheński: [\d,]+% · mediana powiatów Małopolski/).first()).toBeVisible();
+
+    await panel.getByRole("button", { name: /Wstaw do diagnozy – Udział osób w wieku 60\+/ }).click();
+    await expect(page.locator("#idea-problem")).toHaveValue(/gmina Drwinia: [\d,]+%.*Internetowy Obserwator Statystyk Społecznych ROPS, dane za \d{4} r\./);
+    await expect(panel.getByRole("button", { name: /Wstawiono do diagnozy/ })).toBeDisabled();
+    await panel.getByRole("button", { name: "Cofnij zmianę w diagnozie" }).click();
+    await expect(page.locator("#idea-problem")).toHaveValue("");
+
+    // asystent (tryb bez AI) proponuje diagnozę z tymi samymi wskaźnikami – bez wymyślonych liczb
+    await page.locator("#idea-essence").fill("Raz w miesiącu szkoła udostępnia aulę na pokaz filmu dla seniorów.");
+    await page.getByRole("button", { name: "Sprawdź fiszkę z AI" }).click();
+    const note = page.locator('[data-coach="diagnoza"]');
+    await expect(note).toContainText("gmina Drwinia");
+    await note.getByRole("button", { name: /Wstaw propozycję/ }).click();
+    await expect(page.locator("#idea-problem")).toHaveValue(/Udział osób w wieku 60\+ w liczbie ludności – gmina Drwinia/);
+  });
+
+  test("Zasobnik: Mapa Wyzwań z prawdziwymi wskaźnikami IOSS", async ({ page }) => {
+    await open(page, "/zasobnik");
+    const wyzwania = page.locator("#wyzwania");
+    await expect(wyzwania.getByRole("link", { name: /Źródło: IOSS ROPS/ })).toHaveCount(6);
+    await expect(wyzwania.getByText(/Mediana 22 powiatów; od [\d,]+% \(powiat/).first()).toBeVisible();
+    await expect(wyzwania.getByText(/przykład/i)).toHaveCount(0);
   });
 
   test("tester: ocena gwiazdkowa i zgłoszenie do testów", async ({ page }) => {

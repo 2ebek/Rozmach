@@ -94,6 +94,35 @@ describe("asystent fiszki (Kreator pomysłów)", () => {
     expect(r.summary).toMatch(/z 7 punktów/);
   });
 
+  const facts = ["Udział osób w wieku 60+ w liczbie ludności – gmina Drwinia: 22,07% (powiat bocheński: 23,33%). Źródło: IOSS, dane za 2024 r."];
+
+  it("dane IOSS trafiają do modelu jako dane; propozycja z wymyśloną liczbą jest odrzucana", async () => {
+    const withNumbers = {
+      ...aiOut,
+      points: aiOut.points.map((p) =>
+        p.section === "diagnoza" ? { ...p, suggestion: "W gminie Drwinia 22,07% mieszkańców ma 60+ (2024)." } : p.section === "wizja" ? { ...p, status: "do-poprawy", suggestion: "Za 3 lata obejmiemy 500 seniorów." } : p,
+      ),
+    };
+    const { claude, parse } = fakeClaude(withNumbers);
+    const r = await coachIdea({ ...draft, place: "gmina Drwinia", facts }, innovations, { claude });
+    const content = (parse.mock.calls[0]![0] as { messages: { content: string }[] }).messages[0]!.content;
+    expect(content).toContain('<dane_ioss miejsce="gmina Drwinia">');
+    expect(content).toContain("<wskaznik>Udział osób w wieku 60+");
+    // liczby z IOSS – zostają; „500 seniorów” nie ma w źródłach – propozycja odrzucona (punkt z trybu lokalnego)
+    expect(r.points.find((p) => p.section === "diagnoza")!.suggestion).toContain("22,07%");
+    expect(r.points.find((p) => p.section === "wizja")!.suggestion).toBeUndefined();
+  });
+
+  it("tryb lokalny z danymi IOSS: diagnoza bez liczb dostaje propozycję z prawdziwymi wskaźnikami", () => {
+    const r = localCoach({ ...draft, place: "gmina Drwinia", facts, sections: { ...draft.sections, diagnoza: "Seniorzy są samotni." } }, innovations);
+    const d = r.points.find((p) => p.section === "diagnoza")!;
+    expect(d.status).toBe("do-poprawy");
+    expect(d.suggestion).toBe(`Seniorzy są samotni.\n\n${facts[0]}`);
+    // diagnoza z liczbami – bez propozycji
+    const r2 = localCoach({ ...draft, facts, sections: { ...draft.sections, diagnoza: "W gminie 22% osób ma 60+. ".repeat(8) } }, innovations);
+    expect(r2.points.find((p) => p.section === "diagnoza")!.suggestion).toBeUndefined();
+  });
+
   it("bez klucza AI asystent fiszki nie wywołuje modelu", async () => {
     vi.stubEnv("HUB_AI", "off");
     expect((await coachIdea(draft, innovations)).source).toBe("lokalne");

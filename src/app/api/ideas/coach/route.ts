@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { AREA_ENUM, parseBody } from "@/lib/api";
 import { COACH_SECTIONS, coachIdea } from "@/lib/ai/ideaCoach";
+import { getIossUnit, localFacts, unitLabel } from "@/lib/ioss";
 import { IWS_SECTIONS } from "@/lib/iws";
 import { getRepo } from "@/lib/store";
 
@@ -18,6 +19,8 @@ const Body = z
         z.ZodOptional<z.ZodString>
       >,
     ),
+    /** Id gminy lub powiatu z IOSS – serwer dołącza prawdziwe wskaźniki do diagnozy. */
+    place: z.string().max(80).optional(),
   })
   .refine((b) => Object.values(b.sections).join("").trim().length >= 10, "Napisz choć kilka zdań o pomyśle – asystent potrzebuje punktu wyjścia.");
 
@@ -26,5 +29,8 @@ export async function POST(req: Request) {
   const body = await parseBody(req, Body, "assistant");
   if ("error" in body) return body.error;
   const innovations = await getRepo().listInnovations();
-  return NextResponse.json(await coachIdea(body.data, innovations));
+  const { place, ...draft } = body.data;
+  const unit = place ? getIossUnit(place) : undefined;
+  const facts = unit ? localFacts(unit.id, draft.category).map((f) => f.sentence) : [];
+  return NextResponse.json(await coachIdea({ ...draft, place: unit && unitLabel(unit), facts }, innovations));
 }

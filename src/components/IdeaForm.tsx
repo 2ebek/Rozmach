@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CoachPoint, CoachResponse, CoachSectionId } from "@/lib/ai/ideaCoach";
 import { postJson } from "@/lib/client";
+import { iossUnits } from "@/lib/data/ioss-jednostki";
+import type { IossFact } from "@/lib/ioss";
 import { IWS_SECTIONS } from "@/lib/iws";
 import { AREAS, AREA_COLOR, AREA_LABEL, AREA_LABEL_ROPS, STAGES, STAGE_LABEL } from "@/lib/labels";
 import type { ChallengeArea, IdeaStage } from "@/lib/types";
@@ -27,6 +29,11 @@ type DraftKey = "title" | TextKey;
 const EMPTY: Record<TextKey, string> = { essence: "", innovativeness: "", problem: "", audience: "", change: "", vision: "" };
 const section = (id: CoachSectionId) => IWS_SECTIONS.find((s) => s.id === id)!;
 const SECTION_OF: Record<DraftKey, CoachSectionId> = { title: "tytul", ...Object.fromEntries(FIELDS.map((f) => [f.key, f.section])) } as Record<DraftKey, CoachSectionId>;
+
+/** Powiaty z gminami – lista wyboru miejsca (dane IOSS). */
+const POWIATY = iossUnits
+  .filter((u) => u.kind === "powiat")
+  .map((p) => ({ powiat: p, gminy: iossUnits.filter((g) => g.powiat === p.id) }));
 
 const STATUS_STYLE: Record<CoachPoint["status"], { label: string; cls: string }> = {
   ok: { label: "W porządku", cls: "bg-emerald-100 text-emerald-900" },
@@ -53,6 +60,31 @@ export function IdeaForm() {
   const [coachError, setCoachError] = useState<string | null>(null);
   /** Poprzednia treść pól zastąpionych propozycją – do cofnięcia. */
   const [undo, setUndo] = useState<Partial<Record<DraftKey, string>>>({});
+  /** Gmina/powiat (id IOSS) i prawdziwe wskaźniki dla niego – do diagnozy problemu. */
+  const [place, setPlace] = useState("");
+  const [facts, setFacts] = useState<IossFact[] | null>(null);
+  const [factsError, setFactsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setFacts(null);
+    setFactsError(null);
+    if (!place) return;
+    let cancelled = false;
+    fetch(`/api/ioss?unit=${encodeURIComponent(place)}${category ? `&area=${category}` : ""}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error())))
+      .then((d: { facts: IossFact[] }) => !cancelled && setFacts(d.facts))
+      .catch(() => !cancelled && setFactsError("Nie udało się pobrać danych z Obserwatora. Spróbuj ponownie później."));
+    return () => {
+      cancelled = true;
+    };
+  }, [place, category]);
+
+  /** Dopisuje zdanie ze wskaźnikiem na końcu diagnozy (z możliwością cofnięcia). */
+  function insertFact(sentence: string) {
+    setUndo((u) => ({ ...u, problem: text.problem }));
+    const next = [text.problem.trim(), sentence].filter(Boolean).join("\n\n");
+    setText((prev) => ({ ...prev, problem: next.slice(0, section("diagnoza").max) }));
+  }
 
   const valueOf = (k: DraftKey) => (k === "title" ? title : text[k]);
   const setValue = (k: DraftKey, v: string) => (k === "title" ? setTitle(v) : setText((prev) => ({ ...prev, [k]: v })));
@@ -63,7 +95,7 @@ export function IdeaForm() {
     try {
       // Do asystenta trafia tylko treść merytoryczna – bez pola „Autorzy”.
       const sections = Object.fromEntries((Object.keys(SECTION_OF) as DraftKey[]).map((k) => [SECTION_OF[k], valueOf(k)]));
-      setCoach(await postJson<CoachResponse>("/api/ideas/coach", { category: category || undefined, stage, sections }));
+      setCoach(await postJson<CoachResponse>("/api/ideas/coach", { category: category || undefined, stage, sections, place: place || undefined }));
       setUndo({});
     } catch (err) {
       setCoachError(err instanceof Error ? err.message : "Asystent jest chwilowo niedostępny.");
@@ -103,6 +135,7 @@ export function IdeaForm() {
       setText(EMPTY);
       setAuthors("");
       setCategory("");
+      setPlace("");
       setStage("pomysl");
       setCoach(null);
       setUndo({});
@@ -148,6 +181,67 @@ export function IdeaForm() {
     );
   }
 
+  /** Prawdziwe wskaźniki IOSS dla wybranej gminy/powiatu – pod diagnozą problemu. */
+  function iossPanel() {
+    if (!place) {
+      return (
+        <p className="mt-2 text-sm text-muted">
+          Wskazówka: wybierz wyżej gminę lub powiat, a podpowiemy prawdziwe dane do diagnozy z Obserwatora Statystyk Społecznych ROPS.
+        </p>
+      );
+    }
+    return (
+      <section aria-labelledby="ioss-h" className="mt-2 rounded-xl border border-slate-200 bg-white p-4 text-sm" data-ioss>
+        <h4 id="ioss-h" className="flex items-center gap-2 font-semibold text-brand-900">
+          <Icon name="chart" className="h-4 w-4" /> Dane do diagnozy – Obserwator Statystyk Społecznych ROPS
+        </h4>
+        {!category && <p className="mt-1 text-muted">Wybierz kategorię ROPS, by zobaczyć wskaźniki dopasowane do odbiorców pomysłu. Na razie pokazujemy ogólne.</p>}
+        <div aria-live="polite">
+          {factsError && <p className="mt-2 font-semibold text-red-800">{factsError}</p>}
+          {!facts && !factsError && <p className="mt-2 text-muted">Pobieram dane…</p>}
+          {facts?.length === 0 && <p className="mt-2 text-muted">Brak wskaźników dla tego miejsca w tej kategorii.</p>}
+          {facts && facts.length > 0 && (
+            <ul className="mt-3 space-y-3">
+              {facts.map((fact) => {
+                const inserted = text.problem.includes(fact.sentence);
+                return (
+                  <li key={fact.indicatorId} className="rounded-lg bg-mist p-3">
+                    <p className="font-semibold text-brand-900">{fact.label}</p>
+                    <p className="mt-1">
+                      <span className="text-2xl font-black text-brand-900">{fact.valueText}</span>{" "}
+                      <span className="text-ink">
+                        – {fact.placeName}, {fact.year}&nbsp;r.
+                      </span>
+                    </p>
+                    <p className="text-muted">
+                      {fact.powiat && `${fact.powiat.name}: ${fact.powiat.valueText} · `}
+                      {fact.region.label}: {fact.region.valueText}
+                    </p>
+                    {fact.description && <p className="mt-1 text-xs text-muted">{fact.description.length > 220 ? `${fact.description.slice(0, 219)}…` : fact.description}</p>}
+                    <p className="mt-2 flex flex-wrap gap-4">
+                      <button type="button" disabled={inserted} onClick={() => insertFact(fact.sentence)} className="font-semibold text-brand-700 underline-offset-2 enabled:hover:underline disabled:text-muted">
+                        {inserted ? "Wstawiono do diagnozy" : "Wstaw do diagnozy"}
+                        <span className="sr-only"> – {fact.label}</span>
+                      </button>
+                      <a href={fact.url} target="_blank" rel="noopener noreferrer" className="text-brand-700 underline">
+                        Źródło w IOSS<span className="sr-only"> – {fact.label} (otwiera się w nowej karcie)</span>
+                      </a>
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+          {undo.problem !== undefined && !coach?.points.some((p) => p.section === "diagnoza") && (
+            <button type="button" onClick={() => revert("problem")} className="mt-3 font-semibold text-muted underline-offset-2 hover:underline">
+              Cofnij zmianę w diagnozie
+            </button>
+          )}
+        </div>
+      </section>
+    );
+  }
+
   const stageIdx = STAGES.indexOf(stage);
   const t = section("tytul");
 
@@ -174,6 +268,25 @@ export function IdeaForm() {
               ))}
             </select>
           </Field>
+          <Field
+            id="idea-place"
+            label="Gmina lub powiat, którego dotyczy pomysł (opcjonalnie)"
+            hint="Przy diagnozie problemu pokażemy prawdziwe dane dla tego miejsca z Obserwatora Statystyk Społecznych ROPS – możesz je wstawić jednym kliknięciem."
+          >
+            <select id="idea-place" aria-describedby="idea-place-hint" value={place} onChange={(e) => setPlace(e.target.value)} className={inputCls}>
+              <option value="">Nie wybrano</option>
+              {POWIATY.map(({ powiat, gminy }) => (
+                <optgroup key={powiat.id} label={powiat.name}>
+                  <option value={powiat.id}>{powiat.name} – cały powiat</option>
+                  {gminy.map((g) => (
+                    <option key={g.id} value={g.id}>
+                      gmina {g.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </Field>
           {FIELDS.map((f) => {
             const s = section(f.section);
             const id = `idea-${f.key}`;
@@ -193,6 +306,7 @@ export function IdeaForm() {
                 <p id={`${id}-count`} className="text-right text-xs text-slate-600">
                   {v.length} / {s.max} znaków
                 </p>
+                {f.key === "problem" && iossPanel()}
                 {coachNote(f.key)}
               </Field>
             );

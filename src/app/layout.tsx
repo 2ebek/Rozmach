@@ -76,8 +76,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-4 sm:px-8 xl:py-6">
             <Link href="/" className="flex items-center gap-4 no-underline">
               <span className="font-display text-[2.1rem] leading-none text-brand-900 sm:text-[2.5rem]">Rozmach</span>
-              <span aria-hidden className="hidden h-8 w-px bg-brand-100 sm:block xl:hidden 2xl:block" />
-              <span className="hidden max-w-[11rem] text-[0.8rem] leading-snug text-muted sm:block xl:hidden 2xl:block 2xl:max-w-none">Małopolski Hub Innowacji Społecznych</span>
+              <span aria-hidden className="hidden h-8 w-px bg-brand-100 sm:block xl:hidden min-[1720px]:block" />
+              <span className="hidden max-w-[11rem] text-[0.8rem] leading-snug text-muted sm:block xl:hidden min-[1720px]:block min-[1720px]:max-w-none">Małopolski Hub Innowacji Społecznych</span>
               <span className="sr-only"> – Małopolski Hub Innowacji Społecznych, strona główna</span>
             </Link>
             <NavLinks />

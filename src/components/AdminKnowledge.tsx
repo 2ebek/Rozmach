@@ -6,7 +6,7 @@ import { postJson } from "@/lib/client";
 import { AREAS, AREA_LABEL, STAGES, STAGE_LABEL } from "@/lib/labels";
 import type { ChallengeArea, IdeaStage } from "@/lib/types";
 import { Icon } from "./Icon";
-import { Field, Status, btnCls, btnSecondaryCls, inputCls } from "./ui";
+import { Field, Status, btnCls, inputCls } from "./ui";
 
 /** Formularz dodawania innowacji do Biblioteki – pola jak karta Biblioteki ROPS (6 pytań + materiały). */
 export function AddInnovationForm() {
@@ -141,45 +141,6 @@ export function AddInnovationForm() {
         <Icon name="check" className="h-5 w-5" /> Dodaj do Biblioteki
       </button>
       <Status error={error} ok={ok} />
-    </form>
-  );
-}
-
-/** Edycja wartości wskaźnika wyzwania (Mapa Wyzwań). */
-export function IndicatorEditor({ id, value, unit, label }: { id: string; value: number; unit: string; label: string }) {
-  const router = useRouter();
-  const [v, setV] = useState(String(value));
-  const [state, setState] = useState<"idle" | "saved" | "error">("idle");
-
-  async function save(e: React.FormEvent) {
-    e.preventDefault();
-    try {
-      await postJson("/api/admin", { action: "indicator", id, value: Number(v) });
-      setState("saved");
-      router.refresh();
-    } catch {
-      setState("error");
-    }
-  }
-
-  return (
-    <form onSubmit={save} className="flex flex-wrap items-end gap-2">
-      <div>
-        <label htmlFor={`ind-${id}`} className="mb-1 block text-sm text-slate-600">
-          {label}
-        </label>
-        <div className="flex items-center gap-1">
-          <input id={`ind-${id}`} type="number" min={0} max={100} step={1} value={v} onChange={(e) => { setV(e.target.value); setState("idle"); }} className={`${inputCls} w-24 py-2`} />
-          <span className="font-bold text-slate-700">{unit}</span>
-        </div>
-      </div>
-      <button type="submit" className={`${btnSecondaryCls} py-2`}>
-        Zapisz
-      </button>
-      <span aria-live="polite" className="text-sm font-bold">
-        {state === "saved" && <span className="text-emerald-800">Zapisano</span>}
-        {state === "error" && <span className="text-red-800">Błąd zapisu</span>}
-      </span>
     </form>
   );
 }

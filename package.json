@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "import:rops": "node scripts/import-rops.mjs"
+    "import:rops": "node scripts/import-rops.mjs",
+    "import:ioss": "node scripts/import-ioss.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",

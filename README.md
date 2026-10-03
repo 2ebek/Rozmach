@@ -35,7 +35,7 @@ Powiadomienia push wymagają HTTPS (lub `localhost`). Klucze VAPID: patrz `.env.
 |---|---|
 | I Matchmaking: podobne przypadki, informacje o kwestii, gotowe innowacje | `/dopasuj`, `src/lib/matching`, `src/app/api/match` |
 | II Zasobnik: wyzwania, Biblioteka (filmy), materiały; trendy tylko dla admina | `/zasobnik`, `/admin#trendy` |
-| II Szybka aktualizacja danych | `/admin/wiedza` (dodawanie/publikacja innowacji, wskaźniki) |
+| II Szybka aktualizacja danych | `/admin/wiedza` (dodawanie/publikacja innowacji), `npm run import:rops` / `npm run import:ioss` |
 | III Fiszka pomysłu (zawsze dostępna) | `/kreator#fiszka` → kod zgłoszenia |
 | III Generator wniosków w czasie naboru, wniosek dopasowany do naboru | `/kreator/wniosek`, `/admin/nabory` |
 | III Canwy innowacji społecznych | `/kreator/canva` (druk/PDF) |
@@ -63,6 +63,20 @@ Aplikacja wspiera istniejący system ROPS zamiast tworzyć własny:
 - **Karta innowacji** (`/zasobnik/[id]`) i **zgłaszanie** (fiszka w Kreatorze, formularze panelu) według 6 pytań karty ROPS:
   na czym polega rozwiązanie · jakich problemów dotyczy · grupa docelowa · kto może skorzystać · czy to działa · autorzy.
 - Linki kategorii (`/zasobnik?kategoria=dla-seniorow`) odpowiadają adresom kategorii ROPS.
+
+## Dane z Internetowego Obserwatora Statystyk Społecznych ROPS (IOSS)
+
+16 prawdziwych wskaźników z [obserwator.rops.krakow.pl](https://obserwator.rops.krakow.pl/) (GUS BDL i sprawozdania pomocy społecznej)
+dla 22 powiatów i gmin Małopolski, za najnowszy dostępny rok. Wskaźniki są przypisane do 9 kategorii ROPS (`AREA_INDICATORS` w `src/lib/ioss.ts`).
+
+- **Mapa Wyzwań** (`/zasobnik#wyzwania`): każde z 6 wyzwań ma wskaźnik z rokiem, zakresem między powiatami i linkiem do źródła.
+  IOSS nie podaje wartości dla województwa, więc pokazujemy medianę powiatów albo, dla liczby osób lub placówek, ich sumę.
+  Wartości nie są edytowane w panelu.
+- **Diagnoza w fiszce** (pkt 5 IWS): po wyborze gminy lub powiatu fiszka pokazuje wskaźniki dla kategorii pomysłu (`GET /api/ioss?unit=&area=`).
+  Każdy ma porównanie z powiatem i regionem oraz gotowe zdanie ze źródłem („Wstaw do diagnozy”).
+- **Asystent fiszki** dostaje te same zdania jako `<dane_ioss>` i może przytoczyć tylko te liczby.
+  Propozycję z liczbą spoza treści autora i danych IOSS odrzucamy (`numbersIn` w `ideaCoach.ts`).
+- Odświeżenie danych: `npm run import:ioss` (`scripts/import-ioss.mjs` → `src/lib/data/ioss-jednostki.ts`, `ioss-wskazniki.ts`).
 
 ## Formularz aplikacyjny ROPS „Inkubator Włączenia Społecznego 2.0”
 

@@ -65,8 +65,18 @@ export interface Challenge {
   area: ChallengeArea;
   title: string;
   description: string;
-  /** Przykładowy wskaźnik do wizualizacji (Mapa Wyzwań Społecznych). */
-  indicator?: { label: string; value: number; unit: string };
+  /** Wskaźnik z Internetowego Obserwatora Statystyk Społecznych ROPS (Mapa Wyzwań Społecznych). */
+  indicator?: {
+    label: string;
+    value: number;
+    unit: string;
+    /** Rok danych. */
+    year: number;
+    /** Jak policzono wartość dla regionu (mediana/suma powiatów) i zakres. */
+    note: string;
+    /** Strona wskaźnika w IOSS. */
+    sourceUrl: string;
+  };
 }
 
 export interface Resource {

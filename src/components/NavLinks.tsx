@@ -32,7 +32,7 @@ export function NavLinks() {
           className={
             mobile
               ? `block rounded-lg px-3 py-3 font-semibold ${active ? "bg-brand-50 text-brand-900" : "text-brand-900 hover:bg-brand-50"}`
-              : `block border-b-2 py-1 text-[0.95rem] ${active ? "border-accent text-brand-900" : "border-transparent text-brand-900 hover:border-brand-900"}`
+              : `block whitespace-nowrap border-b-2 py-1 text-[0.95rem] ${active ? "border-accent text-brand-900" : "border-transparent text-brand-900 hover:border-brand-900"}`
           }
         >
           {n.label}
@@ -46,7 +46,7 @@ export function NavLinks() {
       {/* Szerokie ekrany: menu w jednej linii */}
       <div className="hidden items-center gap-7 xl:flex">
         <ul className="flex items-center gap-5">{NAV.map((n) => link(n))}</ul>
-        <Link href="/logowanie" className="hidden text-[0.95rem] text-muted hover:text-brand-900 2xl:inline">
+        <Link href="/logowanie" className="hidden text-[0.95rem] text-muted hover:text-brand-900 min-[1720px]:inline">
 
           Zaloguj się
         </Link>

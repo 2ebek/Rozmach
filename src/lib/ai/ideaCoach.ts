@@ -19,6 +19,10 @@ export interface IdeaDraft {
   category?: ChallengeArea;
   stage?: IdeaStage;
   sections: Partial<Record<CoachSectionId, string>>;
+  /** Gmina lub powiat, którego dotyczy pomysł (nazwa z IOSS). */
+  place?: string;
+  /** Zdania z prawdziwymi wskaźnikami IOSS dla tego miejsca – jedyne liczby, które asystent może przytoczyć. */
+  facts?: string[];
 }
 
 export interface CoachPoint {
@@ -79,6 +83,11 @@ Zasady:
 - Oceń każdy z 7 punktów: "ok" (wystarczający), "do-poprawy" (jest, ale słaby lub ogólnikowy), "brak" (pusty).
 - Propozycje treści opieraj WYŁĄCZNIE na tym, co napisał autor. Nie wymyślaj liczb, statystyk, nazw raportów, miejscowości,
   instytucji ani partnerów. W diagnozie zamiast danych napisz, jakich danych szukać i gdzie (np. GUS, raporty ROPS, gminny ośrodek pomocy).
+- Wyjątek: jeśli w sekcji <dane_ioss> są wskaźniki z Internetowego Obserwatora Statystyk Społecznych ROPS dla miejsca, którego dotyczy
+  pomysł, w punkcie "diagnoza" przytocz te, które pasują do problemu – dokładnie te liczby, z rokiem i źródłem, bez zaokrąglania.
+  To dane z jednego roku: nie pisz o wzroście, spadku ani trendach i nie dopisuj wniosków, których dane nie pokazują.
+  Zachowaj w propozycji to, co autor już napisał w diagnozie, i dopisz do tego dane. Gdy diagnoza nie ma danych liczbowych,
+  oceń ją jako "do-poprawy". Nie podawaj żadnych innych liczb.
 - Pisz jako autor fiszki (pierwsza osoba liczby mnogiej), prostym językiem, po polsku. Bez żargonu i bez obietnic finansowania.
 - Innowacja nie może powielać rozwiązań już wdrożonych: sprawdź katalog Biblioteki ROPS poniżej i wskaż podobne pozycje
   (dokładne identyfikatory, niczego spoza katalogu). W punkcie "innowacyjnosc" podpowiedz, czym pomysł może się od nich różnić.
@@ -95,8 +104,16 @@ export function buildLibraryCatalog(innovations: Innovation[]): string {
 
 function draftText(d: IdeaDraft): string {
   const lines = COACH_SECTIONS.map((id) => `<${id}>${(d.sections[id] ?? "").trim() || "(puste)"}</${id}>`);
-  return `<fiszka>\n${d.category ? `<kategoria_rops>${d.category}</kategoria_rops>\n` : ""}${d.stage ? `<etap>${d.stage}</etap>\n` : ""}${lines.join("\n")}\n</fiszka>`;
+  const fiszka = `<fiszka>\n${d.category ? `<kategoria_rops>${d.category}</kategoria_rops>\n` : ""}${d.stage ? `<etap>${d.stage}</etap>\n` : ""}${lines.join("\n")}\n</fiszka>`;
+  if (!d.facts?.length) return fiszka;
+  return `${fiszka}\n<dane_ioss miejsce="${d.place ?? ""}">\n${d.facts.map((f) => `<wskaznik>${f}</wskaznik>`).join("\n")}\n</dane_ioss>`;
 }
+
+/** Czy tekst zawiera już jakąś liczbę (np. wskaźnik w diagnozie). */
+const hasNumber = (s: string) => /\d/.test(s);
+
+/** Liczby w tekście w postaci znormalizowanej ("27,32" i "27.32" → "27.32"). */
+export const numbersIn = (s: string) => (s.match(/\d+(?:[.,]\d+)?/g) ?? []).map((n) => n.replace(",", "."));
 
 const queryOf = (d: IdeaDraft) => [d.sections.tytul, d.sections.opis, d.sections.diagnoza, d.sections.odbiorcy].filter(Boolean).join(" ");
 
@@ -115,6 +132,15 @@ export function localCoach(d: IdeaDraft, innovations: Innovation[]): CoachRespon
     const s = sectionDef(id);
     // Pierwsze pytanie z podpowiedzi formularza – konkretna wskazówka, co dopisać.
     const firstQuestion = s.hint.split("?")[0] + "?";
+    if (id === "diagnoza" && d.facts?.length && !hasNumber(text)) {
+      // Prawdziwe dane IOSS dla wybranej gminy – gotowa propozycja (tekst autora + wskaźniki ze źródłem), bez wymyślania liczb.
+      return {
+        section: id,
+        status: text ? "do-poprawy" : "brak",
+        feedback: `${text ? "Dodaj dane, które pokażą skalę problemu." : `Ten punkt jest pusty. ${firstQuestion}`} Masz wskaźniki z Obserwatora Statystyk Społecznych ROPS dla: ${d.place} – opisz też, co widzisz na co dzień.`,
+        suggestion: clip([text, ...d.facts].filter(Boolean).join("\n\n"), s.max),
+      };
+    }
     if (!text) return { section: id, status: "brak", feedback: `Ten punkt jest pusty. Zacznij od pytania z formularza: ${firstQuestion}` };
     if (text.length < GOOD_LENGTH[id]) return { section: id, status: "do-poprawy", feedback: `Rozwiń ten punkt – komisja zapyta m.in.: ${s.hint}` };
     if (id === "innowacyjnosc" && similar.length) {
@@ -145,10 +171,12 @@ export async function coachIdea(d: IdeaDraft, innovations: Innovation[], clients
   if (!out) return localCoach(d, innovations);
 
   const byId = new Map(innovations.map((i) => [i.id, i]));
+  // Liczby wolno brać tylko z treści autora i z danych IOSS – propozycja z inną liczbą jest odrzucana (zmyślona statystyka).
+  const allowed = new Set([...Object.values(d.sections), ...(d.facts ?? [])].flatMap((t) => numbersIn(t ?? "")));
   // Każdy punkt dokładnie raz, w kolejności formularza; propozycje tylko tam, gdzie punkt wymaga pracy.
   const points: CoachPoint[] = COACH_SECTIONS.map((id) => {
     const p = out.points.find((x) => x.section === id);
-    if (!p) return localCoach(d, innovations).points.find((x) => x.section === id)!;
+    if (!p || !numbersIn(p.suggestion).every((n) => allowed.has(n))) return localCoach(d, innovations).points.find((x) => x.section === id)!;
     const suggestion = p.status !== "ok" && p.suggestion.trim() ? clip(p.suggestion.trim(), sectionDef(id).max) : undefined;
     return { section: id, status: p.status, feedback: p.feedback, suggestion };
   });

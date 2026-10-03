@@ -2,648 +2,534 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<title>Rozmach – dokumentacja funkcji</title>
+<title>Rozmach – opis funkcji</title>
 <style>
-  @font-face { font-family: "Momo Trust Display"; src: url(../public/fonts/momo-latin-ext.woff2) format("woff2"); unicode-range: U+0100-02BA, U+1E00-1EFF; }
-  @font-face { font-family: "Momo Trust Display"; src: url(../public/fonts/momo-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F; }
-  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
-  :root { --navy: #13214f; --accent: #db1e56; --muted: #55627f; --line: #dfe7f5; --bg: #eef3fa; }
+  @page { size: A4; margin: 20mm 20mm 22mm 20mm; }
   * { box-sizing: border-box; }
-  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  body { margin: 0; font: 10.5pt/1.55 "Segoe UI", Arial, sans-serif; color: #1b2540; }
-  h1, h2, .display { font-family: "Momo Trust Display", "Segoe UI", sans-serif; font-weight: 400; color: var(--navy); letter-spacing: -0.01em; }
-  h1 { font-size: 30pt; line-height: 1.05; margin: 0 0 8pt; }
-  h2 { font-size: 20pt; line-height: 1.1; margin: 0 0 10pt; padding-top: 2pt; }
-  h3 { font-size: 13pt; color: var(--navy); margin: 16pt 0 5pt; break-after: avoid; }
-  h4 { font-size: 11pt; color: var(--navy); margin: 11pt 0 3pt; break-after: avoid; }
-  p { margin: 0 0 6pt; }
-  ul, ol { margin: 0 0 7pt; padding-left: 16pt; }
-  li { margin-bottom: 2.5pt; }
-  a { color: #24418f; text-decoration: none; }
-  code { font: 9pt Consolas, monospace; background: var(--bg); padding: 0.5pt 3pt; border-radius: 3pt; color: var(--navy); }
-  .chapter { break-before: page; }
-  .flow { margin-top: 26pt; padding-top: 14pt; border-top: 1.5pt solid var(--line); }
-  .flow h2, .chapter h2 { break-after: avoid; }
-  .kicker { break-after: avoid; }
-  .kicker { font-size: 8.5pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 3pt; }
-  .lead { font-size: 11.5pt; color: var(--muted); }
-  table { width: 100%; border-collapse: collapse; margin: 4pt 0 10pt; font-size: 9.3pt; break-inside: auto; }
-  th, td { text-align: left; vertical-align: top; padding: 4pt 6pt; border-bottom: 0.6pt solid var(--line); }
-  thead th { background: var(--navy); color: #fff; font-weight: 600; }
+  body { margin: 0; font: 11.5pt/1.6 "Segoe UI", Arial, sans-serif; color: #111; }
+  h1 { font-size: 24pt; line-height: 1.2; margin: 0 0 6pt; }
+  h2 { font-size: 18pt; line-height: 1.25; margin: 0 0 10pt; padding-bottom: 4pt; border-bottom: 1.5pt solid #111; }
+  h3 { font-size: 14pt; line-height: 1.3; margin: 22pt 0 2pt; break-after: avoid; }
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 9pt; padding-left: 20pt; }
+  li { margin-bottom: 3pt; }
+  b { font-weight: 600; }
+  .part { break-before: page; }
+  .where { color: #444; font-size: 10.5pt; margin-bottom: 8pt; }
+  .label { font-weight: 600; margin: 9pt 0 3pt; break-after: avoid; }
+  .note { border-left: 3pt solid #999; padding: 2pt 0 2pt 10pt; margin: 8pt 0 10pt; color: #222; }
+  table { width: 100%; border-collapse: collapse; margin: 4pt 0 12pt; font-size: 10.5pt; }
+  th, td { text-align: left; vertical-align: top; padding: 5pt 7pt; border: 0.75pt solid #999; }
+  th { background: #eee; font-weight: 600; }
   tr { break-inside: avoid; }
-  tbody tr:nth-child(even) td { background: #f7f9fd; }
-  .box { background: var(--bg); border-radius: 8pt; padding: 8pt 11pt; margin: 6pt 0 10pt; break-inside: avoid; }
-  .box.warn { background: #fff4e5; border-left: 3pt solid #f59e0b; }
-  .box.ai { border-left: 3pt solid var(--accent); }
-  .box p:last-child, .box ul:last-child { margin-bottom: 0; }
-  figure { margin: 8pt 0 12pt; break-inside: avoid; }
-  figure img { width: 100%; border: 0.6pt solid var(--line); border-radius: 6pt; display: block; }
-  figure.narrow img { width: 45%; }
-  figcaption { font-size: 8.5pt; color: var(--muted); margin-top: 3pt; }
-  .pill { display: inline-block; font-size: 8pt; font-weight: 700; padding: 0.5pt 6pt; border-radius: 99pt; background: var(--bg); color: var(--navy); }
-  .pill.red { background: var(--accent); color: #fff; }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; }
-  .steps { counter-reset: s; list-style: none; padding: 0; }
-  .steps li { counter-increment: s; position: relative; padding-left: 22pt; margin-bottom: 5pt; }
-  .steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 15pt; height: 15pt; border-radius: 50%; background: var(--accent); color: #fff; font-size: 8pt; font-weight: 700; text-align: center; line-height: 15pt; }
-
-  /* okładka */
-  .cover { height: 255mm; display: flex; flex-direction: column; justify-content: space-between; }
-  .cover .brand { font-family: "Momo Trust Display", sans-serif; font-size: 40pt; color: var(--navy); }
-  .cover .tag { display: inline-block; background: var(--accent); color: #fff; font-weight: 700; font-size: 9pt; border-radius: 99pt; padding: 2pt 9pt; }
-  .cover h1 { font-size: 40pt; margin-top: 14pt; }
-  .cover .band { background: var(--navy); color: #fff; border-radius: 12pt; padding: 16pt 18pt; }
-  .cover .band p { color: #dbe3f3; margin: 0; }
-  .cover .meta { font-size: 9.5pt; color: var(--muted); }
-
-  /* spis treści */
-  .toc ol { list-style: none; padding: 0; columns: 1; }
-  .toc > ol > li { margin: 5pt 0; font-weight: 600; }
-  .toc ol ol { padding-left: 14pt; font-weight: 400; color: var(--muted); }
-  .toc a { color: inherit; }
+  .fn { break-inside: auto; }
+  .toc ol { padding-left: 18pt; }
+  .toc li { margin-bottom: 2pt; }
+  .toc > ol > li { margin-top: 8pt; font-weight: 600; }
+  .toc ol ol { font-weight: 400; }
 </style>
 </head>
 <body>
 
-<!-- ============ OKŁADKA ============ -->
-<section class="cover">
-  <div>
-    <div class="brand">Rozmach</div>
-    <div class="meta">Małopolski Hub Innowacji Społecznych</div>
-  </div>
-  <div>
-    <span class="tag">Dokumentacja funkcji</span>
-    <h1>Wszystkie funkcje platformy – dla użytkowników, zespołu Hubu i integratorów</h1>
-    <p class="lead">Opis każdego modułu strony: co robi, kto z niego korzysta, jak działa krok po kroku, jakie ma reguły i ograniczenia. Na końcu: AI, dane i prywatność, dostępność, API, konfiguracja i testy.</p>
-  </div>
-  <div class="band">
-    <p style="font-size:12pt;color:#fff;font-weight:600;margin-bottom:4pt">Prototyp hackathonowy dla Regionalnego Ośrodka Polityki Społecznej w Krakowie</p>
-    <p>Wyzwanie: Małopolski Hub Innowacji Społecznych (HUBMI). Wersja dokumentu: 1.0 · 3 października 2026. Dane w prototypie są przykładowe, z wyjątkiem innowacji pobranych z publicznej Biblioteki Innowacji Społecznych ROPS.</p>
-  </div>
-</section>
+<h1>Rozmach – opis funkcji</h1>
+<p class="where">Małopolski Hub Innowacji Społecznych · prototyp hackathonowy dla ROPS w Krakowie · wersja 2.0, 3 października 2026</p>
 
-<!-- ============ SPIS TREŚCI ============ -->
-<section class="chapter toc">
-  <h2>Spis treści</h2>
+<p>Ten dokument opisuje, <b>co można zrobić na stronie Rozmach</b>: każdą funkcję po kolei – do czego służy, jak z niej skorzystać krok po kroku i co dzieje się potem. Dokument nie opisuje kodu ani technologii.</p>
+
+<div class="toc">
   <ol>
-    <li><a href="#r1">1. Wprowadzenie</a></li>
-    <li><a href="#r2">2. Mapa strony</a></li>
-    <li><a href="#r3">3. Funkcje dla mieszkańców, organizacji i samorządów</a>
+    <li>Rozmach w skrócie</li>
+    <li>Funkcje dla mieszkańców, organizacji i instytucji
       <ol>
-        <li>3.1 Strona główna · 3.2 Znajdź rozwiązanie (matchmaking) · 3.3 Zasobnik wiedzy i karta innowacji</li>
-        <li>3.4 Kreator pomysłów: fiszka i asystent AI fiszki · 3.5 Canva innowacji · 3.6 Asystent kreatora</li>
-        <li>3.7 Generator wniosków (w tym formularz ROPS IWS 2.0) · 3.8 Status zgłoszenia</li>
-        <li>3.9 Tester innowacji · 3.10 Rozmowy i giełda partnerstw · 3.11 Middleman Innowacji · 3.12 O projekcie</li>
+        <li>Zgłoszenie potrzeby</li>
+        <li>Wyszukiwanie rozwiązań (dopasowanie)</li>
+        <li>Biblioteka innowacji i karta innowacji</li>
+        <li>Fiszka pomysłu (2.4a: dane do diagnozy problemu)</li>
+        <li>Sprawdzenie fiszki z AI</li>
+        <li>Asystent pomysłu</li>
+        <li>Canva innowacji</li>
+        <li>Wniosek grantowy „Inkubator Włączenia Społecznego 2.0”</li>
+        <li>Wniosek w innych naborach</li>
+        <li>Status zgłoszenia i rozmowa z Hubem</li>
+        <li>Tester innowacji</li>
+        <li>Forum Hubu</li>
+        <li>Giełda partnerstw</li>
+        <li>Middleman – wdrożenie innowacji w instytucji</li>
+        <li>Ułatwienia dostępu</li>
       </ol>
     </li>
-    <li><a href="#r4">4. Panel administratora</a>
-      <ol><li>Logowanie · Pulpit (powiadomienia, trendy, kolejka fiszek) · Pomysły · Zarządzanie wiedzą · Nabory i wnioski · Aplikacja na telefon i powiadomienia push</li></ol>
+    <li>Funkcje zespołu Hubu (panel administratora)
+      <ol>
+        <li>Logowanie</li>
+        <li>Pulpit: liczby, powiadomienia i trendy potrzeb</li>
+        <li>Przegląd fiszek</li>
+        <li>Zarządzanie pomysłami</li>
+        <li>Zarządzanie Biblioteką i wskaźnikami</li>
+        <li>Nabory</li>
+        <li>Wnioski</li>
+        <li>Aplikacja na telefon i powiadomienia</li>
+      </ol>
     </li>
-    <li><a href="#r5">5. Sztuczna inteligencja</a></li>
-    <li><a href="#r6">6. Dane, prywatność i bezpieczeństwo</a></li>
-    <li><a href="#r7">7. Dostępność (WCAG 2.1 AA)</a></li>
-    <li><a href="#r8">8. API i integracje</a></li>
-    <li><a href="#r9">9. Uruchomienie i konfiguracja</a></li>
-    <li><a href="#r10">10. Testy i jakość</a></li>
-    <li><a href="#r11">11. Architektura, koszty utrzymania i ograniczenia prototypu</a></li>
+    <li>Jak działa AI i co się dzieje, gdy jest niedostępne</li>
+    <li>Ściąga: statusy i limity</li>
   </ol>
-</section>
+</div>
 
-<!-- ============ 1. WPROWADZENIE ============ -->
-<section class="chapter" id="r1">
-  <div class="kicker">Rozdział 1</div>
-  <h2>Wprowadzenie</h2>
-  <h3>Jaki problem rozwiązuje Rozmach</h3>
-  <p>Mieszkańcy, organizacje i samorządy w Małopolsce widzą lokalne problemy – samotność seniorów, bariery w dostępie do usług, brak miejsc spotkań – ale nie wiedzą, że często ktoś już wymyślił i przetestował rozwiązanie. Wiedza o sprawdzonych innowacjach społecznych jest rozproszona, a droga od pomysłu do grantu jest trudna i sformalizowana.</p>
-  <p>Rozmach łączy zgłoszoną potrzebę z gotowymi innowacjami z Biblioteki Innowacji Społecznych ROPS i z ludźmi, którzy pomogą je wdrożyć, a nowy pomysł prowadzi od krótkiej fiszki aż do wniosku w naborze „Inkubator Włączenia Społecznego 2.0”.</p>
+<!-- =============================== 1 =============================== -->
+<section class="part">
+  <h2>1. Rozmach w skrócie</h2>
 
-  <h3>Dla kogo</h3>
-  <table>
-    <thead><tr><th style="width:28%">Grupa</th><th>Co robi na platformie</th></tr></thead>
-    <tbody>
-      <tr><td>Mieszkańcy</td><td>Opisują problem własnymi słowami, przeglądają innowacje, zgłaszają pomysły, oceniają rozwiązania, zgłaszają się do testów, rozmawiają na forum.</td></tr>
-      <tr><td>Organizacje pozarządowe</td><td>Szukają partnerów i inspiracji, składają fiszki i wnioski grantowe, dzielą się doświadczeniem.</td></tr>
-      <tr><td>Samorządy, CUS, OPS, instytucje</td><td>Znajdują gotowe innowacje i dostają szkic ich wdrożenia jako usługi (Middleman), ogłaszają się w giełdzie partnerstw.</td></tr>
-      <tr><td>Zespół Hubu (ROPS)</td><td>Moderuje zgłoszenia, odpowiada autorom, prowadzi nabory, aktualizuje Bibliotekę i wskaźniki, obserwuje trendy potrzeb, dostaje powiadomienia na telefon.</td></tr>
-      <tr><td>Inne systemy</td><td>Pobierają innowacje, wyzwania i nabory przez publiczne API; odbierają zdarzenia przez webhook.</td></tr>
-    </tbody>
-  </table>
+  <p class="label">Jaki problem rozwiązuje</p>
+  <p>Ludzie widzą lokalne problemy – samotność seniorów, brak miejsc spotkań, bariery w dostępie do usług – ale nie wiedzą, że ktoś mógł już wymyślić i przetestować rozwiązanie. Droga od pomysłu do grantu jest długa i sformalizowana. Rozmach łączy zgłoszoną potrzebę z gotowymi innowacjami z Biblioteki Innowacji Społecznych ROPS oraz prowadzi nowy pomysł od krótkiej fiszki do wniosku grantowego.</p>
 
-  <h3>Najważniejsze zasady</h3>
+  <p class="label">Kto korzysta</p>
   <ul>
-    <li><b>Bez kont dla mieszkańców.</b> Po zgłoszeniu fiszki lub wniosku użytkownik dostaje kod (np. <code>HUB-KINO42</code>) – nim sprawdza status i rozmawia z zespołem Hubu.</li>
-    <li><b>AI podpowiada, człowiek decyduje.</b> Każda podpowiedź AI ma uzasadnienie i źródło, a gdy AI jest niedostępne, strona działa dalej w trybie podstawowym.</li>
-    <li><b>Zgodność z systemem ROPS.</b> 9 kategorii Biblioteki ROPS, 114 prawdziwych innowacji, pytania fiszki i wniosku z formularza aplikacyjnego IWS 2.0.</li>
-    <li><b>Minimum danych osobowych.</b> Dane osobowe zbiera tylko formularz wniosku grantowego i widzi je wyłącznie administrator.</li>
-    <li><b>Dostępność.</b> Projektowane zgodnie z WCAG 2.1 AA: klawiatura, czytniki ekranu, kontrasty, powiększanie tekstu, wersja kontrastowa.</li>
+    <li><b>Mieszkańcy i organizacje</b> – zgłaszają potrzeby i pomysły, szukają rozwiązań, składają wnioski, oceniają innowacje, rozmawiają na forum.</li>
+    <li><b>Instytucje (gminy, OPS, CUS)</b> – szukają gotowych innowacji, dostają szkic ich wdrożenia, szukają partnerów.</li>
+    <li><b>Zespół Hubu (ROPS)</b> – przegląda zgłoszenia, odpowiada autorom, prowadzi nabory, aktualizuje Bibliotekę, obserwuje, jakie potrzeby zgłaszają mieszkańcy.</li>
   </ul>
-  <div class="box warn"><p><b>Status: prototyp.</b> Zgłoszenia, wnioski, wiadomości i wskaźniki są przykładowe. Innowacje pochodzą z publicznej Biblioteki ROPS (bez danych osobowych autorów). Nie należy wpisywać prawdziwych danych osobowych.</p></div>
-</section>
 
-<!-- ============ 2. MAPA STRONY ============ -->
-<section class="flow" id="r2">
-  <div class="kicker">Rozdział 2</div>
-  <h2>Mapa strony</h2>
-  <table>
-    <thead><tr><th style="width:24%">Adres</th><th style="width:24%">Nazwa</th><th>Do czego służy</th></tr></thead>
-    <tbody>
-      <tr><td><code>/</code></td><td>Strona główna</td><td>Wejście do platformy, zgłoszenie potrzeby (krok 1), opis działania, inspiracje, zasady AI, FAQ, trwające nabory.</td></tr>
-      <tr><td><code>/dopasuj</code></td><td>Znajdź rozwiązanie</td><td>Matchmaking: opis problemu → dopasowane innowacje, podobne zgłoszenia, wyzwanie regionu.</td></tr>
-      <tr><td><code>/zasobnik</code></td><td>Zasobnik wiedzy</td><td>Mapa Wyzwań Społecznych (wskaźniki), Biblioteka Innowacji ROPS z filtrem kategorii, materiały.</td></tr>
-      <tr><td><code>/zasobnik/[id]</code></td><td>Karta innowacji</td><td>Opis innowacji wg 6 pytań ROPS, film, folder, materiały, licencja, przejście do wdrożenia.</td></tr>
-      <tr><td><code>/kreator</code></td><td>Kreator pomysłów</td><td>Fiszka pomysłu z asystentem AI, asystent kreatora, lista naborów.</td></tr>
-      <tr><td><code>/kreator/canva</code></td><td>Canva innowacji</td><td>Plansza do rozpisania pomysłu (9 pól), zapis w przeglądarce, druk/PDF.</td></tr>
-      <tr><td><code>/kreator/wniosek</code></td><td>Generator wniosków</td><td>Wniosek w otwartym naborze; formularz ROPS IWS 2.0 w 4 krokach albo formularz pytań naboru.</td></tr>
-      <tr><td><code>/status</code></td><td>Status zgłoszenia</td><td>Status fiszki/wniosku po kodzie, rozmowa z zespołem Hubu.</td></tr>
-      <tr><td><code>/tester</code></td><td>Tester innowacji</td><td>Ocena innowacji (1–5), uwagi, zgłoszenie do testów.</td></tr>
-      <tr><td><code>/komunikacja</code></td><td>Rozmowy</td><td>Forum Hubu i giełda partnerstw międzysektorowych.</td></tr>
-      <tr><td><code>/middleman</code></td><td>Middleman Innowacji</td><td>Dla instytucji: szkic wdrożenia innowacji jako usługi (asystent AI).</td></tr>
-      <tr><td><code>/o-projekcie</code></td><td>O projekcie</td><td>Opis rozwiązania, moduły, architektura, bezpieczeństwo, API, koszty utrzymania.</td></tr>
-      <tr><td><code>/logowanie</code></td><td>Logowanie</td><td>Wejście do panelu administratora.</td></tr>
-      <tr><td><code>/admin</code></td><td>Pulpit administratora</td><td>Statystyki, powiadomienia, trendy potrzeb, kolejka fiszek z rozmowami.</td></tr>
-      <tr><td><code>/admin/pomysly</code></td><td>Pomysły</td><td>Dodawanie, edycja i usuwanie fiszek.</td></tr>
-      <tr><td><code>/admin/wiedza</code></td><td>Zarządzanie wiedzą</td><td>Dodawanie innowacji do Biblioteki, publikacja/ukrywanie, wskaźniki wyzwań.</td></tr>
-      <tr><td><code>/admin/nabory</code></td><td>Nabory i wnioski</td><td>Otwieranie/zamykanie naborów, dodawanie wniosków, ocena wniosków, rozmowa z wnioskodawcą.</td></tr>
-      <tr><td><code>/admin/app</code></td><td>Aplikacja administratora</td><td>Instalowalna aplikacja (PWA) na telefon/komputer z listą nowych pomysłów i powiadomieniami push.</td></tr>
-    </tbody>
-  </table>
-  <h3>Elementy wspólne każdej strony</h3>
-  <ul>
-    <li><b>Pasek górny:</b> informacja o prototypie, link „Sprawdź status zgłoszenia”, przełączniki wielkości tekstu (A / A+ / A++) i „Wersja kontrastowa”.</li>
-    <li><b>Nagłówek:</b> logo „Rozmach” (link do strony głównej), menu: Jak to działa · Rozwiązania · Kreator pomysłów · Tester · Rozmowy · Dla Hubu, przycisk „Zgłoś problem lub potrzebę”. Na telefonie i tablecie menu chowa się pod przyciskiem „Menu”.</li>
-    <li><b>Okruszki</b> („Strona główna › …”) na podstronach.</li>
-    <li><b>Stopka:</b> wezwanie „Szkoda życia na czekanie…” z przyciskami zgłoszenia i Biblioteki, kolumny linków Odkrywaj / Współpracuj / Dowiedz się, linki Prywatność / Dostępność / Regulamin.</li>
-    <li><b>„Przejdź do treści”</b> – ukryty link widoczny po naciśnięciu Tab (pominięcie nawigacji).</li>
-  </ul>
-</section>
-
-<!-- ============ 3. FUNKCJE PUBLICZNE ============ -->
-<section class="chapter" id="r3">
-  <div class="kicker">Rozdział 3</div>
-  <h2>Funkcje dla mieszkańców, organizacji i samorządów</h2>
-
-  <h3>3.1 Strona główna</h3>
-  <figure><img src="img/strona-glowna.png" alt=""><figcaption>Strona główna – sekcja powitalna „Zróbmy to z rozmachem.”</figcaption></figure>
-  <p>Strona główna odpowiada makiecie „ROZMACH – strona główna”. Sekcje od góry:</p>
+  <p class="label">Typowa ścieżka użytkownika</p>
   <ol>
-    <li><b>Powitanie</b> – hasło, opis działania i dwa przyciski: „Zgłoś problem lub potrzebę” (przewija do formularza) i „Zobacz, co już wspólnie naprawiamy” (Biblioteka).</li>
-    <li><b>Pasek zdjęć</b> z hasłem „Razem łączymy potrzeby, wiedzę i ludzi.”</li>
-    <li><b>Aktualności – trwające nabory</b>: pojawiają się automatycznie, gdy administrator otworzy nabór; link prowadzi do generatora wniosków dla tego naboru.</li>
-    <li><b>Jak działa Rozmach</b> – 4 kroki: Ty mówisz, co uwiera → AI szuka rozwiązań → Hub daje wsparcie → idziemy z tym w region.</li>
-    <li><b>01 · „Widzisz potrzebę? Daj jej głos.”</b> – działający formularz „Co chcesz zmienić?” (opis poniżej).</li>
-    <li><b>02 · „Nie zaczynaj od pustej kartki.”</b> – przykład wyników AI z uzasadnieniami i liczba innowacji w bazie.</li>
-    <li><b>Dla kogo</b> – „Nie musisz być fundacją, aby coś zmienić.”</li>
-    <li><b>Inspiracje</b> – trzy przykładowe modele z filtrem (Relacje i dobrostan / Dostępność / Wspólne zasoby). „Poznaj model” uruchamia wyszukiwanie podobnych, prawdziwych innowacji.</li>
-    <li><b>Dla zespołu Hubu</b> – przykład bazy wiedzy z podsumowaniem AI, link do panelu.</li>
-    <li><b>03–04 · Rozwijaj, testuj, dziel się</b> – przykład tablicy zadań projektu i plan pomiaru („Testujmy mało. Uczmy się dużo.”), link do Testera.</li>
-    <li><b>Wsparcie AI. Zaufanie między ludźmi.</b> – trzy zasady: człowiek ma ostatnie słowo, tylko potrzebne dane, wiesz, skąd bierze się sugestia.</li>
-    <li><b>FAQ</b> – rozwijane odpowiedzi na 5 pytań (czy trzeba mieć pomysł, kto może zgłosić, czy AI wybiera, co z danymi, jak rozwiązanie trafia do regionu).</li>
+    <li>Opisuje problem ze swojej okolicy.</li>
+    <li>Dostaje listę innowacji, które już gdzieś działają, z wyjaśnieniem, dlaczego pasują.</li>
+    <li>Jeśli nic nie pasuje – wypełnia fiszkę własnego pomysłu (AI pomaga ją dopracować) i dostaje kod zgłoszenia.</li>
+    <li>Kodem sprawdza status i rozmawia z zespołem Hubu.</li>
+    <li>Gdy Hub zaakceptuje pomysł – składa wniosek grantowy; treść fiszki wczytuje się do wniosku sama.</li>
   </ol>
-  <div class="box">Elementy oznaczone „Przykład interfejsu” to materiał demonstracyjny z makiety. Formularz „Co chcesz zmienić?”, filtry inspiracji, linki i FAQ działają naprawdę.</div>
 
-  <h4>Formularz „Co chcesz zmienić?” (zgłoszenie potrzeby – krok 1 z 2)</h4>
-  <figure><img src="img/zglos-potrzebe.png" alt=""><figcaption>Zgłoszenie potrzeby na stronie głównej.</figcaption></figure>
-  <table>
-    <thead><tr><th style="width:30%">Pole</th><th>Opis</th></tr></thead>
-    <tbody>
-      <tr><td>Nazwij potrzebę *</td><td>Krótka nazwa, do 120 znaków (np. „Więcej spotkań dla osób starszych”).</td></tr>
-      <tr><td>Co dzieje się w Twojej okolicy?</td><td>Opis sytuacji, do 1500 znaków.</td></tr>
-      <tr><td>Miejsce</td><td>Np. „osiedle • małe miasto”, do 80 znaków.</td></tr>
-      <tr><td>Kogo dotyczy potrzeba?</td><td>Jedna z 9 kategorii Biblioteki ROPS (opcjonalnie).</td></tr>
-    </tbody>
-  </table>
+  <p class="label">Zasady obowiązujące w całym serwisie</p>
   <ul>
-    <li><b>Dalej</b> – składa opis z pól i otwiera krok 2: wyniki matchmakingu (<code>/dopasuj?q=…&amp;area=…</code>).</li>
-    <li><b>Zapisz szkic</b> – zapisuje formularz tylko w tej przeglądarce (localStorage); po powrocie pola są uzupełnione.</li>
-    <li>Ostrzeżenie: „Nie wpisuj nazwisk ani danych wrażliwych”.</li>
+    <li><b>Bez zakładania konta.</b> Zamiast konta użytkownik dostaje kod zgłoszenia, np. HUB-KINO42 (fiszka) lub WN-AB12CD (wniosek).</li>
+    <li><b>AI tylko podpowiada.</b> Każda podpowiedź ma uzasadnienie, a tekst od AI trafia do formularza dopiero po kliknięciu użytkownika. Gdy AI nie działa, strona działa dalej w trybie podstawowym (rozdział 4).</li>
+    <li><b>Mało danych osobowych.</b> Dane osobowe zbiera tylko wniosek grantowy i widzi je wyłącznie zespół Hubu. Formularze ostrzegają, by nie wpisywać nazwisk i danych wrażliwych.</li>
+    <li><b>Zgodność z ROPS.</b> 9 kategorii i 114 innowacji z Biblioteki ROPS; pytania fiszki i wniosku pochodzą z formularza aplikacyjnego „Inkubator Włączenia Społecznego 2.0”.</li>
   </ul>
+  <div class="note">To prototyp: zgłoszenia, wnioski i wiadomości są przykładowe. Prawdziwe są innowacje z publicznej Biblioteki ROPS i wskaźniki z Internetowego Obserwatora Statystyk Społecznych ROPS.</div>
+</section>
 
-  <h3>3.2 Znajdź rozwiązanie (matchmaking społeczny)</h3>
-  <figure><img src="img/dopasuj.png" alt=""><figcaption>Matchmaking: opis problemu i podsumowanie AI nad listą propozycji.</figcaption></figure>
-  <p><b>Cel:</b> na podstawie opisu problemu pokazać innowacje, które mogą go rozwiązać, podobne sytuacje zgłoszone przez innych i wyzwanie regionu, którego dotyczy problem.</p>
-  <h4>Jak to działa</h4>
-  <ol class="steps">
-    <li>Użytkownik opisuje problem (3–2000 znaków) i opcjonalnie wybiera kategorię ROPS. Można też przyjść z linku z parametrami <code>?q=</code> i <code>&amp;area=</code> – wtedy wyszukiwanie startuje od razu.</li>
-    <li>Opis zostaje zapisany jako „potrzeba” (bez danych osobowych) – zasila trendy w panelu administratora.</li>
-    <li>Wyszukiwarka lokalna (TF-IDF z polskimi rdzeniami słów) układa ranking innowacji.</li>
-    <li>Jeśli AI jest włączone, model dostaje opis, katalog Biblioteki i aktualne pomysły z Hubu, a zwraca dopasowania z uzasadnieniem, podobne pomysły i następny krok. Przy błędzie lub braku AI zostają wyniki lokalne.</li>
-    <li>Wyniki: do 5 innowacji z oceną trafności (wysoka / średnia / niska), uzasadnieniem AI albo słowami, które zadecydowały o dopasowaniu, kategoriami i linkiem do karty.</li>
+<!-- =============================== 2 =============================== -->
+<section class="part">
+  <h2>2. Funkcje dla mieszkańców, organizacji i instytucji</h2>
+
+  <!-- 2.1 -->
+  <div class="fn">
+  <h3>2.1 Zgłoszenie potrzeby</h3>
+  <p class="where">Gdzie: strona główna, sekcja „Widzisz potrzebę? Daj jej głos.” (także przycisk „Zgłoś problem lub potrzebę” w nagłówku)</p>
+  <p><b>Do czego służy.</b> Pierwszy krok dla kogoś, kto nie ma pomysłu, tylko widzi problem. Użytkownik opisuje go własnymi słowami, a serwis szuka rozwiązań.</p>
+  <p class="label">Jak to zrobić</p>
+  <ol>
+    <li>Wpisz nazwę potrzeby, np. „Więcej spotkań dla osób starszych” (wymagane, do 120 znaków).</li>
+    <li>Opisz, co dzieje się w okolicy (do 1500 znaków).</li>
+    <li>Opcjonalnie podaj miejsce (np. „osiedle, małe miasto”) i wybierz, kogo dotyczy potrzeba (jedna z 9 kategorii ROPS).</li>
+    <li>Kliknij <b>Dalej</b> – otworzą się wyniki wyszukiwania rozwiązań (2.2).</li>
   </ol>
-  <h4>Dodatkowe informacje w wynikach</h4>
+  <p class="label">Warto wiedzieć</p>
   <ul>
-    <li><b>Podsumowanie AI</b> – jak AI zrozumiało potrzebę i co zrobić dalej.</li>
-    <li><b>Podobne pomysły z Hubu</b> – zaakceptowane fiszki z treścią; niezweryfikowane tylko jako informacja „podobny pomysł czeka na weryfikację” (bez treści i kodu).</li>
-    <li><b>„Inni zgłaszali podobny problem”</b> – wcześniejsze potrzeby podobne do opisu (porównanie rdzeni słów).</li>
-    <li><b>Wyzwanie regionu</b> – powiązane wyzwanie z Mapy Wyzwań Społecznych ze wskaźnikiem.</li>
-    <li>Źródło wyników: „AI” albo „wyszukiwanie słów kluczowych”.</li>
-    <li>Wyniki są zapamiętywane w karcie przeglądarki – powrót przyciskiem „Wstecz” nie wymaga ponownego wyszukiwania.</li>
+    <li><b>Zapisz szkic</b> zapamiętuje wpisany tekst w tej przeglądarce. Po powrocie na stronę pola są wypełnione. Szkic nie trafia na serwer.</li>
+    <li>Zgłoszona potrzeba jest zapisywana anonimowo i trafia do statystyk zespołu Hubu („Trendy potrzeb”, 3.2).</li>
   </ul>
-  <p>Panel boczny: „Jak dobrze opisać problem?”, „Nie znalazłeś rozwiązania? Zgłoś własny pomysł”, „Wolisz porozmawiać? Napisz do mentora”.</p>
-
-  <h3>3.3 Zasobnik wiedzy i karta innowacji</h3>
-  <figure><img src="img/zasobnik.png" alt=""><figcaption>Biblioteka Innowacji Społecznych ROPS z filtrem kategorii.</figcaption></figure>
-  <h4>Zasobnik (<code>/zasobnik</code>)</h4>
-  <ul>
-    <li><b>Mapa Wyzwań Społecznych</b> – wyzwania regionu z wizualizacją wskaźnika (wartości przykładowe, aktualizowane w panelu).</li>
-    <li><b>Biblioteka Innowacji Społecznych ROPS</b> – 114 prawdziwych innowacji. Filtr 9 kategorii ROPS (seniorzy; dzieci, młodzież i rodzina; rynek pracy; osoby o ograniczonej mobilności; z niepełnosprawnością sensoryczną; cudzoziemcy; z niepełnosprawnością intelektualną; w kryzysie bezdomności; zdrowie i medycyna). Adres <code>/zasobnik?kategoria=dla-seniorow</code> otwiera bibliotekę z gotowym filtrem – tak jak adresy kategorii na stronie ROPS.</li>
-    <li><b>Materiały</b> – poradniki, raporty, Canva, link do pełnej Biblioteki ROPS.</li>
-    <li>Trendy potrzeb są celowo widoczne tylko dla administratora.</li>
-  </ul>
-  <h4>Karta innowacji (<code>/zasobnik/[id]</code>)</h4>
-  <figure><img src="img/karta-innowacji.png" alt=""><figcaption>Karta innowacji wg 6 pytań Biblioteki ROPS.</figcaption></figure>
-  <ul>
-    <li>Opis według pytań karty ROPS: 1. Na czym polega rozwiązanie? 2. Jakich problemów dotyczy? 3. Grupa docelowa 4. Kto może skorzystać? 5. Czy to działa? 6. Autorzy (odsyłacz do karty ROPS – autorzy nie są kopiowani).</li>
-    <li>Kategorie z linkami do kategorii ROPS, projekt ROPS, w którym innowację wybrano.</li>
-    <li>Materiały: folder PDF, film, materiały do pobrania, karta w Bibliotece ROPS, licencja (np. CC BY 4.0).</li>
-    <li>„Chcesz ją wdrożyć?” – przejście do Middlemana z wpisaną nazwą innowacji; „Znasz tę innowację? Oceń ją w Testerze”.</li>
-  </ul>
-
-  <h3>3.4 Kreator pomysłów – fiszka pomysłu</h3>
-  <figure><img src="img/fiszka.png" alt=""><figcaption>Fiszka pomysłu z podglądem na żywo.</figcaption></figure>
-  <p><b>Cel:</b> szybkie, zawsze dostępne zgłoszenie pomysłu bez zakładania konta. Pytania pochodzą z części merytorycznej formularza aplikacyjnego ROPS „Inkubator Włączenia Społecznego 2.0”, dzięki czemu fiszkę można później jednym kodem przenieść do wniosku.</p>
-  <table>
-    <thead><tr><th style="width:36%">Pole (punkt formularza IWS)</th><th style="width:14%">Wymagane</th><th>Limit i podpowiedź</th></tr></thead>
-    <tbody>
-      <tr><td>1. Tytuł innowacji</td><td>tak</td><td>do 150 znaków; krótki, kojarzący się z przedmiotem innowacji</td></tr>
-      <tr><td>Kategoria Biblioteki ROPS</td><td>tak</td><td>jedna z 9 kategorii</td></tr>
-      <tr><td>3. Opis innowacji</td><td>tak</td><td>do 4000 znaków; charakter, cel włączenia społecznego, deinstytucjonalizacja</td></tr>
-      <tr><td>4. Innowacyjność rozwiązania</td><td>nie</td><td>do 4000 znaków; czym różni się od istniejących rozwiązań</td></tr>
-      <tr><td>5. Diagnoza problemu</td><td>tak</td><td>do 4000 znaków; skala problemu, źródła danych, Mapa Wyzwań</td></tr>
-      <tr><td>6. Opis odbiorców</td><td>tak</td><td>do 3000 znaków; kim są, jakie mają potrzeby, dlaczego grozi im wykluczenie</td></tr>
-      <tr><td>7. Zmiana, jaką wprowadza</td><td>nie</td><td>do 3000 znaków; wpływ na problem i życie odbiorców</td></tr>
-      <tr><td>8. Wizja przyszłości</td><td>nie</td><td>do 3000 znaków; skalowanie, inne grupy i miejsca</td></tr>
-      <tr><td>Autorzy</td><td>nie</td><td>do 200 znaków; nazwa organizacji lub podpis, bez adresu i telefonu</td></tr>
-      <tr><td>Etap</td><td>tak</td><td>Pomysł / Prototyp / W testach / Wdrożone</td></tr>
-    </tbody>
-  </table>
-  <ul>
-    <li>Pod każdym polem: oryginalna podpowiedź z formularza ROPS i licznik znaków.</li>
-    <li><b>Podgląd fiszki</b> na żywo: tytuł, kategoria, opis, problem, odbiorcy, liczba wypełnionych punktów i etap.</li>
-    <li>Po wysłaniu: <b>kod zgłoszenia</b> (<code>HUB-XXXXXX</code>) z przyciskiem kopiowania i linkiem do strony statusu. Fiszka trafia do panelu jako „Nowa”, administrator dostaje powiadomienie (panel, push, webhook).</li>
-  </ul>
-
-  <h4>Asystent AI fiszki</h4>
-  <figure><img src="img/asystent-fiszki.png" alt=""><figcaption>Wskazówki asystenta pod polami fiszki („Do rozwinięcia”, „Brakuje”).</figcaption></figure>
-  <div class="box ai">
-    <p>Przycisk <b>„Sprawdź fiszkę z AI”</b> pod formularzem. Asystent:</p>
-    <ul>
-      <li>ocenia każdy z 7 punktów tak, jak zrobi to komisja IWS 2.0: <span class="pill" style="background:#d1fae5;color:#064e3b">W porządku</span> <span class="pill" style="background:#fef3c7;color:#78350f">Do rozwinięcia</span> <span class="pill" style="background:#ffe4e6;color:#881337">Brakuje</span> – wskazówka pojawia się pod polem, którego dotyczy;</li>
-      <li>proponuje treść pustych i słabych punktów, opartą wyłącznie na tym, co napisał autor; przycisk „Wstaw propozycję” / „Zastąp moją treść propozycją” wstawia tekst dopiero po kliknięciu, a „Cofnij” przywraca poprzednią treść;</li>
-      <li>wskazuje do 3 podobnych innowacji z Biblioteki ROPS (formularz wymaga, by pomysł nie powielał wdrożonych rozwiązań) i podpowiada, czym pomysł może się wyróżnić;</li>
-      <li>podaje podsumowanie i jeden następny krok; w podglądzie fiszki pokazuje, ile punktów jest w porządku.</li>
-    </ul>
-    <p>Do AI trafia tylko treść merytoryczna – <b>bez pola „Autorzy”</b>. Model ma zakaz wymyślania statystyk, nazw raportów i instytucji: w diagnozie wskazuje, gdzie szukać danych (np. GUS, raporty ośrodków pomocy). Bez AI asystent działa w trybie podstawowym: sprawdza kompletność punktów, cytuje pytania z formularza i szuka podobnych innowacji wyszukiwarką lokalną (bez propozycji treści).</p>
   </div>
 
-  <h3>3.5 Canva innowacji społecznej</h3>
-  <figure><img src="img/canva.png" alt=""><figcaption>Canva innowacji – plansza 9 pól.</figcaption></figure>
-  <p>Uproszczona Canwa innowacji społecznych: Problem, Odbiorcy, Wartość, Rozwiązanie, Kluczowe działania, Zasoby, Partnerzy, Koszty i finansowanie, Miary sukcesu. Każde pole ma podpowiedź. Szkic zapisuje się automatycznie w przeglądarce (zostaje po odświeżeniu), przycisk „Drukuj / zapisz PDF” drukuje samą planszę (bez menu i stopki).</p>
+  <!-- 2.2 -->
+  <div class="fn">
+  <h3>2.2 Wyszukiwanie rozwiązań (dopasowanie)</h3>
+  <p class="where">Gdzie: „Znajdź rozwiązanie” (adres /dopasuj)</p>
+  <p><b>Do czego służy.</b> Na podstawie opisu problemu pokazuje innowacje, które mogą go rozwiązać, oraz informuje, czy ktoś zgłaszał już coś podobnego.</p>
+  <p class="label">Jak to zrobić</p>
+  <ol>
+    <li>Opisz problem (od 3 do 2000 znaków). Jeśli przychodzisz ze strony głównej, opis jest już wpisany i wyszukiwanie startuje samo.</li>
+    <li>Opcjonalnie wybierz kategorię ROPS, by zawęzić wyniki.</li>
+    <li>Kliknij <b>Znajdź rozwiązania</b>.</li>
+  </ol>
+  <p class="label">Co pokazują wyniki</p>
+  <ul>
+    <li><b>Podsumowanie AI</b> – jak AI zrozumiało problem i co warto zrobić dalej.</li>
+    <li><b>Do 5 innowacji</b> z Biblioteki ROPS. Przy każdej: trafność (wysoka / średnia / niska), uzasadnienie, dlaczego pasuje, kategorie i link do karty innowacji.</li>
+    <li><b>Podobne pomysły z Hubu</b> – zaakceptowane fiszki innych osób. Pomysły jeszcze niesprawdzone przez Hub są tylko sygnalizowane („podobny pomysł czeka na weryfikację”), bez treści.</li>
+    <li><b>„Inni zgłaszali podobny problem”</b> – wcześniejsze potrzeby o podobnej treści.</li>
+    <li><b>Wyzwanie regionu</b> – powiązane wyzwanie z Mapy Wyzwań Społecznych i jego wskaźnik.</li>
+    <li>Informacja, skąd pochodzą wyniki: z AI czy z wyszukiwania słów kluczowych.</li>
+  </ul>
+  <p class="label">Co dalej</p>
+  <p>Z karty innowacji można przejść do jej wdrożenia (Middleman, 2.14). Jeśli nic nie pasuje – panel boczny prowadzi do fiszki własnego pomysłu (2.4) albo do rozmowy z mentorem na forum (2.12). Powrót przyciskiem „Wstecz” nie powtarza wyszukiwania – wyniki zostają.</p>
+  </div>
 
-  <h3>3.6 Asystent kreatora (<code>/kreator#asystent</code>)</h3>
-  <p>Użytkownik opisuje pomysł – nawet w jednym zdaniu – i klika „Podpowiedz mi”. Asystent AI zwraca 3–4 sekcje podpowiedzi (np. Doprecyzuj problem, Co jest nowego, Zaplanuj mały test, Kto może pomóc) oraz „Zainspiruj się (Biblioteka ROPS)” – tylko innowacje istniejące w katalogu. Odpowiedź jest oznaczona „AI • wersja robocza – sprawdź przed użyciem”. Bez AI: stałe podpowiedzi oparte na Canwie i podobne innowacje z wyszukiwarki lokalnej („tryb podstawowy, bez AI”).</p>
+  <!-- 2.3 -->
+  <div class="fn">
+  <h3>2.3 Biblioteka innowacji i karta innowacji</h3>
+  <p class="where">Gdzie: „Rozwiązania” w menu (adres /zasobnik)</p>
+  <p><b>Do czego służy.</b> Przeglądanie wszystkich sprawdzonych innowacji społecznych z Biblioteki ROPS oraz wyzwań regionu.</p>
+  <p class="label">Co jest na stronie</p>
+  <ul>
+    <li><b>Mapa Wyzwań Społecznych</b> – 6 wyzwań Małopolski, każde z prawdziwym wskaźnikiem z Internetowego Obserwatora Statystyk Społecznych ROPS (IOSS, dane GUS i sprawozdań pomocy społecznej), np. udział osób w wieku 60+ czy odsetek długotrwale bezrobotnych. Przy wskaźniku: rok danych, zakres między powiatami (od najniższej do najwyższej wartości) i link do źródła. IOSS nie podaje wartości dla całego województwa, dlatego duża liczba to mediana 22 powiatów, a dla liczby osób lub placówek – ich suma.</li>
+    <li><b>Biblioteka Innowacji Społecznych</b> – 114 innowacji. Filtr 9 kategorii: dla seniorów; dla dzieci, młodzieży i rodziny; rynek pracy; osoby o ograniczonej mobilności; z niepełnosprawnością sensoryczną; cudzoziemcy; z niepełnosprawnością intelektualną; w kryzysie bezdomności; zdrowie i medycyna.</li>
+    <li><b>Materiały</b> – poradniki, raporty, Canva innowacji i link do pełnej Biblioteki ROPS.</li>
+  </ul>
+  <p class="label">Karta innowacji (po kliknięciu innowacji)</p>
+  <ul>
+    <li>Opis według pytań Biblioteki ROPS: na czym polega rozwiązanie, jakich problemów dotyczy, grupa docelowa, kto może skorzystać, czy to działa. Autorzy – odnośnik do karty w Bibliotece ROPS.</li>
+    <li>Materiały: folder PDF, film, pliki do pobrania, licencja.</li>
+    <li><b>„Chcesz ją wdrożyć?”</b> – przejście do Middlemana (2.14) z wpisaną nazwą innowacji.</li>
+    <li><b>„Oceń ją w Testerze”</b> – przejście do oceny (2.11).</li>
+  </ul>
+  </div>
 
-  <h3>3.7 Generator wniosków</h3>
-  <p>Generator działa tylko dla <b>otwartych naborów</b>. Strona <code>/kreator/wniosek</code> wybiera pierwszy otwarty nabór albo wskazany w adresie (<code>?nabor=</code>); gdy otwartych jest kilka, nad formularzem pojawia się przełącznik naborów. Gdy żaden nabór nie trwa, strona pokazuje listę zamkniętych naborów z terminami. Każdy wniosek dostaje kod <code>WN-XXXXXX</code>.</p>
-
-  <h4>Nabór „Inkubator Włączenia Społecznego 2.0” – formularz ROPS w 4 krokach</h4>
-  <figure><img src="img/wniosek-iws.png" alt=""><figcaption>Krok 1 formularza IWS 2.0 – wnioskodawca (dane przykładowe).</figcaption></figure>
+  <!-- 2.4 -->
+  <div class="fn">
+  <h3>2.4 Fiszka pomysłu</h3>
+  <p class="where">Gdzie: „Kreator pomysłów” w menu (adres /kreator)</p>
+  <p><b>Do czego służy.</b> Szybkie zgłoszenie własnego pomysłu do Hubu, bez konta i bez czekania na nabór. Pytania są takie same jak w części merytorycznej wniosku IWS 2.0, więc fiszkę można później przenieść do wniosku jednym kodem.</p>
+  <p class="label">Pola fiszki</p>
   <table>
-    <thead><tr><th style="width:22%">Krok</th><th>Zawartość i reguły</th></tr></thead>
-    <tbody>
-      <tr><td>1. Wnioskodawca</td><td>
-        <b>Osoba fizyczna</b>: imię, nazwisko, adres, kod pocztowy (00-000), miejscowość, telefon, e-mail.<br>
-        <b>Podmiot</b>: nazwa, KRS (opcjonalnie, 10 cyfr), REGON (9 lub 14 cyfr, suma kontrolna), NIP (suma kontrolna), adres siedziby, kontakt, osoba upoważniona do reprezentacji i osoba do kontaktów roboczych.<br>
-        <b>Grupa nieformalna</b>: 2–5 partnerów (osoba lub podmiot, dane) i reprezentant grupy.<br>
-        Przycisk „Wstaw dane przykładowe” wpisuje dane fikcyjne; ostrzeżenie, by w prototypie nie podawać prawdziwych danych.</td></tr>
-      <tr><td>2. Treść innowacji</td><td>Punkty 1, 3–8 i 11 (Zespół projektowy) z oryginalnymi podpowiedziami i limitami. Kod fiszki wczytuje punkty 1 i 3–8 automatycznie.</td></tr>
-      <tr><td>3. Plan działania i budżet</td><td>Okres przygotowawczy, faza I testu, faza II testu (opcjonalna): działania z terminem od–do (miesiąc i rok) i kosztem. Reguły: przygotowanie ≤ 3 miesiące, testowanie (faza I + II) ≤ 9 miesięcy, żadne działanie nie kończy się przed rozpoczęciem, wnioskowana kwota grantu = suma kosztów (domyślnie wpisuje się sama).</td></tr>
-      <tr><td>4. Oświadczenia</td><td>Lista 12 A (19 oświadczeń osoby fizycznej; także partnerzy grupy) albo 12 B (21 oświadczeń reprezentanta podmiotu), przycisk „Zaznacz wszystkie oświadczenia”, klauzule informacyjne RODO (ROPS i Instytucja Zarządzająca) i wymagane potwierdzenie ich przeczytania.</td></tr>
-    </tbody>
+    <tr><th style="width:42%">Pole</th><th style="width:16%">Wymagane</th><th>Limit znaków</th></tr>
+    <tr><td>1. Tytuł innowacji</td><td>tak</td><td>150</td></tr>
+    <tr><td>Kategoria Biblioteki ROPS</td><td>tak</td><td>wybór z listy</td></tr>
+    <tr><td>Gmina lub powiat, którego dotyczy pomysł</td><td>nie</td><td>wybór z listy (22 powiaty i ich gminy)</td></tr>
+    <tr><td>3. Opis innowacji</td><td>tak</td><td>4000</td></tr>
+    <tr><td>4. Innowacyjność rozwiązania</td><td>nie</td><td>4000</td></tr>
+    <tr><td>5. Diagnoza problemu</td><td>tak</td><td>4000</td></tr>
+    <tr><td>6. Opis odbiorców</td><td>tak</td><td>3000</td></tr>
+    <tr><td>7. Zmiana, jaką wprowadza</td><td>nie</td><td>3000</td></tr>
+    <tr><td>8. Wizja przyszłości</td><td>nie</td><td>3000</td></tr>
+    <tr><td>Autorzy (organizacja lub podpis)</td><td>nie</td><td>200</td></tr>
+    <tr><td>Etap: pomysł / prototyp / w testach / wdrożone</td><td>tak</td><td>wybór z listy</td></tr>
   </table>
+  <p class="label">Jak to zrobić</p>
+  <ol>
+    <li>Wypełnij pola. Pod każdym jest podpowiedź z formularza ROPS i licznik znaków. Obok widać podgląd fiszki, który zmienia się na bieżąco.</li>
+    <li>Jeśli wybierzesz gminę lub powiat, pod polem „5. Diagnoza problemu” pojawią się <b>prawdziwe dane dla tego miejsca</b> (2.4a).</li>
+    <li>Opcjonalnie kliknij <b>Sprawdź fiszkę z AI</b> (2.5), by dopracować treść.</li>
+    <li>Kliknij <b>Wyślij fiszkę</b>.</li>
+    <li>Zapisz otrzymany <b>kod zgłoszenia</b> (np. HUB-KINO42) – przycisk kopiuje go do schowka.</li>
+  </ol>
+  <p class="label">Co dalej</p>
+  <p>Fiszka trafia do zespołu Hubu ze statusem „Nowy”, a zespół dostaje powiadomienie (w panelu i na telefonie). Kodem sprawdzasz status i odpowiadasz na wiadomości Hubu (2.10). Po akceptacji możesz złożyć wniosek grantowy (2.8).</p>
+  </div>
+
+  <!-- 2.4a -->
+  <div class="fn">
+  <h3>2.4a Dane do diagnozy problemu (Obserwator Statystyk Społecznych ROPS)</h3>
+  <p class="where">Gdzie: fiszka pomysłu, pole „Gmina lub powiat” i panel pod polem „5. Diagnoza problemu”</p>
+  <p><b>Do czego służy.</b> Komisja IWS 2.0 oczekuje, że diagnoza pokaże skalę problemu i poda źródła danych. Fiszka podsuwa prawdziwe liczby dla wybranej gminy z Internetowego Obserwatora Statystyk Społecznych ROPS – nie trzeba ich szukać samemu.</p>
+  <p class="label">Jak to zrobić</p>
+  <ol>
+    <li>Wybierz kategorię ROPS i gminę lub powiat (lista: 22 powiaty Małopolski, w każdym „cały powiat” i jego gminy).</li>
+    <li>Pod diagnozą pojawi się 1–3 wskaźników dopasowanych do kategorii, np. dla seniorów: udział osób w wieku 60+ i wskaźnik wsparcia osób najstarszych; dla osób w kryzysie bezdomności: odsetek klientów pomocy społecznej wspieranych z powodu bezdomności i liczba noclegowni. Bez kategorii – wskaźniki ogólne (ubóstwo, ludność 60+).</li>
+    <li>Przy każdym wskaźniku: wartość dla gminy, porównanie z powiatem i z medianą powiatów Małopolski, rok danych, krótka definicja i link „Źródło w IOSS”.</li>
+    <li>Kliknij <b>Wstaw do diagnozy</b> – na końcu pola dopisze się gotowe zdanie z liczbą, rokiem i źródłem. <b>Cofnij zmianę w diagnozie</b> przywraca poprzedni tekst.</li>
+  </ol>
+  <p class="label">Warto wiedzieć</p>
   <ul>
-    <li>Pasek kroków u góry (przejście dalej wymaga poprawnie wypełnionego bieżącego kroku), przyciski „Wstecz” / „Dalej” / „Złóż wniosek”.</li>
-    <li><b>Kontrola wniosku</b> w panelu bocznym na bieżąco: treść kompletna, długość okresu przygotowawczego i testowania, zgodność kwoty z sumą, oświadczenia i RODO.</li>
-    <li>Pełna walidacja odbywa się także na serwerze – błędny wniosek nie zostanie zapisany, a komunikat wskazuje problem (np. „Okres przygotowawczy nie może przekroczyć 3 miesięcy.”).</li>
-    <li>Dane wnioskodawcy widzi wyłącznie administrator. Nie trafiają do AI ani na stronę statusu.</li>
+    <li>Część wskaźników (np. stopa bezrobocia) IOSS podaje tylko dla powiatów – wtedy panel pokazuje wartość powiatu i informuje o tym.</li>
+    <li>Dane pochodzą z GUS i sprawozdań pomocy społecznej, za najnowszy rok dostępny w IOSS (zwykle 2024). Wybrana gmina nie jest zapisywana w fiszce – służy tylko do podpowiedzi.</li>
   </ul>
-  <h4>Pozostałe nabory (formularz pytań naboru)</h4>
-  <p>Formularz budowany z pytań danego naboru (każde wymagane, z limitem znaków i licznikiem). „Masz już fiszkę?” – wpisanie kodu fiszki uzupełnia pytania powiązane z polami fiszki. Pasek postępu pokazuje liczbę uzupełnionych pól. Do zamkniętego naboru nie da się złożyć wniosku (komunikat „Ten nabór jest zamknięty”).</p>
+  </div>
 
-  <h3>3.8 Status zgłoszenia (<code>/status</code>)</h3>
-  <figure><img src="img/status.png" alt=""><figcaption>Status fiszki i rozmowa z zespołem Hubu.</figcaption></figure>
+  <!-- 2.5 -->
+  <div class="fn">
+  <h3>2.5 Sprawdzenie fiszki z AI</h3>
+  <p class="where">Gdzie: przycisk „Sprawdź fiszkę z AI” pod formularzem fiszki</p>
+  <p><b>Do czego służy.</b> Ocenia fiszkę tak, jak zrobiłaby to komisja konkursu IWS 2.0, zanim autor ją wyśle, i pomaga uzupełnić braki.</p>
+  <p class="label">Co robi asystent</p>
   <ul>
-    <li>Wpisanie kodu (wielkość liter i spacje nie mają znaczenia) albo wejście z linku <code>/status?kod=HUB-…</code>.</li>
-    <li>Widać: typ (fiszka / wniosek), tytuł, datę, status – fiszka: Nowy, W weryfikacji, Zaakceptowany, Odrzucony; wniosek: Złożony, W ocenie, Przyjęty, Odrzucony.</li>
-    <li><b>Rozmowa z zespołem Hubu</b> – wiadomości administratora i autora; autor może od razu odpisać (każda odpowiedź to powiadomienie w panelu).</li>
-    <li>Gdy fiszka jest zaakceptowana: „Następny krok – Przygotuj wniosek” (generator z wczytaną fiszką).</li>
-    <li>Strona nie pokazuje danych osobowych z wniosku ani wewnętrznych identyfikatorów.</li>
+    <li><b>Ocenia każdy z 7 punktów</b> treści: „W porządku”, „Do rozwinięcia” albo „Brakuje”. Wskazówka pojawia się bezpośrednio pod polem, którego dotyczy.</li>
+    <li><b>Proponuje treść</b> pustych i słabych punktów – opartą wyłącznie na tym, co napisał autor. Propozycję wstawia się przyciskiem <b>Wstaw propozycję</b> (albo <b>Zastąp moją treść propozycją</b>, gdy pole jest wypełnione). <b>Cofnij</b> przywraca poprzedni tekst.</li>
+    <li><b>Wskazuje do 3 podobnych innowacji</b> z Biblioteki ROPS (formularz IWS wymaga, by pomysł nie powielał istniejących rozwiązań) i podpowiada, czym pomysł może się wyróżnić.</li>
+    <li>Podaje <b>krótkie podsumowanie i jeden następny krok</b>. W podglądzie fiszki widać, ile punktów jest „w porządku”.</li>
   </ul>
-
-  <h3>3.9 Tester innowacji (<code>/tester</code>)</h3>
-  <figure><img src="img/tester.png" alt=""><figcaption>Ocena innowacji i zgłoszenie do testów.</figcaption></figure>
+  <p class="label">Warto wiedzieć</p>
   <ul>
-    <li>Wybór kategorii ROPS, potem innowacji z tej kategorii (z krótkim opisem).</li>
-    <li>Ocena 1–5 gwiazdek (obsługa klawiaturą, opis słowny oceny), uwagi i propozycje usprawnień (do 1000 znaków).</li>
-    <li>„Chcę wziąć udział w testach tej innowacji” – zgłoszenie do testów.</li>
-    <li>Obok formularza: wyjaśnienie, po co zbieramy opinie. Każda opinia to powiadomienie w panelu; średnia ocen i liczba chętnych do testów trafiają do pulpitu administratora.</li>
+    <li>Pole „Autorzy” nie jest wysyłane do AI.</li>
+    <li>AI nie wymyśla liczb ani nazw raportów. Jeśli wybrano gminę, w diagnozie przytacza dokładnie wskaźniki z Obserwatora Statystyk Społecznych ROPS (z rokiem i źródłem) i zachowuje tekst autora. Bez wybranej gminy podpowiada, gdzie szukać danych.</li>
+    <li>Zabezpieczenie: jeśli propozycja AI zawiera liczbę, której nie ma ani w tekście autora, ani w danych IOSS, jest odrzucana, a w tym punkcie pojawia się podpowiedź trybu podstawowego.</li>
+    <li>Bez AI asystent sprawdza, które punkty są puste lub za krótkie, przypomina pytania z formularza i szuka podobnych innowacji. Proponuje treść tylko w jednym przypadku: diagnozę bez liczb uzupełnia o wskaźniki IOSS dla wybranej gminy.</li>
   </ul>
+  </div>
 
-  <h3>3.10 Rozmowy i giełda partnerstw (<code>/komunikacja</code>)</h3>
-  <figure><img src="img/komunikacja.png" alt=""><figcaption>Forum Hubu.</figcaption></figure>
+  <!-- 2.6 -->
+  <div class="fn">
+  <h3>2.6 Asystent pomysłu</h3>
+  <p class="where">Gdzie: Kreator pomysłów, sekcja „Asystent”</p>
+  <p><b>Do czego służy.</b> Dla kogoś, kto ma pomysł w jednym zdaniu i nie wie, od czego zacząć fiszkę.</p>
+  <p class="label">Jak to zrobić</p>
+  <ol>
+    <li>Opisz pomysł choćby jednym zdaniem.</li>
+    <li>Kliknij <b>Podpowiedz mi</b>.</li>
+    <li>Przeczytaj 3–4 podpowiedzi (np. „Doprecyzuj problem”, „Co jest nowego”, „Zaplanuj mały test”, „Kto może pomóc”) i listę „Zainspiruj się” z podobnymi innowacjami z Biblioteki ROPS.</li>
+  </ol>
+  <p>Odpowiedź jest oznaczona jako wersja robocza do sprawdzenia. Bez AI asystent pokazuje stałe podpowiedzi oparte na Canwie innowacji i podobne innowacje z wyszukiwarki.</p>
+  </div>
+
+  <!-- 2.7 -->
+  <div class="fn">
+  <h3>2.7 Canva innowacji</h3>
+  <p class="where">Gdzie: Kreator pomysłów → „Canva innowacji” (adres /kreator/canva)</p>
+  <p><b>Do czego służy.</b> Plansza do rozpisania pomysłu na 9 pól: Problem, Odbiorcy, Wartość, Rozwiązanie, Kluczowe działania, Zasoby, Partnerzy, Koszty i finansowanie, Miary sukcesu. Każde pole ma podpowiedź.</p>
   <ul>
-    <li><b>Forum Hubu</b> – wiadomości mieszkańców, organizacji, samorządów, ekspertów/mentorów i zespołu ROPS; autor podaje imię lub pseudonim i rolę; wiadomość do 1000 znaków; przewijana lista wiadomości dostępna z klawiatury.</li>
-    <li><b>Giełda partnerstw międzysektorowych</b> – ogłoszenia „Szukam” / „Oferuję” z nazwą instytucji (lub podpisem), rolą, opcjonalną kategorią ROPS i opisem (10–600 znaków); filtr: wszystkie / szukam / oferuję.</li>
-    <li>Każdy wpis to zdarzenie w panelu administratora (moderacja).</li>
+    <li>Treść zapisuje się sama w przeglądarce – zostaje po odświeżeniu strony.</li>
+    <li><b>Drukuj / zapisz PDF</b> drukuje samą planszę, bez menu i stopki.</li>
+  </ul>
+  </div>
+
+  <!-- 2.8 -->
+  <div class="fn">
+  <h3>2.8 Wniosek grantowy „Inkubator Włączenia Społecznego 2.0”</h3>
+  <p class="where">Gdzie: „Generator wniosków” (adres /kreator/wniosek), także link „Przygotuj wniosek” na stronie statusu zaakceptowanej fiszki</p>
+  <p><b>Do czego służy.</b> Złożenie wniosku w naborze IWS 2.0 w formie zgodnej z formularzem aplikacyjnym ROPS. Formularz ma 4 kroki; do następnego kroku można przejść dopiero, gdy bieżący jest poprawny.</p>
+
+  <p class="label">Krok 1 – Wnioskodawca</p>
+  <p>Wybierz, kto składa wniosek:</p>
+  <ul>
+    <li><b>Osoba fizyczna</b> – imię, nazwisko, adres, kod pocztowy, miejscowość, telefon, e-mail.</li>
+    <li><b>Podmiot</b> – nazwa, KRS (opcjonalnie), REGON i NIP (sprawdzane cyfrą kontrolną), adres siedziby, kontakt, osoba upoważniona do reprezentacji i osoba do kontaktów roboczych.</li>
+    <li><b>Grupa nieformalna</b> – od 2 do 5 partnerów (osób lub podmiotów) i reprezentant grupy.</li>
+  </ul>
+  <p>Przycisk <b>Wstaw dane przykładowe</b> wpisuje dane fikcyjne – w prototypie nie należy podawać prawdziwych.</p>
+
+  <p class="label">Krok 2 – Treść innowacji</p>
+  <p>Punkty 1 i 3–8 (te same co w fiszce) oraz punkt 11 – zespół projektowy. Jeśli masz fiszkę, wpisz jej kod: punkty 1 i 3–8 wypełnią się same.</p>
+
+  <p class="label">Krok 3 – Plan działania i budżet</p>
+  <ul>
+    <li>Trzy części: okres przygotowawczy, faza I testu i faza II testu (opcjonalna). Każde działanie ma opis, termin od–do (miesiąc i rok) i koszt.</li>
+    <li>Reguły: okres przygotowawczy trwa najwyżej <b>3 miesiące</b>, testowanie (faza I i II razem) najwyżej <b>9 miesięcy</b>, działanie nie może kończyć się przed rozpoczęciem.</li>
+    <li>Wnioskowana kwota grantu musi równać się sumie kosztów – domyślnie wpisuje się sama.</li>
   </ul>
 
-  <h3>3.11 Middleman Innowacji (<code>/middleman</code>)</h3>
-  <figure><img src="img/middleman.png" alt=""><figcaption>Middleman – szkic wdrożenia innowacji w instytucji.</figcaption></figure>
-  <p>Dla gmin, CUS, OPS i organizacji. Trzy kroki: wskaż innowację (pole uzupełnia się samo po przejściu z karty innowacji), opisz swoją instytucję i jej potrzeby, otrzymaj szkic usługi. Asystent AI dopasowuje szkic do instytucji: forma usługi, zasoby, finansowanie (bez obiecywania środków), pierwsze kroki, oraz „Podobne wdrożenia (Biblioteka ROPS)”. Bez AI – szablon wdrożeniowy i podobne innowacje z wyszukiwarki lokalnej.</p>
+  <p class="label">Krok 4 – Oświadczenia</p>
+  <ul>
+    <li>Lista oświadczeń z formularza ROPS: dla osoby fizycznej (19 oświadczeń, dotyczą też partnerów grupy) albo dla podmiotu (21 oświadczeń). Przycisk <b>Zaznacz wszystkie oświadczenia</b> ułatwia wypełnienie.</li>
+    <li>Klauzule informacyjne RODO (ROPS i Instytucji Zarządzającej) i wymagane potwierdzenie, że zostały przeczytane.</li>
+  </ul>
 
-  <h3>3.12 O projekcie (<code>/o-projekcie</code>)</h3>
-  <p>Nazwa i opis rozwiązania, zakres prototypu (moduły I–VII z briefu), schemat przepływu (zgłoszenie → matchmaking i zapis → powiadomienie → odpowiedź), architektura, bezpieczeństwo i dostępność, opis publicznego API, przewidywany koszt utrzymania i niezbędne zasoby.</p>
+  <p class="label">Kontrola wniosku</p>
+  <p>Panel boczny na bieżąco pokazuje, czy: treść jest kompletna, okresy mieszczą się w limitach, kwota zgadza się z sumą kosztów, oświadczenia i RODO są zaznaczone. Te same reguły sprawdza serwer – błędny wniosek nie zostanie zapisany, a komunikat wskaże problem (np. „Okres przygotowawczy nie może przekroczyć 3 miesięcy”).</p>
+
+  <p class="label">Co dalej</p>
+  <p>Po kliknięciu <b>Złóż wniosek</b> użytkownik dostaje kod wniosku (WN-…), a wniosek trafia do zespołu Hubu ze statusem „Złożony”. Dane wnioskodawcy widzi tylko zespół Hubu – nie ma ich na stronie statusu i nie trafiają do AI.</p>
+  </div>
+
+  <!-- 2.9 -->
+  <div class="fn">
+  <h3>2.9 Wniosek w innych naborach</h3>
+  <p class="where">Gdzie: Generator wniosków, przełącznik naborów nad formularzem</p>
+  <ul>
+    <li>Wniosek można złożyć tylko w <b>otwartym</b> naborze. Gdy otwartych jest kilka, nad formularzem jest przełącznik; gdy żaden nie trwa, strona pokazuje listę zakończonych naborów z terminami.</li>
+    <li>Nabory inne niż IWS 2.0 mają własną listę pytań. Każde pytanie jest wymagane i ma limit znaków.</li>
+    <li><b>„Masz już fiszkę?”</b> – wpisanie kodu fiszki wypełnia pytania, które odpowiadają polom fiszki.</li>
+    <li>Pasek postępu pokazuje, ile pól jest wypełnionych.</li>
+  </ul>
+  </div>
+
+  <!-- 2.10 -->
+  <div class="fn">
+  <h3>2.10 Status zgłoszenia i rozmowa z Hubem</h3>
+  <p class="where">Gdzie: link „Sprawdź status zgłoszenia” na górze każdej strony (adres /status)</p>
+  <p><b>Do czego służy.</b> Sprawdzenie, co dzieje się z fiszką lub wnioskiem, i kontakt z zespołem Hubu – bez konta.</p>
+  <p class="label">Jak to zrobić</p>
+  <ol>
+    <li>Wpisz kod zgłoszenia (wielkość liter i spacje nie mają znaczenia).</li>
+    <li>Zobaczysz: rodzaj zgłoszenia, tytuł, datę i aktualny status.</li>
+    <li>Poniżej jest <b>rozmowa z zespołem Hubu</b>. Możesz odpisać od razu – zespół dostanie powiadomienie.</li>
+  </ol>
+  <p>Gdy fiszka jest zaakceptowana, pojawia się przycisk <b>Przygotuj wniosek</b>, który otwiera wniosek z wczytaną treścią fiszki.</p>
+  </div>
+
+  <!-- 2.11 -->
+  <div class="fn">
+  <h3>2.11 Tester innowacji</h3>
+  <p class="where">Gdzie: „Tester” w menu (adres /tester)</p>
+  <p><b>Do czego służy.</b> Zbieranie opinii o innowacjach i chętnych do ich testowania.</p>
+  <p class="label">Jak to zrobić</p>
+  <ol>
+    <li>Wybierz kategorię, a potem innowację.</li>
+    <li>Oceń ją w skali 1–5 gwiazdek (działa też z klawiatury).</li>
+    <li>Opcjonalnie dopisz uwagi (do 1000 znaków) i zaznacz „Chcę wziąć udział w testach tej innowacji”.</li>
+    <li>Kliknij <b>Wyślij opinię</b>.</li>
+  </ol>
+  <p>Zespół Hubu dostaje powiadomienie, a na pulpicie widzi średnią ocen i liczbę chętnych do testów.</p>
+  </div>
+
+  <!-- 2.12 -->
+  <div class="fn">
+  <h3>2.12 Forum Hubu</h3>
+  <p class="where">Gdzie: „Rozmowy” w menu (adres /komunikacja)</p>
+  <p>Wspólna rozmowa mieszkańców, organizacji, samorządów, mentorów i zespołu ROPS. Aby napisać, podaj imię lub pseudonim, wybierz rolę i wpisz wiadomość (do 1000 znaków). Każdy wpis widzi zespół Hubu (moderacja).</p>
+  </div>
+
+  <!-- 2.13 -->
+  <div class="fn">
+  <h3>2.13 Giełda partnerstw</h3>
+  <p class="where">Gdzie: „Rozmowy” → „Giełda partnerstw międzysektorowych”</p>
+  <p>Ogłoszenia „Szukam” i „Oferuję”, np. gmina szuka organizacji do prowadzenia usługi albo fundacja oferuje wolontariuszy. Ogłoszenie zawiera nazwę instytucji lub podpis, rolę, opcjonalnie kategorię ROPS i opis (10–600 znaków). Listę można filtrować: wszystkie / szukam / oferuję.</p>
+  </div>
+
+  <!-- 2.14 -->
+  <div class="fn">
+  <h3>2.14 Middleman – wdrożenie innowacji w instytucji</h3>
+  <p class="where">Gdzie: adres /middleman, także przycisk „Chcesz ją wdrożyć?” na karcie innowacji</p>
+  <p><b>Do czego służy.</b> Pomaga gminie, OPS, CUS lub organizacji przełożyć innowację z Biblioteki na usługę we własnej instytucji.</p>
+  <p class="label">Jak to zrobić</p>
+  <ol>
+    <li>Wskaż innowację (po przejściu z karty innowacji nazwa jest już wpisana).</li>
+    <li>Opisz swoją instytucję i jej potrzeby.</li>
+    <li>Kliknij <b>Przygotuj szkic usługi</b>.</li>
+  </ol>
+  <p>Szkic zawiera: proponowaną formę usługi, potrzebne zasoby, możliwe źródła finansowania (bez obiecywania środków), pierwsze kroki oraz podobne wdrożenia z Biblioteki ROPS. Bez AI – ogólny szablon wdrożenia i podobne innowacje.</p>
+  </div>
+
+  <!-- 2.15 -->
+  <div class="fn">
+  <h3>2.15 Ułatwienia dostępu</h3>
+  <p class="where">Gdzie: pasek na samej górze każdej strony</p>
+  <ul>
+    <li><b>A / A+ / A++</b> – powiększenie tekstu (100%, 112,5%, 125%). Wybór jest zapamiętywany.</li>
+    <li><b>Wersja kontrastowa</b> – żółty i biały tekst na czarnym tle.</li>
+    <li>Cała strona działa z klawiatury; po naciśnięciu Tab pojawia się link „Przejdź do treści”.</li>
+    <li>Strona współpracuje z czytnikami ekranu i działa na telefonie (menu chowa się pod przyciskiem „Menu”).</li>
+  </ul>
+  </div>
 </section>
 
-<!-- ============ 4. PANEL ADMINA ============ -->
-<section class="chapter" id="r4">
-  <div class="kicker">Rozdział 4</div>
-  <h2>Panel administratora</h2>
-  <h3>Logowanie</h3>
-  <ul>
-    <li>Wszystkie adresy <code>/admin/…</code> i <code>/api/admin/…</code> wymagają zalogowania. Niezalogowany użytkownik jest przekierowywany na <code>/logowanie</code> (a po zalogowaniu wraca na stronę, którą chciał otworzyć); API zwraca 401.</li>
-    <li>Hasło demonstracyjne: <code>demo</code> (zmiana zmienną <code>ADMIN_DEMO_PASSWORD</code>). Sesja: ciasteczko httpOnly z tokenem SHA-256. Limit prób logowania: 20 na minutę z jednego adresu.</li>
-    <li>Nawigacja panelu: Pulpit (z licznikiem nieprzeczytanych powiadomień) · Zarządzanie wiedzą · Pomysły · Nabory i wnioski · Aplikacja na telefon · Wyloguj.</li>
-  </ul>
+<!-- =============================== 3 =============================== -->
+<section class="part">
+  <h2>3. Funkcje zespołu Hubu (panel administratora)</h2>
 
-  <h3>Pulpit (<code>/admin</code>)</h3>
-  <figure><img src="img/admin-pulpit.png" alt=""><figcaption>Pulpit: statystyki i powiadomienia.</figcaption></figure>
-  <ul>
-    <li><b>Statystyki</b>: zgłoszone potrzeby, fiszki do przejrzenia, chętni do testów, średnia ocena innowacji.</li>
-    <li><b>Powiadomienia</b> o każdym zdarzeniu: nowa potrzeba, fiszka, wniosek, opinia, wiadomość, ogłoszenie, zmiana naboru, odpowiedź autora, zmiana w Bibliotece; „Oznacz wszystkie jako przeczytane”. Każde zdarzenie jest też wysyłane na webhook (np. Teams, e-mail, system grantowy).</li>
-    <li><b>Trendy potrzeb</b> – liczba zgłoszonych potrzeb w każdej kategorii ROPS (wykres słupkowy) i ostatnie zgłoszenia z rolą zgłaszającego.</li>
-    <li><b>Kolejka fiszek</b> – każda fiszka z treścią, kategorią, odbiorcami, etapem, datą i kodem; przyciski zmiany statusu (Akceptuj / Do weryfikacji / Odrzuć) i rozwijana rozmowa z autorem („Odpowiedz autorowi”).</li>
-  </ul>
+  <div class="fn">
+  <h3>3.1 Logowanie</h3>
+  <p class="where">Gdzie: „Dla Hubu” w menu (adres /admin)</p>
+  <p>Panel wymaga zalogowania. Niezalogowana osoba zostaje przeniesiona na stronę logowania, a po zalogowaniu wraca tam, gdzie chciała wejść. W prototypie hasło to <b>demo</b>. Menu panelu: Pulpit · Zarządzanie wiedzą · Pomysły · Nabory i wnioski · Aplikacja na telefon · Wyloguj.</p>
+  </div>
 
-  <h3>Pomysły (<code>/admin/pomysly</code>)</h3>
-  <figure><img src="img/admin-pomysly.png" alt=""><figcaption>Zarządzanie pomysłami.</figcaption></figure>
+  <div class="fn">
+  <h3>3.2 Pulpit: liczby, powiadomienia i trendy potrzeb</h3>
   <ul>
-    <li>Lista wszystkich fiszek z możliwością <b>edycji</b> (wszystkie pola fiszki IWS + pola karty ROPS: kto może skorzystać, czy to działa, autorzy) i <b>usunięcia</b>. Edycja nie zmienia kodu, statusu ani rozmowy.</li>
-    <li><b>Dodanie pomysłu</b> w imieniu autora (np. zgłoszonego telefonicznie) – dostaje własny kod.</li>
-    <li>Zmiany są zapisywane trwale i od razu widoczne w panelu, aplikacji administratora, na stronie statusu i w matchmakingu.</li>
+    <li><b>Liczby</b>: zgłoszone potrzeby, fiszki do przejrzenia, chętni do testów, średnia ocena innowacji.</li>
+    <li><b>Powiadomienia</b> o każdym zdarzeniu na stronie: nowa potrzeba, fiszka, wniosek, opinia, wpis na forum, ogłoszenie w giełdzie, odpowiedź autora w rozmowie, zmiany w naborach i w Bibliotece. Przy menu widać licznik nieprzeczytanych. Przycisk „Oznacz wszystkie jako przeczytane”.</li>
+    <li><b>Trendy potrzeb</b> – wykres: ile potrzeb zgłoszono w każdej kategorii ROPS, oraz lista ostatnich zgłoszeń. Pozwala zobaczyć, czego najbardziej brakuje w regionie.</li>
   </ul>
+  </div>
 
-  <h3>Zarządzanie wiedzą (<code>/admin/wiedza</code>)</h3>
-  <figure><img src="img/admin-wiedza.png" alt=""><figcaption>Dodawanie innowacji i wskaźniki wyzwań.</figcaption></figure>
+  <div class="fn">
+  <h3>3.3 Przegląd fiszek</h3>
+  <p class="where">Gdzie: Pulpit, sekcja „Kolejki fiszek”</p>
+  <p>Fiszki są podzielone na cztery kolejki (zakładki z liczbą fiszek): <b>Nieprzejrzane</b> (nowe, otwierają się domyślnie), <b>Do weryfikacji</b>, <b>Zaakceptowane</b> i <b>Odrzucone</b>. Liczba przy „Nieprzejrzane” i „Do weryfikacji” jest wyróżniona, gdy coś czeka na decyzję. Powiadomienie o odpowiedzi autora prowadzi od razu do kolejki, w której jest jego fiszka.</p>
+  <ol>
+    <li>Wybierz kolejkę i przeczytaj fiszkę (treść, kategoria, odbiorcy, etap, data, kod).</li>
+    <li>Zmień status przyciskiem: <b>Do weryfikacji</b>, <b>Akceptuj</b> albo <b>Odrzuć</b>. Fiszka przechodzi do odpowiedniej kolejki, a autor zobaczy nowy status na stronie statusu.</li>
+    <li>Rozwiń rozmowę, wpisz wiadomość w polu „Odpowiedz autorowi” i kliknij <b>Wyślij</b> – tak zadajesz pytanie lub przekazujesz decyzję. Odpowiedź autora pojawi się w tym samym wątku i w powiadomieniach.</li>
+  </ol>
+  </div>
+
+  <div class="fn">
+  <h3>3.4 Zarządzanie pomysłami</h3>
+  <p class="where">Gdzie: panel → „Pomysły”</p>
   <ul>
-    <li><b>Dodaj innowację do Biblioteki</b> – tytuł, opis wg 6 pytań ROPS (na czym polega, problem, grupa docelowa, kto może skorzystać, czy to działa), krótki opis, kategorie ROPS (min. 1), słowa kluczowe (do 12), etap, film, projekt ROPS, link do karty ROPS i materiałów, publikacja od razu lub ukrycie.</li>
-    <li><b>Publikuj / Ukryj</b> – ukryta innowacja nie jest widoczna publicznie, w matchmakingu ani w API.</li>
-    <li><b>Wskaźniki wyzwań</b> – aktualizacja wartości (0–100) widocznych w Zasobniku i w wynikach matchmakingu.</li>
-    <li>Prawdziwe innowacje ROPS są odświeżane skryptem <code>npm run import:rops</code> (rozdział 6).</li>
+    <li><b>Edytuj</b> – poprawa dowolnego pola fiszki oraz uzupełnienie pól karty ROPS (kto może skorzystać, czy to działa, autorzy). Edycja nie zmienia kodu, statusu ani rozmowy.</li>
+    <li><b>Usuń</b> – usunięcie fiszki.</li>
+    <li><b>Dodaj pomysł</b> – wpisanie pomysłu w imieniu autora, np. zgłoszonego telefonicznie. Pomysł dostaje własny kod.</li>
   </ul>
+  <p>Zmiany są od razu widoczne na stronie statusu, w aplikacji na telefon i w wyszukiwaniu rozwiązań.</p>
+  </div>
 
-  <h3>Nabory i wnioski (<code>/admin/nabory</code>)</h3>
-  <figure><img src="img/admin-nabory.png" alt=""><figcaption>Nabory: otwieranie i zamykanie.</figcaption></figure>
+  <div class="fn">
+  <h3>3.5 Zarządzanie Biblioteką i wskaźnikami</h3>
+  <p class="where">Gdzie: panel → „Zarządzanie wiedzą”</p>
   <ul>
-    <li><b>Nabory</b> – status, termin, liczba pytań i wniosków; „Otwórz nabór” / „Zamknij nabór”. Otwarcie automatycznie dodaje nabór do Aktualności na stronie głównej i do generatora wniosków; zamknięcie je usuwa.</li>
-    <li><b>Dodaj wniosek</b> – np. złożony na papierze; także do zamkniętego naboru. Powiązanie z pomysłem (wybór fiszki) uzupełnia pola z treści fiszki.</li>
-    <li><b>Wnioski</b> – tytuł, nabór, kod, powiązana fiszka, data, status; „Treść wniosku” (odpowiedzi na pytania); dla naboru IWS 2.0 dodatkowo „Wnioskodawca, plan działania i oświadczenia”: dane wnioskodawcy, tabele planu z sumami, kwota grantu, liczba złożonych oświadczeń. Akcje: Przekaż do oceny / Przyjmij / Odrzuć; rozmowa z wnioskodawcą.</li>
+    <li><b>Dodaj innowację</b> – tytuł, opis według pytań ROPS, krótki opis, co najmniej jedna kategoria, słowa kluczowe, etap, film, linki do karty ROPS i materiałów. Można ją opublikować od razu albo zapisać jako ukrytą.</li>
+    <li><b>Publikuj / Ukryj</b> – ukryta innowacja znika z Biblioteki i z wyników wyszukiwania.</li>
+    <li><b>Wskaźniki wyzwań</b> – podgląd wskaźników Mapy Wyzwań z rokiem, datą pobrania i linkiem do IOSS. Wartości nie są wpisywane ręcznie, żeby zawsze zgadzały się ze źródłem; nowsze dane wczytuje się poleceniem <b>npm run import:ioss</b>.</li>
   </ul>
+  </div>
 
-  <h3>Aplikacja administratora na telefon i komputer (<code>/admin/app</code>)</h3>
-  <figure class="narrow"><img src="img/admin-aplikacja.png" alt=""><figcaption>Aplikacja administratora (widok telefonu).</figcaption></figure>
+  <div class="fn">
+  <h3>3.6 Nabory</h3>
+  <p class="where">Gdzie: panel → „Nabory i wnioski”</p>
   <ul>
-    <li>Instalowalna aplikacja (PWA) dostępna tylko po zalogowaniu: lista nowych pomysłów (oznaczonych do przejrzenia) i pozostałych, podgląd szczegółów pomysłu (wszystkie punkty IWS), przejście do pełnego panelu.</li>
-    <li><b>Powiadomienia push</b> o każdej nowej fiszce – „Włącz powiadomienia” (Web Push, klucze VAPID); kliknięcie powiadomienia otwiera szczegóły pomysłu. Wygasłe subskrypcje są usuwane automatycznie.</li>
-    <li>Instalacja: Edge/Chrome na komputerze – ikona instalacji w pasku adresu; Android – menu ⋮ → „Zainstaluj aplikację”; iPhone (iOS 16.4+) – Udostępnij → „Do ekranu początkowego”. Push wymaga HTTPS (lub localhost).</li>
-    <li>Po zainstalowaniu aplikacja działa bez nagłówka i stopki serwisu.</li>
+    <li>Lista naborów ze statusem, terminem, liczbą pytań i liczbą wniosków.</li>
+    <li><b>Otwórz nabór</b> – nabór pojawia się na stronie głównej (sekcja „Aktualności – trwające nabory”) i w Generatorze wniosków.</li>
+    <li><b>Zamknij nabór</b> – nabór znika z tych miejsc i nie przyjmuje już wniosków przez stronę.</li>
+  </ul>
+  </div>
+
+  <div class="fn">
+  <h3>3.7 Wnioski</h3>
+  <p class="where">Gdzie: panel → „Nabory i wnioski”, lista wniosków</p>
+  <ul>
+    <li>Przy każdym wniosku: tytuł, nabór, kod, powiązana fiszka, data i status. „Treść wniosku” pokazuje odpowiedzi.</li>
+    <li>Wnioski IWS 2.0 mają dodatkowo sekcję „Wnioskodawca, plan działania i oświadczenia”: dane wnioskodawcy, tabele planu z sumami, kwotę grantu i liczbę złożonych oświadczeń.</li>
+    <li>Zmiana statusu: <b>Przekaż do oceny</b>, <b>Przyjmij</b>, <b>Odrzuć</b>. Rozmowa z wnioskodawcą działa tak samo jak przy fiszkach.</li>
+    <li><b>Dodaj wniosek</b> – np. złożony na papierze, także do zamkniętego naboru. Wybranie powiązanej fiszki wypełnia pola jej treścią.</li>
+  </ul>
+  </div>
+
+  <div class="fn">
+  <h3>3.8 Aplikacja na telefon i powiadomienia</h3>
+  <p class="where">Gdzie: panel → „Aplikacja na telefon”</p>
+  <ul>
+    <li>Uproszczony panel, który można zainstalować na telefonie lub komputerze jak zwykłą aplikację. Pokazuje nowe pomysły do przejrzenia i pozostałe, ze szczegółami każdej fiszki.</li>
+    <li><b>Włącz powiadomienia</b> – telefon dostaje powiadomienie o każdej nowej fiszce. Kliknięcie otwiera szczegóły pomysłu.</li>
+    <li>Instalacja: na komputerze (Edge, Chrome) – ikona instalacji w pasku adresu; na Androidzie – menu ⋮ → „Zainstaluj aplikację”; na iPhonie – Udostępnij → „Do ekranu początkowego”.</li>
+  </ul>
+  </div>
+</section>
+
+<!-- =============================== 4 =============================== -->
+<section class="part">
+  <h2>4. Jak działa AI i co się dzieje, gdy jest niedostępne</h2>
+
+  <table>
+    <tr><th style="width:24%">Funkcja</th><th style="width:38%">Co AI robi</th><th>Bez AI (tryb podstawowy)</th></tr>
+    <tr><td>Wyszukiwanie rozwiązań (2.2)</td><td>Wybiera do 5 innowacji, uzasadnia wybór, wskazuje podobne pomysły i następny krok</td><td>Wyniki z wyszukiwania słów kluczowych; przy każdej innowacji słowa, które zadecydowały o dopasowaniu</td></tr>
+    <tr><td>Sprawdzenie fiszki (2.5)</td><td>Ocenia 7 punktów, proponuje treść (w diagnozie z wskaźnikami IOSS dla wybranej gminy), wskazuje podobne innowacje</td><td>Sprawdza, które punkty są puste lub za krótkie; wskazuje podobne innowacje; proponuje tylko uzupełnienie diagnozy o wskaźniki IOSS</td></tr>
+    <tr><td>Asystent pomysłu (2.6)</td><td>Podpowiedzi dopasowane do opisu pomysłu i inspiracje z Biblioteki</td><td>Stałe podpowiedzi i podobne innowacje</td></tr>
+    <tr><td>Middleman (2.14)</td><td>Szkic wdrożenia dopasowany do instytucji</td><td>Ogólny szablon wdrożenia i podobne innowacje</td></tr>
+  </table>
+
+  <p class="label">Zasady</p>
+  <ul>
+    <li>AI wybiera innowacje <b>tylko z Biblioteki</b> – nie może wymyślić rozwiązania, którego nie ma w katalogu.</li>
+    <li>Do AI <b>nie trafiają</b>: kody zgłoszeń, pole „Autorzy”, dane wnioskodawcy z wniosku, odrzucone pomysły.</li>
+    <li>Tekst od AI wchodzi do formularza tylko po kliknięciu użytkownika i zawsze można go cofnąć.</li>
+    <li>Strona zawsze informuje, czy wynik pochodzi z AI, czy z trybu podstawowego.</li>
+    <li>Gdy AI nie odpowiada (brak połączenia, przekroczony limit, zbyt długi czas odpowiedzi), strona automatycznie przechodzi w tryb podstawowy – użytkownik może dalej pracować.</li>
   </ul>
 </section>
 
-<!-- ============ 5. AI ============ -->
-<section class="chapter" id="r5">
-  <div class="kicker">Rozdział 5</div>
-  <h2>Sztuczna inteligencja</h2>
-  <h3>Gdzie działa AI</h3>
-  <table>
-    <thead><tr><th style="width:22%">Funkcja</th><th style="width:38%">Co dostaje model</th><th>Co zwraca</th></tr></thead>
-    <tbody>
-      <tr><td>Matchmaking</td><td>Opis problemu, wybrana kategoria, katalog Biblioteki (do 150 pozycji), aktualne pomysły bez odrzuconych i bez kodów zgłoszeń</td><td>Do 5 innowacji z trafnością i uzasadnieniem, do 3 podobnych pomysłów, podsumowanie, następny krok</td></tr>
-      <tr><td>Asystent fiszki</td><td>Treść 7 punktów fiszki, kategoria, etap (bez autorów), katalog Biblioteki</td><td>Ocena każdego punktu, propozycje treści, do 3 podobnych innowacji, podsumowanie, następny krok</td></tr>
-      <tr><td>Asystent kreatora</td><td>Opis pomysłu, katalog Biblioteki</td><td>3–4 sekcje podpowiedzi + do 3 inspiracji z Biblioteki</td></tr>
-      <tr><td>Middleman</td><td>Nazwa innowacji, opis instytucji, katalog Biblioteki</td><td>Szkic wdrożenia w 3–4 sekcjach + podobne wdrożenia</td></tr>
-    </tbody>
-  </table>
-  <h3>Dostawcy i modele</h3>
-  <ul>
-    <li><b>Gemini</b> (Google) – domyślnie <code>gemini-3.5-flash</code>, model zapasowy <code>gemini-2.5-flash</code> przy przeciążeniu lub limicie (429/500/503). Po wyczerpaniu limitu (429) model główny jest pomijany przez 10 minut.</li>
-    <li><b>Claude</b> (Anthropic) – <code>claude-opus-5-5</code>, odpowiedzi w ustrukturyzowanym formacie, automatyczny model zapasowy przy odmowie, cache katalogu.</li>
-    <li>Wybór: <code>AI_PROVIDER=gemini|claude</code>, a bez niego – według dostępnego klucza (najpierw Gemini). <code>HUB_AI=off</code> wyłącza AI.</li>
-    <li>Każda odpowiedź jest sprawdzana według schematu; identyfikatory spoza katalogu i duplikaty są odrzucane.</li>
-  </ul>
-  <h3>Zasady bezpieczeństwa AI</h3>
-  <ul>
-    <li>Treść użytkownika i katalogu jest przekazywana jako dane w znacznikach – model ma ignorować zawarte w nich polecenia (ochrona przed „prompt injection”).</li>
-    <li>Wybór wyłącznie z katalogu – model nie może wymyślać innowacji, liczb, raportów ani instytucji.</li>
-    <li>Do AI nie trafiają kody zgłoszeń, pole „Autorzy”, dane wnioskodawcy z wniosku ani odrzucone pomysły; treść niezweryfikowanych pomysłów nie jest pokazywana publicznie.</li>
-    <li>Podpowiedzi są oznaczone jako wersja robocza; propozycje treści trafiają do formularza tylko po kliknięciu użytkownika.</li>
-  </ul>
-  <h3>Tryb podstawowy (bez AI)</h3>
-  <p>Brak klucza, błąd sieci, przekroczony czas (15–25 s), odmowa modelu albo odpowiedź niezgodna ze schematem nie przerywają pracy: matchmaking używa wyszukiwarki TF-IDF (polskie rdzenie słów, uwzględnienie podtytułu, problemu, grupy docelowej i beneficjentów), asystent fiszki – reguł kompletności i wyszukiwarki lokalnej, asystent kreatora i Middleman – szablonów. Interfejs informuje, z jakiego trybu pochodzą wyniki.</p>
-</section>
+<!-- =============================== 5 =============================== -->
+<section class="part">
+  <h2>5. Ściąga: statusy i limity</h2>
 
-<!-- ============ 6. DANE ============ -->
-<section class="flow" id="r6">
-  <div class="kicker">Rozdział 6</div>
-  <h2>Dane, prywatność i bezpieczeństwo</h2>
-  <h3>Jakie dane są przechowywane</h3>
+  <p class="label">Statusy zgłoszeń</p>
   <table>
-    <thead><tr><th style="width:25%">Dane</th><th style="width:25%">Gdzie</th><th>Uwagi</th></tr></thead>
-    <tbody>
-      <tr><td>Fiszki pomysłów i wnioski</td><td>Plik <code>data/hub-data.json</code> (trwale)</td><td>Zapis atomowy; uszkodzony plik jest archiwizowany i zastępowany danymi startowymi; ścieżka: <code>HUB_DATA_FILE</code>. Usunięcie pliku = reset danych.</td></tr>
-      <tr><td>Innowacje</td><td><code>src/lib/data/rops-biblioteka.ts</code> + dodane w panelu</td><td>114 innowacji z publicznej Biblioteki ROPS, bez danych osobowych autorów.</td></tr>
-      <tr><td>Potrzeby, opinie, forum, giełda, powiadomienia</td><td>Pamięć serwera</td><td>Dane przykładowe – wracają do stanu startowego po restarcie (w produkcji: baza danych).</td></tr>
-      <tr><td>Szkice (potrzeba, Canva), ustawienia dostępności</td><td>Przeglądarka użytkownika</td><td>Nie trafiają na serwer.</td></tr>
-      <tr><td>Subskrypcje push</td><td>Pamięć serwera</td><td>Tylko adres i klucze przeglądarki administratora.</td></tr>
-    </tbody>
+    <tr><th style="width:20%">Zgłoszenie</th><th>Kolejne statusy</th><th style="width:30%">Kto zmienia</th></tr>
+    <tr><td>Fiszka</td><td>Nowy → W weryfikacji → Zaakceptowany albo Odrzucony</td><td>zespół Hubu (3.3)</td></tr>
+    <tr><td>Wniosek</td><td>Złożony → W ocenie → Przyjęty albo Odrzucony</td><td>zespół Hubu (3.7)</td></tr>
+    <tr><td>Nabór</td><td>Otwarty ↔ Zamknięty</td><td>zespół Hubu (3.6)</td></tr>
+    <tr><td>Innowacja</td><td>Opublikowana ↔ Ukryta</td><td>zespół Hubu (3.5)</td></tr>
   </table>
-  <h3>Prywatność</h3>
-  <ul>
-    <li>Mieszkańcy nie zakładają kont; kontakt odbywa się przez kod zgłoszenia (6 znaków z alfabetu bez mylących się znaków).</li>
-    <li>Formularze ostrzegają przed wpisywaniem nazwisk i danych wrażliwych.</li>
-    <li>Dane osobowe zbiera wyłącznie formularz wniosku IWS 2.0; widzi je tylko zalogowany administrator; nie są przekazywane do AI ani pokazywane na stronie statusu.</li>
-    <li>Wniosek IWS zawiera klauzule informacyjne RODO ROPS i Instytucji Zarządzającej oraz wymagane potwierdzenie.</li>
-  </ul>
-  <h3>Bezpieczeństwo</h3>
-  <ul>
-    <li>Walidacja wszystkich danych wejściowych (zod) z polskimi komunikatami błędów; limity długości pól.</li>
-    <li>Limit zapytań: 20 na minutę z jednego adresu IP dla każdego formularza i asystenta (odpowiedź 429).</li>
-    <li>Panel i API administratora chronione przez middleware; ciasteczko sesji httpOnly.</li>
-    <li>Klucze API wyłącznie w zmiennych środowiskowych (<code>.env.local</code>, poza repozytorium); klucz Gemini przesyłany w nagłówku, nie w adresie.</li>
-    <li>Linki zewnętrzne otwierane z <code>rel="noopener noreferrer"</code>.</li>
-  </ul>
-  <h3>Aktualizacja Biblioteki ROPS</h3>
-  <p><code>npm run import:rops</code> pobiera 9 kategorii Biblioteki ROPS i karty szczegółów (pytania 1–5, bez autorów), scala duplikaty, zachowuje linki do filmów, folderów i materiałów oraz licencje. Zapytania idą kolejno, z odstępami, by nie obciążać serwera ROPS.</p>
-</section>
 
-<!-- ============ 7. DOSTĘPNOŚĆ ============ -->
-<section class="flow" id="r7">
-  <div class="kicker">Rozdział 7</div>
-  <h2>Dostępność (WCAG 2.1 AA)</h2>
+  <p class="label">Kody</p>
   <ul>
-    <li><b>Klawiatura:</b> wszystkie funkcje dostępne z klawiatury, wyraźny fokus (malinowa ramka, biała na ciemnym tle), link „Przejdź do treści”.</li>
-    <li><b>Kontrast:</b> kolory tekstu i przycisków spełniają 4.5:1, obramowania pól 3:1.</li>
-    <li><b>Powiększenie tekstu:</b> A / A+ / A++ (100%, 112,5%, 125%) – ustawienie zapamiętywane.</li>
-    <li><b>Wersja kontrastowa:</b> żółte i białe na czarnym, jak w serwisach publicznych.</li>
-    <li><b>Czytniki ekranu:</b> semantyczne nagłówki i obszary (nawigacja, główna treść, sekcje), etykiety wszystkich pól, podpowiedzi powiązane z polami, komunikaty o wynikach i błędach ogłaszane na bieżąco (aria-live), opisy przycisków ikonowych.</li>
-    <li><b>Formularze:</b> autouzupełnianie danych (imię, adres, e-mail, telefon), błędy opisane słowami, wyraźne oznaczenie pól opcjonalnych.</li>
-    <li><b>Ruch:</b> respektowana preferencja ograniczenia animacji.</li>
-    <li><b>Responsywność:</b> układ od telefonu (390 px) po duże ekrany, menu mobilne, brak przewijania w poziomie.</li>
-    <li><b>Język:</b> prosty, zrozumiały także dla seniorów; deklaracja języka polskiego.</li>
+    <li><b>HUB-XXXXXX</b> – fiszka pomysłu.</li>
+    <li><b>WN-XXXXXX</b> – wniosek grantowy.</li>
   </ul>
-</section>
 
-<!-- ============ 8. API ============ -->
-<section class="chapter" id="r8">
-  <div class="kicker">Rozdział 8</div>
-  <h2>API i integracje</h2>
-  <p>Wszystkie odpowiedzi w formacie JSON. Błędy: <code>{"error": "komunikat po polsku"}</code> z kodem 400 (dane), 401 (brak logowania), 404 (nie znaleziono), 409 (nabór zamknięty), 429 (limit zapytań).</p>
-  <h3>Publiczne API integracyjne</h3>
+  <p class="label">Najważniejsze limity</p>
   <table>
-    <thead><tr><th style="width:30%">Endpoint</th><th>Opis</th></tr></thead>
-    <tbody>
-      <tr><td><code>GET /api/innovations</code></td><td>Opublikowane innowacje (np. dla portali gmin, systemu grantowego).</td></tr>
-      <tr><td><code>GET /api/challenges</code></td><td>Wyzwania regionu ze wskaźnikami.</td></tr>
-      <tr><td><code>GET /api/nabory</code></td><td>Nabory i ich status (otwarty/zamknięty).</td></tr>
-    </tbody>
+    <tr><th>Pole</th><th style="width:30%">Limit</th></tr>
+    <tr><td>Nazwa potrzeby / opis sytuacji</td><td>120 / 1500 znaków</td></tr>
+    <tr><td>Opis problemu w wyszukiwaniu rozwiązań</td><td>3–2000 znaków</td></tr>
+    <tr><td>Tytuł innowacji (fiszka, wniosek)</td><td>150 znaków</td></tr>
+    <tr><td>Opis, innowacyjność, diagnoza</td><td>4000 znaków</td></tr>
+    <tr><td>Odbiorcy, zmiana, wizja</td><td>3000 znaków</td></tr>
+    <tr><td>Uwagi w Testerze, wiadomość na forum</td><td>1000 znaków</td></tr>
+    <tr><td>Ogłoszenie w giełdzie partnerstw</td><td>10–600 znaków</td></tr>
+    <tr><td>Okres przygotowawczy / testowanie we wniosku IWS</td><td>do 3 / do 9 miesięcy</td></tr>
+    <tr><td>Partnerzy grupy nieformalnej</td><td>2–5</td></tr>
+    <tr><td>Liczba wysłanych formularzy z jednego adresu</td><td>20 na minutę</td></tr>
   </table>
-  <h3>API funkcji strony</h3>
-  <table>
-    <thead><tr><th style="width:30%">Endpoint</th><th>Dane wejściowe → odpowiedź</th></tr></thead>
-    <tbody>
-      <tr><td><code>POST /api/match</code></td><td><code>text</code> (3–2000), <code>area</code>? → <code>results</code>, <code>similar</code>, <code>challenge</code>, <code>area</code>, <code>source</code> (ai/lokalne), <code>ai</code></td></tr>
-      <tr><td><code>POST /api/ideas</code></td><td>Pola fiszki (tytuł, opis, odbiorcy, etap; opcjonalnie kategoria, diagnoza, innowacyjność, zmiana, wizja, autorzy) → <code>{code}</code>, 201</td></tr>
-      <tr><td><code>POST /api/ideas/coach</code></td><td><code>sections</code> (7 punktów), <code>category</code>?, <code>stage</code>? → <code>source</code>, <code>summary</code>, <code>points</code>, <code>similar</code>, <code>nextStep</code></td></tr>
-      <tr><td><code>POST /api/applications</code></td><td><code>naborId</code>, <code>ideaCode</code>?, <code>answers</code> albo <code>form</code> (IWS 2.0) → <code>{code}</code>, 201</td></tr>
-      <tr><td><code>GET /api/status?code=</code></td><td>Status, tytuł, data, rozmowa; dla fiszki także treść (do wczytania we wniosku)</td></tr>
-      <tr><td><code>POST /api/status</code></td><td><code>code</code>, <code>text</code> – odpowiedź autora w rozmowie</td></tr>
-      <tr><td><code>POST /api/assistant</code></td><td><code>kind</code> (develop-idea / adapt-innovation), <code>input</code> (5–2000), <code>context</code>? → <code>sections</code>, <code>source</code></td></tr>
-      <tr><td><code>POST /api/feedback</code></td><td><code>innovationId</code>, <code>rating</code> 1–5, <code>comment</code>, <code>wantsToTest</code> → 201</td></tr>
-      <tr><td><code>GET/POST /api/messages</code></td><td>Forum: lista / nowa wiadomość (<code>author</code>, <code>role</code>, <code>text</code>)</td></tr>
-      <tr><td><code>GET/POST /api/partners</code></td><td>Giełda: lista / nowe ogłoszenie (<code>kind</code>, <code>org</code>, <code>role</code>, <code>area</code>?, <code>text</code>)</td></tr>
-      <tr><td><code>POST /api/auth/login</code>, <code>/logout</code></td><td>Logowanie administratora (<code>password</code>) / wylogowanie</td></tr>
-    </tbody>
-  </table>
-  <h3>API administratora (wymaga zalogowania)</h3>
-  <p><code>POST /api/admin</code> z polem <code>action</code>:</p>
-  <table>
-    <thead><tr><th style="width:30%">action</th><th>Działanie</th></tr></thead>
-    <tbody>
-      <tr><td><code>idea-status</code></td><td>Zmiana statusu fiszki</td></tr>
-      <tr><td><code>application-status</code></td><td>Zmiana statusu wniosku</td></tr>
-      <tr><td><code>reply</code></td><td>Odpowiedź w rozmowie (po kodzie)</td></tr>
-      <tr><td><code>add-idea</code> / <code>update-idea</code> / <code>delete-idea</code></td><td>Zarządzanie pomysłami</td></tr>
-      <tr><td><code>add-application</code></td><td>Dodanie wniosku (także do zamkniętego naboru; kod fiszki musi istnieć)</td></tr>
-      <tr><td><code>add-innovation</code> / <code>publish</code></td><td>Dodanie innowacji / publikacja lub ukrycie</td></tr>
-      <tr><td><code>indicator</code></td><td>Wartość wskaźnika wyzwania (0–100)</td></tr>
-      <tr><td><code>nabor-open</code></td><td>Otwarcie lub zamknięcie naboru</td></tr>
-      <tr><td><code>events-read</code></td><td>Oznaczenie powiadomień jako przeczytanych</td></tr>
-    </tbody>
-  </table>
-  <p><code>GET /api/admin/push</code> – klucz publiczny VAPID; <code>POST</code> – zapis subskrypcji; <code>DELETE</code> – usunięcie subskrypcji.</p>
-  <h3>Webhook</h3>
-  <p>Gdy ustawiono <code>NOTIFY_WEBHOOK_URL</code>, każde zdarzenie (nowa fiszka, wniosek, opinia, wiadomość, ogłoszenie, potrzeba, zmiana naboru, odpowiedź autora, zmiana wiedzy) jest wysyłane metodą POST jako JSON <code>{"source": "hub-innowacji", "event": {…}}</code>, gdzie <code>event</code> zawiera rodzaj, treść, link do panelu i datę. Błąd webhooka nie blokuje działania strony.</p>
-</section>
-
-<!-- ============ 9. KONFIGURACJA ============ -->
-<section class="flow" id="r9">
-  <div class="kicker">Rozdział 9</div>
-  <h2>Uruchomienie i konfiguracja</h2>
-  <h3>Wymagania i polecenia</h3>
-  <p>Node.js 20 lub nowszy. Technologie: Next.js 14 (App Router), TypeScript, Tailwind CSS, zod, Anthropic SDK, Google GenAI SDK, web-push; testy: Vitest i Playwright.</p>
-  <table>
-    <thead><tr><th style="width:30%">Polecenie</th><th>Działanie</th></tr></thead>
-    <tbody>
-      <tr><td><code>npm install</code></td><td>Instalacja zależności</td></tr>
-      <tr><td><code>npm run dev</code></td><td>Serwer deweloperski: http://localhost:3000</td></tr>
-      <tr><td><code>npm run build</code> / <code>npm start</code></td><td>Wersja produkcyjna</td></tr>
-      <tr><td><code>npm run typecheck</code></td><td>Kontrola typów</td></tr>
-      <tr><td><code>npm test</code></td><td>Testy jednostkowe (Vitest)</td></tr>
-      <tr><td><code>npm run test:e2e</code></td><td>Testy end-to-end w Microsoft Edge (Playwright), z wyłączonym AI</td></tr>
-      <tr><td><code>npm run import:rops</code></td><td>Odświeżenie Biblioteki Innowacji ROPS</td></tr>
-    </tbody>
-  </table>
-  <h3>Zmienne środowiskowe (<code>.env.local</code>)</h3>
-  <table>
-    <thead><tr><th style="width:30%">Zmienna</th><th>Znaczenie</th></tr></thead>
-    <tbody>
-      <tr><td><code>GEMINI_API_KEY</code></td><td>Klucz Gemini (Google AI Studio) – włącza AI</td></tr>
-      <tr><td><code>ANTHROPIC_API_KEY</code></td><td>Klucz Claude – alternatywa dla Gemini</td></tr>
-      <tr><td><code>AI_PROVIDER</code></td><td><code>gemini</code> lub <code>claude</code> (domyślnie według dostępnego klucza)</td></tr>
-      <tr><td><code>GEMINI_MODEL</code>, <code>GEMINI_FALLBACK_MODEL</code></td><td>Model główny (domyślnie gemini-3.5-flash) i zapasowy (gemini-2.5-flash)</td></tr>
-      <tr><td><code>HUB_AI</code></td><td><code>off</code> wyłącza AI mimo klucza (np. testy)</td></tr>
-      <tr><td><code>ADMIN_DEMO_PASSWORD</code></td><td>Hasło panelu (domyślnie <code>demo</code>; w produkcji SSO/OIDC)</td></tr>
-      <tr><td><code>NOTIFY_WEBHOOK_URL</code></td><td>Adres webhooka zdarzeń</td></tr>
-      <tr><td><code>VAPID_PUBLIC_KEY</code>, <code>VAPID_PRIVATE_KEY</code>, <code>VAPID_SUBJECT</code></td><td>Stałe klucze powiadomień push (bez nich generowane przy starcie)</td></tr>
-      <tr><td><code>HUB_DATA_FILE</code></td><td>Ścieżka pliku z pomysłami i wnioskami (domyślnie <code>data/hub-data.json</code>)</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<!-- ============ 10. TESTY ============ -->
-<section class="flow" id="r10">
-  <div class="kicker">Rozdział 10</div>
-  <h2>Testy i jakość</h2>
-  <p>Stan na 3.10.2026: <b>112 testów jednostkowych</b> i <b>48 testów end-to-end</b> – wszystkie przechodzą; kontrola typów i build produkcyjny bez błędów.</p>
-  <h3>Testy jednostkowe (Vitest)</h3>
-  <ul>
-    <li>Wyszukiwarka TF-IDF i dopasowanie (polskie rdzenie, pokrycie zapytania).</li>
-    <li>AI: matchmaking, asystent fiszki, asystent kreatora i Middleman – na atrapach modeli (bez płatnych wywołań): przetwarzanie odpowiedzi, odrzucanie identyfikatorów spoza katalogu, prywatność (brak kodów i odrzuconych pomysłów w zapytaniu), model zapasowy, przerwa po limicie, tryb podstawowy, wybór dostawcy.</li>
-    <li>Formularz IWS 2.0: NIP i REGON, okresy, suma kosztów, oświadczenia A/B, RODO, dane wnioskodawcy; API wniosków (także brak danych osobowych na stronie statusu).</li>
-    <li>API administratora, trwały zapis danych (w tym uszkodzony plik), pomysły, powiadomienia push, middleware autoryzacji, poprawność danych Biblioteki ROPS.</li>
-  </ul>
-  <h3>Testy end-to-end (Playwright, Microsoft Edge)</h3>
-  <ul>
-    <li>Każda strona publiczna ładuje się bez błędów.</li>
-    <li>Pełna ścieżka: fiszka → kod → status → akceptacja i odpowiedź administratora → odpowiedź autora → wniosek IWS z wczytaną fiszką.</li>
-    <li>Wniosek IWS podmiotu: limity okresów, zgodność kwoty, oświadczenia B, dane widoczne tylko w panelu.</li>
-    <li>Strona główna: zgłoszenie potrzeby → wyniki, szkic w przeglądarce, filtr inspiracji, menu na telefonie.</li>
-    <li>Matchmaking, asystent fiszki, asystent kreatora, Middleman, Tester, forum, giełda, Zasobnik, Canva, pasek dostępności.</li>
-    <li>Panel: logowanie (bez zapętlenia ładowania), pomysły (dodaj/edytuj/usuń), wiedza, nabory (otwarcie → Aktualności), wnioski, powiadomienia, aplikacja administratora i push, matchmaking z AI (atrapa) i bez AI.</li>
-  </ul>
-</section>
-
-<!-- ============ 11. ARCHITEKTURA ============ -->
-<section class="flow" id="r11">
-  <div class="kicker">Rozdział 11</div>
-  <h2>Architektura, koszty utrzymania i ograniczenia prototypu</h2>
-  <h3>Architektura</h3>
-  <ul>
-    <li><b>Porty i adaptery:</b> repozytorium danych, wyszukiwarka i asystent są wymiennymi modułami – prototyp działa w pamięci i na pliku, produkcja podmienia je na PostgreSQL (z wyszukiwaniem wektorowym) i model językowy bez zmian w interfejsie.</li>
-    <li><b>Zdarzenia:</b> każda akcja użytkownika trafia do powiadomień administratora, na webhook i (nowe fiszki) do powiadomień push.</li>
-    <li><b>Wspólna warstwa AI</b> (<code>src/lib/ai/llm.ts</code>): jeden sposób wywołania Claude/Gemini dla wszystkich funkcji, ze schematem odpowiedzi i trybem podstawowym.</li>
-    <li><b>Formularz IWS</b> (<code>src/lib/iws.ts</code>): jedna definicja pytań, oświadczeń, klauzul i reguł walidacji dla interfejsu i serwera.</li>
-  </ul>
-  <h3>Przewidywany koszt utrzymania (miesięcznie, netto, 2026)</h3>
-  <table>
-    <thead><tr><th>Pozycja</th><th style="width:22%">Miesięcznie</th></tr></thead>
-    <tbody>
-      <tr><td>Hosting aplikacji (2 instancje kontenerowe, chmura w UE)</td><td>300–600 zł</td></tr>
-      <tr><td>Baza PostgreSQL zarządzana + kopie zapasowe</td><td>250–500 zł</td></tr>
-      <tr><td>Model językowy i wyszukiwanie semantyczne (ok. 5 tys. zapytań/mies.)</td><td>100–400 zł</td></tr>
-      <tr><td>Domena, certyfikat, poczta transakcyjna, monitoring</td><td>50–150 zł</td></tr>
-      <tr><td><b>Razem infrastruktura</b></td><td><b>ok. 700–1 650 zł</b></td></tr>
-    </tbody>
-  </table>
-  <p>Zasoby ludzkie: redakcja treści ROPS ok. ¼ etatu (moderacja, odpowiedzi, Biblioteka, wskaźniki), dyżury mentorów w ramach istniejącej sieci ekspertów, wsparcie techniczne ok. 10–20 h miesięcznie. Oprogramowanie oparte na otwartych technologiach – bez licencji.</p>
-  <h3>Ograniczenia prototypu i kierunki rozwoju</h3>
-  <ul>
-    <li>Potrzeby, opinie, forum, giełda i powiadomienia są w pamięci serwera – w produkcji baza danych i kopie zapasowe.</li>
-    <li>Logowanie administratora jednym hasłem – w produkcji SSO/OIDC z rolami (np. redaktor, oceniający wnioski).</li>
-    <li>Limit zapytań w pamięci jednej instancji – w produkcji na bramie/WAF lub w Redis.</li>
-    <li>Darmowy klucz Gemini ma dzienny limit zapytań – w produkcji płatny plan lub Claude; tryb podstawowy zapewnia ciągłość działania.</li>
-    <li>Wartości wskaźników, nabory poza IWS 2.0, termin naboru IWS (31.12.2026) i przykładowe modele na stronie głównej są fikcyjne.</li>
-    <li>Wniosek IWS w prototypie nie generuje jeszcze pliku PDF do podpisu ani nie obsługuje załączników.</li>
-  </ul>
 </section>
 
 </body>

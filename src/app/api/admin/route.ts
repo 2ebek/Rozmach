@@ -34,7 +34,6 @@ const Action = z.discriminatedUnion("action", [
     materialsUrl: z.string().url("Podaj poprawny adres materiałów.").optional(),
   }),
   z.object({ action: z.literal("publish"), id: z.string(), published: z.boolean() }),
-  z.object({ action: z.literal("indicator"), id: z.string(), value: z.number().min(0).max(100) }),
   z.object({ action: z.literal("nabor-open"), id: z.string(), open: z.boolean() }),
   z.object({ action: z.literal("events-read") }),
   IdeaFields.extend({ action: z.literal("add-idea") }),
@@ -73,9 +72,6 @@ export async function POST(req: Request) {
     }
     case "publish":
       await repo.setInnovationPublished(a.id, a.published);
-      break;
-    case "indicator":
-      await repo.setChallengeIndicator(a.id, a.value);
       break;
     case "nabor-open":
       await repo.setNaborOpen(a.id, a.open);

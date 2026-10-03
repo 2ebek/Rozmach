@@ -1,9 +1,11 @@
 import { AdminAction } from "@/components/AdminAction";
-import { AddInnovationForm, IndicatorEditor } from "@/components/AdminKnowledge";
+import { AddInnovationForm } from "@/components/AdminKnowledge";
 import { AdminNav } from "@/components/AdminNav";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge, Dot, Panel, SectionTitle, actionCls } from "@/components/ui";
 import { AREA_COLOR, AREA_LABEL, STAGE_LABEL } from "@/lib/labels";
+import { IOSS_IMPORTED } from "@/lib/data/ioss-jednostki";
+import { IOSS_NAME, formatValue } from "@/lib/ioss";
 import { getRepo } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +21,7 @@ export default async function Page() {
       <PageHeader
         eyebrow="Panel administratora"
         title="Zarządzanie wiedzą"
-        lead="Dodawaj innowacje do Biblioteki, ukrywaj je do czasu weryfikacji i aktualizuj wskaźniki wyzwań. Zmiany są widoczne od razu – także w matchmakingu i w API."
+        lead="Dodawaj innowacje do Biblioteki i ukrywaj je do czasu weryfikacji. Zmiany są widoczne od razu – także w matchmakingu i w API. Wskaźniki wyzwań pochodzą z Obserwatora Statystyk Społecznych ROPS."
       >
         <AdminNav unread={unread} />
       </PageHeader>
@@ -43,13 +45,20 @@ export default async function Page() {
                     <Dot className={AREA_COLOR[c.area]} /> {c.title}
                   </p>
                   {c.indicator && (
-                    <div className="mt-3">
-                      <IndicatorEditor id={c.id} value={c.indicator.value} unit={c.indicator.unit} label={c.indicator.label} />
-                    </div>
+                    <p className="mt-2 text-sm text-slate-700">
+                      <strong className="text-brand-900">{formatValue(c.indicator.value, c.indicator.unit)}</strong> – {c.indicator.label}, {c.indicator.year} r.{" "}
+                      <a href={c.indicator.sourceUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-700 underline">
+                        IOSS<span className="sr-only"> (otwiera się w nowej karcie)</span>
+                      </a>
+                    </p>
                   )}
                 </li>
               ))}
             </ul>
+            <p className="mt-4 text-sm text-slate-700">
+              Wartości pochodzą z {IOSS_NAME} (pobrane {IOSS_IMPORTED}). Aby wczytać nowsze dane, uruchom <code className="rounded bg-mist px-1">npm run import:ioss</code> – nie
+              wpisujemy ich ręcznie, żeby liczby zawsze zgadzały się ze źródłem.
+            </p>
           </div>
         </section>
 

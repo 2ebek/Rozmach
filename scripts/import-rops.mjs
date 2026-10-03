@@ -40,9 +40,12 @@ const decode = (s) =>
     .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)));
 const text = (html) => decode(html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
 const abs = (u) => (u ? (u.startsWith("http") ? u : BASE + (u.startsWith("/") ? u : "/" + u)) : undefined);
+/** Ucina sekcję „Autorzy” (dane osobowe) – na części kart ROPS ma numer 5, a nie 6, i jest doklejona do poprzedniego pytania. */
+const stripAuthors = (s) => s.replace(/\s*\d\.\s*Autor(?:zy|ka|ki)?\b[\s\S]*$/, "");
 const clean = (s, max) => {
   if (!s) return undefined;
-  s = s.replace(/\s+/g, " ").trim();
+  s = stripAuthors(s).replace(/\s+/g, " ").trim();
+  if (!s) return undefined;
   return s.length > max ? s.slice(0, max - 1).replace(/\s+\S*$/, "") + "…" : s;
 };
 
@@ -96,7 +99,7 @@ const Q = [
   ["targetGroup", /^3\.\s*Grupa docelowa/i],
   ["beneficiaries", /^4\.\s*Kto może skorzystać/i],
   ["evidence", /^5\.\s*Czy to działa/i],
-  ["authors", /^6\.\s*Autor/i],
+  ["authors", /^\d\.\s*Autor/i],
 ];
 for (const rec of items.values()) {
   try {

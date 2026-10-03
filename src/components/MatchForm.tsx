@@ -334,10 +334,13 @@ export function MatchForm({ initialQuery = "", initialArea }: { initialQuery?: s
                       {context.challenge.indicator && (
                         <p className="mt-3">
                           <span className="text-3xl font-black text-brand-900">
-                            {context.challenge.indicator.value}
+                            {context.challenge.indicator.value.toLocaleString("pl-PL", { maximumFractionDigits: 2 })}
                             {context.challenge.indicator.unit}
                           </span>{" "}
-                          <span className="text-sm text-slate-600">{context.challenge.indicator.label}</span>
+                          <span className="text-sm text-slate-600">
+                            {context.challenge.indicator.label} ({context.challenge.indicator.year} r.)
+                          </span>
+                          <span className="mt-1 block text-xs text-slate-600">{context.challenge.indicator.note} Źródło: Obserwator Statystyk Społecznych ROPS.</span>
                         </p>
                       )}
                       <Link href="/zasobnik#wyzwania" className="mt-4 inline-flex items-center gap-1.5 font-bold text-brand-700 hover:text-accent">

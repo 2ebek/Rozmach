@@ -77,7 +77,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         </dl>
       </Panel>
 
-      <Link href="/admin#kolejka" className="inline-flex items-center gap-2 rounded-xl bg-brand-900 px-5 py-3 font-bold text-white no-underline hover:bg-brand-700">
+      <Link href={`/admin?kolejka=${idea.status}#kolejka`} className="inline-flex items-center gap-2 rounded-xl bg-brand-900 px-5 py-3 font-bold text-white no-underline hover:bg-brand-700">
         Oceń lub odpowiedz w pełnym panelu <Icon name="arrow" className="h-4 w-4" />
       </Link>
     </div>

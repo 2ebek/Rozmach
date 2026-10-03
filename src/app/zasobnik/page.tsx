@@ -4,6 +4,7 @@ import { LibraryGrid } from "@/components/LibraryGrid";
 import { PageHeader } from "@/components/PageHeader";
 import { Dot, SectionTitle } from "@/components/ui";
 import { AREAS, AREA_COLOR, AREA_LABEL, RESOURCE_LABEL } from "@/lib/labels";
+import { IOSS_NAME, IOSS_URL, formatValue } from "@/lib/ioss";
 import { getRepo } from "@/lib/store";
 import type { Resource } from "@/lib/types";
 
@@ -66,20 +67,30 @@ export default async function Page({ searchParams }: { searchParams: { kategoria
                 {c.indicator && (
                   <div className="mt-4">
                     <p className="text-5xl font-black tracking-tight text-brand-900">
-                      {c.indicator.value}
+                      {formatValue(c.indicator.value, "")}
                       <span className="text-3xl">{c.indicator.unit}</span>
                     </p>
-                    <p className="mt-1 text-sm text-slate-600">{c.indicator.label}</p>
-                    <div
-                      role="meter"
-                      aria-valuenow={c.indicator.value}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                      aria-label={c.indicator.label}
-                      className="mt-3 h-2 overflow-hidden rounded-full bg-mist"
-                    >
-                      <div className={`h-full rounded-full ${AREA_COLOR[c.area]}`} style={{ width: `${c.indicator.value}%` }} />
-                    </div>
+                    <p className="mt-1 text-sm text-slate-700">
+                      {c.indicator.label} · {c.indicator.year}&nbsp;r.
+                    </p>
+                    {c.indicator.unit === "%" && (
+                      <div
+                        role="meter"
+                        aria-valuenow={c.indicator.value}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={c.indicator.label}
+                        className="mt-3 h-2 overflow-hidden rounded-full bg-mist"
+                      >
+                        <div className={`h-full rounded-full ${AREA_COLOR[c.area]}`} style={{ width: `${Math.min(100, c.indicator.value)}%` }} />
+                      </div>
+                    )}
+                    <p className="mt-2 text-xs text-slate-600">
+                      {c.indicator.note}{" "}
+                      <a href={c.indicator.sourceUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-700 underline">
+                        Źródło: IOSS ROPS<span className="sr-only"> (otwiera się w nowej karcie)</span>
+                      </a>
+                    </p>
                   </div>
                 )}
                 <h3 className="mt-5 text-xl font-black text-brand-900">{c.title}</h3>
@@ -92,13 +103,16 @@ export default async function Page({ searchParams }: { searchParams: { kategoria
                 </Link>
               </li>
             ))}
-            <li className="flex flex-col justify-center rounded-2xl bg-brand-50 p-6">
-              <p className="font-black text-brand-900">Wartości są przykładowe.</p>
-              <p className="mt-1 text-slate-700">
-                W wersji docelowej dane pochodzą z raportów ROPS i Mapy Wyzwań Społecznych, a redakcja aktualizuje je w panelu administratora.
-              </p>
-            </li>
           </ul>
+          <p className="mt-5 max-w-3xl text-sm text-slate-700">
+            Wskaźniki pochodzą z{" "}
+            <a href={IOSS_URL} target="_blank" rel="noopener noreferrer" className="font-bold text-brand-700 underline">
+              {IOSS_NAME}
+              <span className="sr-only"> (otwiera się w nowej karcie)</span>
+            </a>{" "}
+            (dane GUS i sprawozdań pomocy społecznej). IOSS nie podaje wartości dla całego województwa, dlatego pokazujemy medianę powiatów albo – dla
+            liczby placówek i osób – ich sumę. Dane dla swojej gminy zobaczysz w fiszce pomysłu, przy diagnozie problemu.
+          </p>
         </section>
 
         <section id="biblioteka" aria-labelledby="h-biblioteka" className="scroll-mt-6">

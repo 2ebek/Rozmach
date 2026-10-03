@@ -33,7 +33,14 @@ const IDEA_ACTIONS: { status: IdeaCard["status"]; label: string; cls: string }[]
   { status: "odrzucony", label: "Odrzuć", cls: actionCls.ghost },
 ];
 
-export default async function Page() {
+const QUEUES: { status: IdeaCard["status"]; label: string; empty: string; alert?: true }[] = [
+  { status: "nowy", label: "Nieprzejrzane", empty: "Brak nowych fiszek – wszystkie zostały przejrzane.", alert: true },
+  { status: "w-weryfikacji", label: "Do weryfikacji", empty: "Żadna fiszka nie czeka na weryfikację.", alert: true },
+  { status: "zaakceptowany", label: "Zaakceptowane", empty: "Nie ma jeszcze zaakceptowanych fiszek." },
+  { status: "odrzucony", label: "Odrzucone", empty: "Nie ma odrzuconych fiszek." },
+];
+
+export default async function Page({ searchParams }: { searchParams: { kolejka?: string } }) {
   const repo = getRepo();
   const [needs, ideas, feedback, innovations, events] = await Promise.all([
     repo.listNeeds(),
@@ -48,6 +55,9 @@ export default async function Page() {
     .sort((a, b) => b.n - a.n);
   const max = Math.max(1, ...counts.map((c) => c.n));
   const pending = ideas.filter((i) => i.status === "nowy" || i.status === "w-weryfikacji");
+  // Osobna kolejka dla każdego statusu fiszki (?kolejka=…), domyślnie nieprzejrzane.
+  const queue = QUEUES.find((q) => q.status === searchParams.kolejka) ?? QUEUES[0]!;
+  const shown = ideas.filter((i) => i.status === queue.status);
   const testers = feedback.filter((f) => f.wantsToTest).length;
   const avg = feedback.length ? (feedback.reduce((s, f) => s + f.rating, 0) / feedback.length).toFixed(1) : "–";
   const unread = events.filter((e) => !e.read).length;
@@ -55,10 +65,48 @@ export default async function Page() {
 
   const KPI: { icon: IconName; value: string | number; label: string; tint: string }[] = [
     { icon: "search", value: needs.length, label: "zgłoszonych potrzeb", tint: "bg-brand-50 text-brand-700" },
-    { icon: "bulb", value: pending.length, label: "fiszek do przejrzenia", tint: "bg-rose-50 text-accent" },
+    { icon: "bulb", value: pending.length, label: "fiszek do przejrzenia (nowe i do weryfikacji)", tint: "bg-rose-50 text-accent" },
     { icon: "flask", value: testers, label: "chętnych do testów", tint: "bg-orange-50 text-orange-800" },
     { icon: "star", value: avg, label: "średnia ocena innowacji", tint: "bg-emerald-50 text-emerald-800" },
   ];
+
+  const ideaCard = (i: IdeaCard) => {
+    const awaitsReply = i.thread[i.thread.length - 1]?.from === "author";
+    return (
+      <li key={i.id} className="rounded-xl bg-mist p-5">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <h3 className="text-lg font-black text-brand-900">{i.title}</h3>
+          <Badge className={STATUS_STYLE[i.status]}>{STATUS_LABEL[i.status]}</Badge>
+        </div>
+        <p className="mt-1 text-slate-800">{i.essence}</p>
+        {i.problem && (
+          <p className="mt-1 text-sm text-slate-700">
+            <span className="font-bold">Problem: </span>
+            {i.problem}
+          </p>
+        )}
+        <p className="mt-2 text-sm text-slate-600">
+          {i.category ? `${AREA_LABEL[i.category]} · ` : ""}Dla: {i.audience.length > 120 ? `${i.audience.slice(0, 119)}…` : i.audience} · Etap: {STAGE_LABEL[i.stage]} · {fmt(i.createdAt)} · kod {i.code}
+        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          {IDEA_ACTIONS.filter((a) => a.status !== i.status).map((a) => (
+            <AdminAction key={a.status} payload={{ action: "idea-status", id: i.id, status: a.status }} className={a.cls}>
+              {a.label}
+            </AdminAction>
+          ))}
+        </div>
+        <details className="group mt-4 rounded-lg bg-white p-4" open={awaitsReply}>
+          <summary className="cursor-pointer font-bold text-brand-700">
+            Rozmowa z autorem ({i.thread.length})
+            {awaitsReply && <span className="ml-2 text-accent">· czeka na odpowiedź</span>}
+          </summary>
+          <div className="mt-4">
+            <ThreadView code={i.code} thread={i.thread} as="admin" />
+          </div>
+        </details>
+      </li>
+    );
+  };
 
   return (
     <>
@@ -158,45 +206,44 @@ export default async function Page() {
 
           <section id="kolejka" aria-labelledby="h-kolejka" className="scroll-mt-6 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
             <h2 id="h-kolejka" className="text-2xl font-black">
-              Kolejka fiszek
+              Kolejki fiszek
             </h2>
-            <p className="mt-1 text-sm text-slate-600">Decyzja i odpowiedź od razu pojawiają się autorowi na stronie statusu (po kodzie zgłoszenia).</p>
-            <ul className="mt-6 space-y-4">
-              {[...ideas].reverse().map((i) => (
-                <li key={i.id} className="rounded-xl bg-mist p-5">
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <h3 className="text-lg font-black text-brand-900">{i.title}</h3>
-                    <Badge className={STATUS_STYLE[i.status]}>{STATUS_LABEL[i.status]}</Badge>
-                  </div>
-                  <p className="mt-1 text-slate-800">{i.essence}</p>
-                  {i.problem && (
-                    <p className="mt-1 text-sm text-slate-700">
-                      <span className="font-bold">Problem: </span>
-                      {i.problem}
-                    </p>
-                  )}
-                  <p className="mt-2 text-sm text-slate-600">
-                    {i.category ? `${AREA_LABEL[i.category]} · ` : ""}Dla: {i.audience.length > 120 ? `${i.audience.slice(0, 119)}…` : i.audience} · Etap: {STAGE_LABEL[i.stage]} · {fmt(i.createdAt)} · kod {i.code}
-                  </p>
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    {IDEA_ACTIONS.filter((a) => a.status !== i.status).map((a) => (
-                      <AdminAction key={a.status} payload={{ action: "idea-status", id: i.id, status: a.status }} className={a.cls}>
-                        {a.label}
-                      </AdminAction>
-                    ))}
-                  </div>
-                  <details className="group mt-4 rounded-lg bg-white p-4" open={i.thread.length > 0 && i.thread[i.thread.length - 1]?.from === "author"}>
-                    <summary className="cursor-pointer font-bold text-brand-700">
-                      Rozmowa z autorem ({i.thread.length})
-                      {i.thread[i.thread.length - 1]?.from === "author" && <span className="ml-2 text-accent">· czeka na odpowiedź</span>}
-                    </summary>
-                    <div className="mt-4">
-                      <ThreadView code={i.code} thread={i.thread} as="admin" />
-                    </div>
-                  </details>
-                </li>
-              ))}
-            </ul>
+            <p className="mt-1 text-sm text-slate-600">
+              Po decyzji fiszka przechodzi do odpowiedniej kolejki, a autor od razu widzi status i odpowiedź na stronie statusu (po kodzie zgłoszenia).
+            </p>
+            <nav aria-label="Kolejki fiszek" className="mt-5">
+              <ul className="flex flex-wrap gap-2">
+                {QUEUES.map((q) => {
+                  const n = ideas.filter((i) => i.status === q.status).length;
+                  const active = q.status === queue.status;
+                  return (
+                    <li key={q.status}>
+                      <Link
+                        href={`/admin?kolejka=${q.status}#kolejka`}
+                        scroll={false}
+                        aria-current={active ? "page" : undefined}
+                        className={`inline-flex items-center gap-2 rounded-full border-2 px-4 py-2 text-sm font-bold no-underline ${
+                          active ? "border-brand-900 bg-brand-900 text-white" : "border-slate-300 text-brand-900 hover:border-brand-900"
+                        }`}
+                      >
+                        {q.label}
+                        <span className={`rounded-full px-2 py-0.5 text-xs ${active ? "bg-white text-brand-900" : n && q.alert ? "bg-accent text-white" : "bg-mist text-slate-700"}`}>
+                          {n}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+            <h3 className="sr-only">
+              {queue.label} ({shown.length})
+            </h3>
+            {shown.length === 0 ? (
+              <p className="mt-6 rounded-xl bg-mist p-5 text-slate-700">{queue.empty}</p>
+            ) : (
+              <ul className="mt-6 space-y-4">{[...shown].reverse().map(ideaCard)}</ul>
+            )}
           </section>
         </div>
 
