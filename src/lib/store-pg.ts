@@ -117,6 +117,14 @@ export function createPostgresRepo(docs: Docs): HubRepository {
     async setIdeaStatus(ideaId, status) {
       await patch("idea", ideaId, { status });
     },
+    async setIdeaComment(ideaId, comment) {
+      await ready();
+      const text = comment.trim();
+      const rows = text
+        ? await sql(`UPDATE hub_items SET data = jsonb_set(data, '{adminComment}', to_jsonb($2::text)) WHERE kind = 'idea' AND id = $1 RETURNING id`, [ideaId, text])
+        : await sql(`UPDATE hub_items SET data = data - 'adminComment' WHERE kind = 'idea' AND id = $1 RETURNING id`, [ideaId]);
+      return rows.length > 0;
+    },
     async updateIdea(ideaId, p) {
       await ready();
       const idea = await docs.get<IdeaCard>("idea", ideaId);

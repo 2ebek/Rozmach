@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AdminAction } from "@/components/AdminAction";
 import { AdminNav } from "@/components/AdminNav";
 import { Icon, type IconName } from "@/components/Icon";
+import { IdeaComment } from "@/components/IdeaComment";
 import { PageHeader } from "@/components/PageHeader";
 import { ThreadView } from "@/components/ThreadView";
 import { Badge, Dot, actionCls } from "@/components/ui";
@@ -95,6 +96,7 @@ export default async function Page({ searchParams }: { searchParams: { kolejka?:
             </AdminAction>
           ))}
         </div>
+        <IdeaComment id={i.id} comment={i.adminComment} />
         <details className="group mt-4 rounded-lg bg-white p-4" open={awaitsReply}>
           <summary className="cursor-pointer font-bold text-brand-700">
             Rozmowa z autorem ({i.thread.length})

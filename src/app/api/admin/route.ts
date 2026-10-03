@@ -14,6 +14,8 @@ const Action = z.discriminatedUnion("action", [
   z.object({ action: z.literal("idea-status"), id: z.string(), status: z.enum(["nowy", "w-weryfikacji", "zaakceptowany", "odrzucony"]) }),
   z.object({ action: z.literal("application-status"), id: z.string(), status: z.enum(["zlozony", "w-ocenie", "przyjety", "odrzucony"]) }),
   z.object({ action: z.literal("reply"), code: z.string(), text: z.string().trim().min(2, "Wpisz odpowiedź.").max(1000) }),
+  // komentarz zespołu do fiszki – widoczny dla autora na stronie statusu; pusty tekst usuwa komentarz
+  z.object({ action: z.literal("idea-comment"), id: z.string().min(1), comment: z.string().trim().max(1000, "Komentarz może mieć najwyżej 1000 znaków.") }),
   z.object({
     action: z.literal("add-innovation"),
     title: z.string().trim().min(3, "Podaj tytuł innowacji.").max(120),
@@ -56,6 +58,9 @@ export async function POST(req: Request) {
   switch (a.action) {
     case "idea-status":
       await repo.setIdeaStatus(a.id, a.status);
+      break;
+    case "idea-comment":
+      if (!(await repo.setIdeaComment(a.id, a.comment))) return NextResponse.json({ error: "Nie znaleziono pomysłu." }, { status: 404 });
       break;
     case "application-status":
       await repo.setApplicationStatus(a.id, a.status);

@@ -40,6 +40,8 @@ export interface HubRepository {
   addIdea(i: Omit<IdeaCard, "id" | "createdAt" | "status" | "code" | "thread">): Promise<IdeaCard>;
   listIdeas(): Promise<IdeaCard[]>;
   setIdeaStatus(id: string, status: IdeaCard["status"]): Promise<void>;
+  /** Komentarz zespołu do fiszki (pusty – usuwa); false, gdy fiszka nie istnieje. */
+  setIdeaComment(id: string, comment: string): Promise<boolean>;
   /** Edycja treści pomysłu przez administratora; null, gdy pomysł nie istnieje. */
   updateIdea(id: string, patch: IdeaPatch): Promise<IdeaCard | null>;
   /** Usunięcie pomysłu; false, gdy nie istnieje. Wnioski zachowują historyczny kod fiszki. */
@@ -133,6 +135,14 @@ function createInMemoryRepo(): HubRepository {
       if (!idea) return;
       idea.status = status;
       persist();
+    },
+    async setIdeaComment(ideaId, comment) {
+      const idea = ideas.find((i) => i.id === ideaId);
+      if (!idea) return false;
+      if (comment.trim()) idea.adminComment = comment.trim();
+      else delete idea.adminComment;
+      persist();
+      return true;
     },
     async updateIdea(ideaId, patch) {
       const idea = ideas.find((i) => i.id === ideaId);

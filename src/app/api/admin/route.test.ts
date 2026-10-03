@@ -59,6 +59,19 @@ describe("POST /api/admin – pomysły", () => {
     expect((await getRepo().listIdeas()).find((i) => i.id === target.id)!.title).toBe("Nowa nazwa");
   });
 
+  it("komentarz zespołu do fiszki: dodanie, zmiana, usunięcie; edycja treści go nie kasuje", async () => {
+    const target = (await getRepo().listIdeas())[0]!;
+    const comment = async () => (await getRepo().listIdeas()).find((i) => i.id === target.id)!.adminComment;
+    expect((await call({ action: "idea-comment", id: target.id, comment: "  Brakuje diagnozy problemu.  " })).status).toBe(200);
+    expect(await comment()).toBe("Brakuje diagnozy problemu.");
+    await call({ action: "update-idea", id: target.id, ...idea });
+    expect(await comment()).toBe("Brakuje diagnozy problemu.");
+    await call({ action: "idea-comment", id: target.id, comment: "" });
+    expect(await comment()).toBeUndefined();
+    expect((await call({ action: "idea-comment", id: "nie-ma", comment: "x" })).status).toBe(404);
+    expect((await call({ action: "idea-comment", id: target.id, comment: "x".repeat(1001) })).status).toBe(400);
+  });
+
   it("edycja i usunięcie nieistniejącego pomysłu → 404", async () => {
     expect((await call({ action: "update-idea", id: "nie-ma", ...idea })).status).toBe(404);
     expect((await call({ action: "delete-idea", id: "nie-ma" })).status).toBe(404);

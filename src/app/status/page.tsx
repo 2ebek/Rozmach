@@ -19,6 +19,8 @@ export default async function Page({ searchParams }: { searchParams: { kod?: str
   let step = 0;
   let statusLabel = "";
   let statusCls = "";
+  const rejected = found?.item.status === "odrzucony";
+  const comment = found?.kind === "idea" ? found.item.adminComment : undefined;
   if (found?.kind === "idea") {
     step = { nowy: 0, "w-weryfikacji": 1, zaakceptowany: 2, odrzucony: 2 }[found.item.status];
     statusLabel = STATUS_LABEL[found.item.status];
@@ -76,16 +78,39 @@ export default async function Page({ searchParams }: { searchParams: { kod?: str
 
             {/* Oś czasu zgłoszenia */}
             <ol className="my-8 grid grid-cols-3 gap-2" aria-label="Etapy zgłoszenia">
-              {STEPS.map((s, i) => (
-                <li key={s} aria-current={i === step ? "step" : undefined}>
-                  <div className={`h-2 rounded-full ${i <= step ? "bg-brand-700" : "bg-slate-200"}`} />
-                  <p className={`mt-2 text-sm font-bold ${i <= step ? "text-brand-900" : "text-slate-500"}`}>
-                    {i < step && <span className="sr-only">Zakończony: </span>}
-                    {s}
-                  </p>
-                </li>
-              ))}
+              {STEPS.map((s, i) => {
+                // odrzucenie: ostatni etap (decyzja) na czerwono
+                const negative = rejected && i === 2;
+                return (
+                  <li key={s} aria-current={i === step ? "step" : undefined}>
+                    <div className={`h-2 rounded-full ${negative ? "bg-red-600" : i <= step ? "bg-brand-700" : "bg-slate-200"}`} />
+                    <p className={`mt-2 text-sm font-bold ${negative ? "text-red-800" : i <= step ? "text-brand-900" : "text-slate-500"}`}>
+                      {i < step && <span className="sr-only">Zakończony: </span>}
+                      {negative ? "Decyzja: odrzucone" : s}
+                    </p>
+                  </li>
+                );
+              })}
             </ol>
+
+            {rejected && (
+              <div role="status" className="mb-8 rounded-xl border-l-4 border-red-600 bg-red-50 p-4 text-red-900">
+                <p className="font-black">{found.kind === "idea" ? "Fiszka została odrzucona." : "Wniosek został odrzucony."}</p>
+                <p className="mt-1 text-[0.95rem]">
+                  {comment ? "Uzasadnienie zespołu Hubu znajdziesz poniżej." : "Jeśli chcesz poznać powód albo zapytać, co poprawić – napisz do zespołu Hubu w rozmowie poniżej."} Możesz też
+                  zgłosić poprawiony pomysł jako nową fiszkę.
+                </p>
+              </div>
+            )}
+
+            {comment && (
+              <div className={`mb-8 rounded-xl p-4 ${rejected ? "border border-red-200 bg-white" : "bg-brand-50"}`} data-comment>
+                <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-900">
+                  <Icon name="message" className="h-4 w-4" /> Komentarz zespołu Hubu
+                </p>
+                <p className="mt-1 whitespace-pre-line text-ink">{comment}</p>
+              </div>
+            )}
 
             <h3 className="mb-3 text-lg font-black text-brand-900">Rozmowa z zespołem Hubu</h3>
             <ThreadView code={found.item.code} thread={found.item.thread} as="author" />

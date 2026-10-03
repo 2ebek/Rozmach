@@ -125,6 +125,8 @@ export interface IdeaCard {
   evidence?: string;
   /** Autorzy – nazwa organizacji lub podpis (opcjonalnie). */
   authors?: string;
+  /** Komentarz zespołu Hubu do fiszki (np. uzasadnienie decyzji) – widoczny dla autora na stronie statusu. */
+  adminComment?: string;
   createdAt: string;
   status: "nowy" | "w-weryfikacji" | "zaakceptowany" | "odrzucony";
   /** Kod zgłoszenia – autor sprawdza nim status bez zakładania konta i bez danych osobowych. */

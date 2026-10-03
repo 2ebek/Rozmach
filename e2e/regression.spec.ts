@@ -162,6 +162,37 @@ test.describe("Kluczowe scenariusze", () => {
     await expect(page.locator("code").first()).toHaveText(/^WN-[A-Z0-9]{6}$/);
   });
 
+  test("odrzucona fiszka z komentarzem zespołu: czerwony status i uzasadnienie u autora", async ({ page, browser }) => {
+    const title = unique("Fiszka odrzucana");
+    await open(page, "/kreator");
+    await page.locator("#idea-title").fill(title);
+    await page.locator("#idea-category").selectOption("dla-seniorow");
+    await page.locator("#idea-essence").fill("Opis pomysłu do testu odrzucenia fiszki");
+    await page.locator("#idea-problem").fill("Problem do testu odrzucenia fiszki");
+    await page.locator("#idea-audience").fill("Odbiorcy testu odrzucenia fiszki");
+    await page.getByRole("button", { name: "Wyślij fiszkę" }).click();
+    const code = (await page.locator("code").first().textContent())!.trim();
+
+    const adminCtx = await browser.newContext();
+    const admin = await adminCtx.newPage();
+    await loginAsAdmin(admin);
+    const card = admin.locator("#kolejka li", { has: admin.getByRole("heading", { name: title }) });
+    await card.getByRole("button", { name: "Dodaj komentarz" }).click();
+    await card.getByLabel("Komentarz zespołu do fiszki").fill("Podobna innowacja jest już w Bibliotece ROPS.");
+    await card.getByRole("button", { name: "Zapisz komentarz" }).click();
+    await expect(card.locator("[data-comment]")).toContainText("Podobna innowacja jest już w Bibliotece ROPS.");
+    await card.getByRole("button", { name: "Odrzuć" }).click();
+    await expect(card).toHaveCount(0);
+    await adminCtx.close();
+
+    await open(page, `/status?kod=${code}`);
+    const badge = page.getByText("Odrzucony", { exact: true });
+    await expect(badge).toHaveClass(/bg-red-100/);
+    await expect(page.getByText("Fiszka została odrzucona.")).toBeVisible();
+    await expect(page.getByText("Decyzja: odrzucone")).toBeVisible();
+    await expect(page.locator("[data-comment]")).toContainText("Podobna innowacja jest już w Bibliotece ROPS.");
+  });
+
   test("wniosek IWS 2.0: limity okresów i kwoty grantu, podmiot z oświadczeniami B, dane widoczne tylko w panelu", async ({ page, browser }) => {
     await open(page, "/kreator/wniosek?nabor=nab-iws");
     await page.getByLabel("Podmiot (organizacja, firma, instytucja)").check();

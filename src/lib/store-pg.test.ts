@@ -53,6 +53,12 @@ describe("repozytorium w Postgresie (Vercel + Neon)", () => {
     const [reply] = await repo.listEvents();
     expect(reply).toMatchObject({ kind: "reply", href: "/admin?kolejka=zaakceptowany#kolejka", read: false });
 
+    expect(await repo.setIdeaComment(rec.id, " Brakuje diagnozy. ")).toBe(true);
+    expect((await other.findByCode(rec.code))?.item).toMatchObject({ adminComment: "Brakuje diagnozy.", status: "zaakceptowany" });
+    expect(await repo.setIdeaComment(rec.id, "")).toBe(true);
+    expect((await other.findByCode(rec.code))?.item).not.toHaveProperty("adminComment");
+    expect(await repo.setIdeaComment("nie-ma", "x")).toBe(false);
+
     expect(await repo.addThreadMessage("HUB-NIEMA0", { from: "author", text: "x" })).toBe(false);
     expect(await repo.deleteIdea(rec.id)).toBe(true);
     expect(await other.findByCode(rec.code)).toBeNull();

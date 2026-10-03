@@ -64,7 +64,7 @@ export const STATUS_STYLE: Record<IdeaCard["status"], string> = {
   nowy: "bg-brand-50 text-brand-700",
   "w-weryfikacji": "bg-amber-100 text-amber-900",
   zaakceptowany: "bg-emerald-100 text-emerald-900",
-  odrzucony: "bg-slate-200 text-slate-800",
+  odrzucony: "bg-red-100 text-red-900 ring-1 ring-red-300",
 };
 
 export const ROLE_LABEL: Record<Role, string> = {
@@ -93,7 +93,7 @@ export const APP_STATUS_STYLE: Record<Application["status"], string> = {
   zlozony: "bg-brand-50 text-brand-700",
   "w-ocenie": "bg-amber-100 text-amber-900",
   przyjety: "bg-emerald-100 text-emerald-900",
-  odrzucony: "bg-slate-200 text-slate-800",
+  odrzucony: "bg-red-100 text-red-900 ring-1 ring-red-300",
 };
 
 /** Kroki ścieżki zgłoszenia – oś czasu na stronie statusu. */
