@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AssistantPanel } from "@/components/AssistantPanel";
 import { Icon } from "@/components/Icon";
 import { IdeaForm } from "@/components/IdeaForm";
+import { IdeaVisualization } from "@/components/IdeaVisualization";
 import { PageHeader } from "@/components/PageHeader";
 import { Dot, Panel, SectionTitle } from "@/components/ui";
 import { AREA_COLOR, AREA_LABEL } from "@/lib/labels";
@@ -71,6 +72,16 @@ export default async function Page() {
               inputPlaceholder="np. Chcę, żeby uczniowie uczyli seniorów obsługi smartfona"
               submitLabel="Podpowiedz mi"
             />
+          </Panel>
+          <Panel className="mt-6">
+            <h3 id="h-wizualizacja" className="flex items-center gap-2 text-xl font-black text-brand-900">
+              <Icon name="sparkle" className="h-5 w-5" /> Wizualizacja pomysłu
+            </h3>
+            <p className="mb-5 mt-1 max-w-3xl text-slate-700">
+              Zobacz, jak może wyglądać Twoja innowacja – np. nowy przedmiot, miejsce spotkań albo materiał informacyjny. Asystent przygotuje obraz z
+              opisu.
+            </p>
+            <IdeaVisualization />
           </Panel>
         </section>
 

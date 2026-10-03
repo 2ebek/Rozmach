@@ -328,6 +328,16 @@ test.describe("Kluczowe scenariusze", () => {
     await expect(page.getByText(offer)).toBeVisible();
   });
 
+  test("wizualizacja pomysłu: pole opisu i informacja o płatnym planie AI (przycisk wyłączony)", async ({ page }) => {
+    await open(page, "/kreator#asystent");
+    const viz = page.locator("[data-visualization]");
+    await viz.getByLabel("Co ma przedstawiać wizualizacja?").fill("Szafka z grami na kółkach w świetlicy");
+    await expect(viz.getByText("0 / 1000 znaków")).toHaveCount(0);
+    await viz.getByText("Plakat informacyjny").click();
+    await expect(viz.getByText("Generowanie obrazów wymaga płatnego planu AI.")).toBeVisible();
+    await expect(viz.getByRole("button", { name: "Wygeneruj wizualizację" })).toBeDisabled();
+  });
+
   test("asystent kreatora i Middleman zwracają podpowiedzi", async ({ page }) => {
     await open(page, "/kreator");
     await page.locator("#develop-idea-input").fill("Uczniowie uczą seniorów obsługi smartfona");
