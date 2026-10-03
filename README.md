@@ -18,6 +18,25 @@ npm run test:e2e   # testy E2E w Microsoft Edge (Playwright) – panel, aplikacj
 Panel administratora: `/admin`, hasło demo `demo` (zmienisz w `ADMIN_DEMO_PASSWORD`, patrz `.env.example`).
 Przykładowy kod zgłoszenia do strony statusu: `HUB-KINO42`.
 
+## Wdrożenie: Vercel + Neon Postgres
+
+Na Vercelu funkcje serverless nie dzielą pamięci ani dysku, więc cały zmienny stan trafia do bazy Postgres.
+Dotyczy to fiszek, wniosków, rozmów, potrzeb, opinii, forum, giełdy, powiadomień, zmian w Bibliotece i naborach oraz subskrypcji push.
+Bez `DATABASE_URL` (lokalnie, testy) aplikacja działa jak dotąd: dane w pamięci i w pliku `data/hub-data.json`.
+
+1. **Import projektu.** Na vercel.com wybierz *Add New → Project* i zaimportuj repozytorium z GitHuba. Ustawienia domyślne (Next.js) są właściwe.
+2. **Baza danych.** W projekcie wybierz *Storage → Create Database → Neon (Postgres)*, region Frankfurt. Następnie *Connect* do projektu. Vercel sam ustawi `DATABASE_URL`.
+3. **Zmienne środowiskowe** (*Settings → Environment Variables*):
+   - `ADMIN_DEMO_PASSWORD`: **własne hasło do panelu**. Bez niego obowiązuje hasło `demo` pokazane na stronie logowania.
+   - `GEMINI_API_KEY` (albo `ANTHROPIC_API_KEY`): włącza AI. Bez klucza strona działa w trybie podstawowym.
+   - opcjonalnie `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` i `NOTIFY_WEBHOOK_URL`. Bez kluczy VAPID para zostanie wygenerowana raz i zapisana w bazie.
+4. **Deploy.** Przy pierwszym zapytaniu aplikacja tworzy tabelę `hub_items` i wstawia dane demonstracyjne.
+   Każdy kolejny push na `main` wdraża nową wersję.
+
+Szczegóły:
+- **Implementacja:** repozytorium danych w Postgresie to `src/lib/store-pg.ts`. Jedna tabela dokumentów JSONB jest w `src/lib/db.ts`, a testy na prawdziwym Postgresie (PGlite) w `src/lib/store-pg.test.ts`.
+- **Konfiguracja Vercela:** funkcje działają w regionie `fra1` (`vercel.json`). Trasy AI mają `maxDuration = 60`.
+
 ## Aplikacja administratora (telefon / komputer)
 
 `/admin/app` – PWA tylko dla zalogowanych administratorów (ten sam mechanizm logowania co panel):

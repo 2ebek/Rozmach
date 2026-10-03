@@ -13,20 +13,20 @@ const Subscription = z.object({
 
 /** Klucz publiczny VAPID potrzebny przeglądarce do subskrypcji. */
 export async function GET() {
-  const { publicKey, service } = getPush();
-  return NextResponse.json({ publicKey, subscriptions: service.count() });
+  const { publicKey, service } = await getPush();
+  return NextResponse.json({ publicKey, subscriptions: await service.count() });
 }
 
 export async function POST(req: Request) {
   const body = await parseBody(req, z.object({ subscription: Subscription }));
   if ("error" in body) return body.error;
-  getPush().service.subscribe(body.data.subscription);
+  await (await getPush()).service.subscribe(body.data.subscription);
   return NextResponse.json({ ok: true }, { status: 201 });
 }
 
 export async function DELETE(req: Request) {
   const body = await parseBody(req, z.object({ endpoint: z.string().url().max(1000) }));
   if ("error" in body) return body.error;
-  getPush().service.unsubscribe(body.data.endpoint);
+  await (await getPush()).service.unsubscribe(body.data.endpoint);
   return NextResponse.json({ ok: true });
 }

@@ -15,9 +15,9 @@ const { getPush } = await import("./push");
 const flush = () => new Promise((r) => setTimeout(r, 0));
 
 describe("powiadomienia o nowych pomysłach", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     sendNotification.mockClear();
-    getPush().service.subscribe({ endpoint: "https://push.example/admin-phone", keys: { p256dh: "p256dh-test-key", auth: "auth-test" } });
+    await (await getPush()).service.subscribe({ endpoint: "https://push.example/admin-phone", keys: { p256dh: "p256dh-test-key", auth: "auth-test" } });
   });
 
   it("nowa fiszka wysyła push do zapisanych urządzeń administratorów", async () => {

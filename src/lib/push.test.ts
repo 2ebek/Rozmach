@@ -23,9 +23,9 @@ describe("createPushService", () => {
   it("wysyła do wszystkich subskrypcji i nie dubluje tego samego urządzenia", async () => {
     const send = vi.fn<PushSender>().mockResolvedValue(undefined);
     const svc = createPushService(send);
-    svc.subscribe(sub(1));
-    svc.subscribe(sub(2));
-    svc.subscribe(sub(1)); // ponowna subskrypcja tego samego urządzenia
+    await svc.subscribe(sub(1));
+    await svc.subscribe(sub(2));
+    await svc.subscribe(sub(1)); // ponowna subskrypcja tego samego urządzenia
     const r = await svc.notifyAll(payload);
     expect(r).toEqual({ sent: 2, removed: 0, failed: 0 });
     expect(send).toHaveBeenCalledTimes(2);
@@ -39,17 +39,17 @@ describe("createPushService", () => {
       if (s.endpoint.endsWith("/3")) throw { statusCode: 500 };
     });
     const svc = createPushService(send);
-    [1, 2, 3, 4].forEach((n) => svc.subscribe(sub(n)));
+    for (const n of [1, 2, 3, 4]) await svc.subscribe(sub(n));
     const r = await svc.notifyAll(payload);
     expect(r).toEqual({ sent: 1, removed: 2, failed: 1 });
-    expect(svc.count()).toBe(2); // zostały: /3 (błąd chwilowy) i /4
+    expect(await svc.count()).toBe(2); // zostały: /3 (błąd chwilowy) i /4
   });
 
   it("wypisanie urządzenia wyłącza powiadomienia", async () => {
     const send = vi.fn<PushSender>().mockResolvedValue(undefined);
     const svc = createPushService(send);
-    svc.subscribe(sub(1));
-    svc.unsubscribe(sub(1).endpoint);
+    await svc.subscribe(sub(1));
+    await svc.unsubscribe(sub(1).endpoint);
     expect(await svc.notifyAll(payload)).toEqual({ sent: 0, removed: 0, failed: 0 });
     expect(send).not.toHaveBeenCalled();
   });

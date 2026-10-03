@@ -3,6 +3,9 @@ import { z } from "zod";
 import { rateLimited } from "@/lib/rateLimit";
 import { getAssistant } from "@/lib/ai/assistant";
 
+// Vercel: odpowiedź modelu może trwać kilkanaście sekund.
+export const maxDuration = 60;
+
 const Body = z.object({
   kind: z.enum(["develop-idea", "adapt-innovation"]),
   input: z.string().trim().min(5, "Opisz temat (min. 5 znaków).").max(2000),

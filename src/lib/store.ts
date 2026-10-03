@@ -1,8 +1,11 @@
 import { newCode } from "./code";
+import { sharedDocs } from "./db";
+import { demoState } from "./data/demo";
 import { challenges as seedChallenges, innovations as seedInnovations, nabory as seedNabory, resources } from "./data/seed";
 import { sendWebhook } from "./notify";
 import { loadData, saveData } from "./persist";
 import { pushNewIdea } from "./push";
+import { createPostgresRepo, threadHref } from "./store-pg";
 import type {
   Application,
   Challenge,
@@ -69,46 +72,19 @@ export type IdeaPatch = Pick<IdeaCard, "title" | "essence" | "audience" | "stage
 // Singleton przeżywający hot-reload w dev.
 const g = globalThis as unknown as { __hubStore?: HubRepository };
 
-const daysAgo = (d: number) => new Date(Date.now() - d * 86_400_000).toISOString();
-
 function createInMemoryRepo(): HubRepository {
   // Kopie danych startowych – redakcja może je modyfikować w panelu administratora.
   const innovations: Innovation[] = seedInnovations.map((i) => ({ ...i }));
   const challenges: Challenge[] = seedChallenges;
   const nabory: Nabor[] = seedNabory.map((n) => ({ ...n }));
 
-  // Fikcyjne dane startowe, żeby panel trendów i rozmowy nie były puste w demo.
-  const needs: NeedSubmission[] = [
-    { id: "n1", text: "Samotni seniorzy w gminie", area: "dla-seniorow", submitterRole: "jst", createdAt: daysAgo(9) },
-    { id: "n2", text: "Starsi nie radzą sobie z e-urzędem", area: "dla-seniorow", submitterRole: "resident", createdAt: daysAgo(6) },
-    { id: "n3", text: "Brak psychologa dla młodzieży w powiecie", area: "dla-dzieci-mlodziezy-i-rodziny", submitterRole: "ngo", createdAt: daysAgo(4) },
-    { id: "n4", text: "Seniorzy bez kontaktu z rodziną", area: "dla-seniorow", submitterRole: "resident", createdAt: daysAgo(3) },
-    { id: "n5", text: "Daleko do urzędu i poradni", area: "dla-osob-o-ograniczonej-mobilnosci", submitterRole: "resident", createdAt: daysAgo(1) },
-  ];
+  // Fikcyjne dane startowe (trendy, forum, opinie, powiadomienia) – wspólne z repozytorium w bazie.
+  const { needs, feedback, messages, partners, events } = demoState();
   // Pomysły i wnioski – z trwałego magazynu (przy pierwszym starcie seed z data/seed.ts).
   const stored = loadData();
   const ideas: IdeaCard[] = stored.ideas;
   const applications: Application[] = stored.applications;
   const persist = () => saveData({ version: 1, ideas, applications });
-  const feedback: Feedback[] = [
-    { id: "f1", innovationId: "rops-senior-cuder", rating: 5, comment: "Gramy w świetlicy co tydzień, seniorzy bardzo się angażują. Polecam!", wantsToTest: false, createdAt: daysAgo(5) },
-    { id: "f2", innovationId: "rops-merkury", rating: 4, comment: "Świetne do nauki obsługi biletomatu, ale potrzebny jest opiekun grupy.", wantsToTest: true, createdAt: daysAgo(2) },
-  ];
-  const messages: Message[] = [
-    { id: "m1", author: "Zespół Hubu", role: "admin", text: "Dzień dobry! Tu możecie pytać o nabory, szukać partnerów i dzielić się doświadczeniami.", createdAt: daysAgo(3) },
-    { id: "m2", author: "Gmina Przykładowa", role: "jst", text: "Szukamy organizacji, która pomogłaby nam uruchomić Kawiarenkę Seniora. Ktoś ma doświadczenie?", createdAt: daysAgo(2) },
-    { id: "m3", author: "Mentorka ds. ekonomii społecznej", role: "expert", text: "Warto zacząć od rozmowy z autorami innowacji – w Bibliotece są opisane pierwsze kroki. Chętnie pomogę przygotować plan pilotażu.", createdAt: daysAgo(2) },
-    { id: "m4", author: "Fundacja Sąsiedzi (przykład)", role: "ngo", text: "Prowadzimy podobne spotkania od roku, możemy się podzielić scenariuszami zajęć.", createdAt: daysAgo(1) },
-  ];
-  const partners: PartnerOffer[] = [
-    { id: "p1", kind: "szukam", org: "Gmina Przykładowa", role: "jst", text: "Szukamy organizacji do prowadzenia Kawiarenki Seniora w 3 sołectwach.", area: "dla-seniorow", createdAt: daysAgo(4) },
-    { id: "p2", kind: "oferuje", org: "Biblioteka Publiczna (przykład)", role: "ngo", text: "Udostępnimy salę i sprzęt na zajęcia cyfrowe dla seniorów, 2 popołudnia w tygodniu.", area: "dla-seniorow", createdAt: daysAgo(2) },
-    { id: "p3", kind: "oferuje", org: "Ekspertka ds. ewaluacji", role: "expert", text: "Pomogę zaplanować badanie efektów pilotażu (ankiety, wskaźniki).", createdAt: daysAgo(1) },
-  ];
-  const events: HubEvent[] = [
-    { id: "e1", kind: "idea", text: "Nowa fiszka: „Wymiana usług sąsiedzkich”", href: "/admin#kolejka", createdAt: daysAgo(2), read: false },
-    { id: "e2", kind: "reply", text: "Autor odpowiedział w wątku „Szkolne Kino Seniora”", href: "/admin?kolejka=zaakceptowany#kolejka", createdAt: daysAgo(3), read: false },
-  ];
 
   const id = (p: string) => `${p}-${crypto.randomUUID()}`;
   const now = () => new Date().toISOString();
@@ -148,7 +124,7 @@ function createInMemoryRepo(): HubRepository {
       ideas.push(rec);
       persist();
       emit("idea", `Nowa fiszka: „${rec.title}”`, "/admin#kolejka");
-      pushNewIdea(rec); // powiadomienie push do aplikacji administratora
+      void pushNewIdea(rec); // powiadomienie push do aplikacji administratora
       return rec;
     },
     listIdeas: async () => [...ideas],
@@ -209,9 +185,7 @@ function createInMemoryRepo(): HubRepository {
       if (!target) return false;
       target.thread.push({ ...msg, createdAt: now() });
       persist();
-      // link do kolejki, w której fiszka jest teraz (albo do wniosków)
-      const href = idea ? `/admin?kolejka=${idea.status}#kolejka` : "/admin/nabory";
-      if (msg.from === "author") emit("reply", `Autor odpowiedział w wątku „${target.title}”`, href);
+      if (msg.from === "author") emit("reply", `Autor odpowiedział w wątku „${target.title}”`, threadHref(idea));
       return true;
     },
 
@@ -245,6 +219,14 @@ function createInMemoryRepo(): HubRepository {
   };
 }
 
+/**
+ * Repozytorium danych: z DATABASE_URL (Vercel + Neon) – Postgres, wspólny dla wszystkich instancji serverless;
+ * bez niego (lokalnie, testy) – pamięć procesu + plik data/hub-data.json.
+ */
 export function getRepo(): HubRepository {
-  return (g.__hubStore ??= createInMemoryRepo());
+  if (!g.__hubStore) {
+    const docs = sharedDocs();
+    g.__hubStore = docs ? createPostgresRepo(docs) : createInMemoryRepo();
+  }
+  return g.__hubStore;
 }

@@ -7,6 +7,8 @@ import { IWS_SECTIONS } from "@/lib/iws";
 import { getRepo } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
+// Vercel: odpowiedź AI z propozycjami treści może trwać kilkanaście sekund (limit modelu: 25 s + zapas).
+export const maxDuration = 60;
 
 /** Szkic fiszki do oceny przez asystenta – tylko treść merytoryczna (bez autorów), limity jak w formularzu IWS 2.0. */
 const Body = z

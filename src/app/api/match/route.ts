@@ -7,6 +7,9 @@ import { tokenize } from "@/lib/matching/text";
 import { getRepo } from "@/lib/store";
 import type { NeedSubmission } from "@/lib/types";
 
+// Vercel: dopasowanie przez AI ma limit 30 s – funkcja musi móc trwać dłużej niż domyślnie.
+export const maxDuration = 60;
+
 const Body = z.object({
   text: z.string().trim().min(3, "Wpisz co najmniej 3 znaki.").max(2000),
   area: z.enum(AREA_ENUM).optional(),
