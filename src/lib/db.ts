@@ -13,7 +13,9 @@ export function databaseUrl(): string | undefined {
 }
 
 export function neonSql(url: string): Sql {
-  const client = neon(url);
+  // Sterownik pyta bazę przez fetch, a Next.js 14 na Vercelu zapamiętuje odpowiedzi fetch w Data Cache –
+  // bez "no-store" strony pokazywałyby stare dane (np. panel bez nowych zgłoszeń).
+  const client = neon(url, { fetchOptions: { cache: "no-store" } });
   return (text, params = []) => client.query(text, params);
 }
 
