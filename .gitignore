@@ -22,3 +22,6 @@ za._3._Formularz_aplikacyjny_wzor.pdf
 
 # nagrania prezentacji (duże pliki wideo)
 film/
+
+.vercel
+.env*
