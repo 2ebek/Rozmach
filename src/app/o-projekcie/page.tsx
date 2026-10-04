@@ -10,7 +10,7 @@ const MODULES = [
   { no: "II", name: "Zasobnik wiedzy", req: "", href: "/zasobnik", what: "Wyzwania z prawdziwymi wskaźnikami z Obserwatora Statystyk Społecznych ROPS, Biblioteka Innowacji z filtrem i miejscem na filmy, materiały. Trendy potrzeb tylko dla administratora." },
   { no: "III", name: "Kreator pomysłów", req: "", href: "/kreator", what: "Fiszka z kodem zgłoszenia i danymi IOSS dla gminy do diagnozy problemu, Canva innowacji, asystent kreatora, generator wniosków dopasowany do pytań każdego naboru." },
   { no: "IV", name: "Tester innowacji", req: "", href: "/tester", what: "Zgłoszenie do testów, ocena gwiazdkowa, uwagi i propozycje usprawnień." },
-  { no: "V", name: "Platforma aktywnej komunikacji", req: "", href: "/komunikacja", what: "Forum z rolami (ROPS, mentorzy, JST, NGO, mieszkańcy), giełda partnerstw, wątki zgłoszeń admin ↔ autor, panel ekspertów z feedbackiem do fiszek." },
+  { no: "V", name: "Platforma aktywnej komunikacji", req: "", href: "/komunikacja", what: "Forum z rolami (ROPS, mentorzy, JST, NGO, mieszkańcy), giełda partnerstw, wątki zgłoszeń admin ↔ autor." },
   { no: "VI", name: "Panel administratora", req: "", href: "/admin", what: "Logowanie, powiadomienia, moderacja fiszek i wniosków z odpowiedzią do autora, edycja wiedzy, otwieranie naborów." },
   { no: "VII", name: "Middleman Innowacji", req: "", href: "/middleman", what: "Asystent dopasowujący innowację do formy usługi dla konkretnej instytucji." },
 ];

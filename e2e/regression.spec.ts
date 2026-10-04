@@ -328,35 +328,6 @@ test.describe("Kluczowe scenariusze", () => {
     await expect(page.getByText(offer)).toBeVisible();
   });
 
-  test("ekspert: logowanie, podpisany komentarz do fiszki, autor widzi go na stronie statusu", async ({ page, browser }) => {
-    const ctx = await browser.newContext();
-    const expert = await ctx.newPage();
-    await expert.goto("/ekspert");
-    await expert.getByLabel("Hasło dla ekspertów").fill("ekspert");
-    await expert.getByRole("button", { name: "Zaloguj się" }).click();
-    await expect(expert.getByRole("heading", { name: "Fiszki do konsultacji" })).toBeVisible();
-    // czekamy, aż strona reaguje (hydracja) – kliknięcie wcześniej przepada
-    const all = expert.getByRole("button", { name: /^Wszystkie/ });
-    await expect(async () => {
-      await all.click();
-      await expect(all).toHaveAttribute("aria-pressed", "true", { timeout: 1000 });
-    }).toPass();
-    await expert.getByLabel("Twój podpis pod komentarzami").fill("Mentor ds. usług dla seniorów");
-    const comment = unique("Zaproście do współpracy Uniwersytet Trzeciego Wieku");
-    const card = expert.locator("li", { has: expert.getByRole("heading", { name: "Szkolne Kino Seniora", exact: true }) });
-    // rozwiń rozmowę, jeśli fiszka ma już komentarz eksperta (wtedy jest zwinięta)
-    if ((await card.locator("details").getAttribute("open")) === null) await card.locator("summary").click();
-    await card.getByLabel("Komentarz eksperta dla autora").fill(comment);
-    await card.getByRole("button", { name: "Wyślij" }).click();
-    // po wysłaniu rozmowa zostaje rozwinięta, a komentarz jest widoczny z podpisem
-    await expect(card.locator('[data-from="expert"]', { hasText: comment })).toContainText("Mentor ds. usług dla seniorów");
-    await ctx.close();
-
-    await open(page, "/status?kod=HUB-KINO42");
-    const msg = page.locator('[data-from="expert"]', { hasText: comment });
-    await expect(msg).toContainText("Ekspert Hubu · Mentor ds. usług dla seniorów");
-  });
-
   test("wizualizacja pomysłu: pole opisu i informacja o płatnym planie AI (przycisk wyłączony)", async ({ page }) => {
     await open(page, "/kreator#asystent");
     const viz = page.locator("[data-visualization]");

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { postJson } from "@/lib/client";
 import { Field, Status, btnCls, inputCls } from "./ui";
 
-/** Logowanie administratora (domyślnie) albo eksperta – różni się adres API i etykieta. */
+/** Logowanie administratora Hubu. */
 export function LoginForm({ next, endpoint = "/api/auth/login", label = "Hasło administratora" }: { next: string; endpoint?: string; label?: string }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);

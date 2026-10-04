@@ -189,11 +189,6 @@ export function exampleIdeas(): IdeaCard[] {
     ...(authors ? { authors } : {}),
     ...(adminComment ? { adminComment } : {}),
     createdAt: daysAgo(d),
-    thread: thread.map((m) => ({
-      from: m.from as ThreadMessage["from"],
-      ...("name" in m && m.name ? { name: m.name } : {}),
-      text: m.text,
-      createdAt: daysAgo(m.daysAgo),
-    })),
+    thread: thread.map((m) => ({ from: m.from as ThreadMessage["from"], text: m.text, createdAt: daysAgo(m.daysAgo) })),
   }));
 }

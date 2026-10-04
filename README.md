@@ -60,7 +60,7 @@ Powiadomienia push wymagają HTTPS (lub `localhost`). Klucze VAPID: patrz `.env.
 | III Canwy innowacji społecznych | `/kreator/canva` (druk/PDF) |
 | III Asystent kreatora | `/kreator#asystent`, `src/lib/ai` |
 | IV Tester: testy, ocena, feedback, usprawnienia | `/tester` |
-| V Dialog ROPS ↔ użytkownicy, mentorzy, partnerstwa | `/komunikacja` (forum + giełda partnerstw), `/status` (wątek zgłoszenia), `/ekspert` (feedback ekspertów do fiszek; hasło `EXPERT_PASSWORD`, demo: `ekspert`) |
+| V Dialog ROPS ↔ użytkownicy, mentorzy, partnerstwa | `/komunikacja` (forum + giełda partnerstw), `/status` (wątek zgłoszenia) |
 | VI Panel admina: modyfikacja, weryfikacja, udostępnianie wiedzy | `/admin`, `/admin/wiedza`, `/admin/nabory` (logowanie: `src/middleware.ts`) |
 | VII Middleman Innowacji | `/middleman` |
 | Powiadamianie admina o nowym pomyśle + ścieżka odpowiedzi do autora | powiadomienia w `/admin`, webhook `NOTIFY_WEBHOOK_URL`, `/status?kod=…` |

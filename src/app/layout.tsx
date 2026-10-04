@@ -32,9 +32,7 @@ const FOOTER = [
     links: [
       { href: "/komunikacja", label: "Dla mieszkańców" },
       { href: "/middleman", label: "Dla instytucji" },
-      { href: "/tester", label: "Testowanie rozwiązań" },
-      { href: "/ekspert", label: "Dla ekspertów i mentorów" },
-      { href: "/admin", label: "Dla zespołu Hubu" },
+      { href: "/tester", label: "Testowanie rozwiązań" },      { href: "/admin", label: "Dla zespołu Hubu" },
     ],
   },
   {

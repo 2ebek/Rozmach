@@ -10,11 +10,9 @@ import type { Application, HubEvent, IdeaCard, Innovation, Nabor, ThreadMessage 
 /** Link do kolejki w panelu, w której jest teraz fiszka (albo do wniosków). */
 export const threadHref = (idea?: Pick<IdeaCard, "status">) => (idea ? `/admin?kolejka=${idea.status}#kolejka` : "/admin/nabory");
 
-/** Treść powiadomienia dla zespołu Hubu o nowej wiadomości w wątku (autor albo ekspert); null – bez powiadomienia. */
+/** Treść powiadomienia dla zespołu Hubu o nowej wiadomości w wątku (od autora); null – bez powiadomienia. */
 export function threadEventText(msg: Omit<ThreadMessage, "createdAt">, title: string): string | null {
-  if (msg.from === "author") return `Autor odpowiedział w wątku „${title}”`;
-  if (msg.from === "expert") return `Ekspert (${msg.name ?? "mentor"}) skomentował fiszkę „${title}”`;
-  return null;
+  return msg.from === "author" ? `Autor odpowiedział w wątku „${title}”` : null;
 }
 
 /**
