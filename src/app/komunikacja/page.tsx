@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { Chat } from "@/components/Chat";
+import { Icon } from "@/components/Icon";
 import { PartnerBoard } from "@/components/PartnerBoard";
 import { SectionTitle } from "@/components/ui";
 import { PageHeader } from "@/components/PageHeader";
@@ -48,6 +50,13 @@ export default async function Page() {
               <li>Pisz życzliwie – wszyscy tu pomagają.</li>
               <li>Wiadomości widzi zespół Hubu.</li>
             </ul>
+          </div>
+          <div className="rounded-2xl border border-slate-200 p-6">
+            <h2 className="text-lg font-black">Jesteś ekspertem lub mentorem?</h2>
+            <p className="mt-2 text-[0.95rem] text-slate-700">Skomentuj fiszki pomysłów – autor zobaczy Twój feedback przy swoim zgłoszeniu.</p>
+            <Link href="/ekspert" className="mt-3 inline-flex items-center gap-1.5 font-bold text-brand-700 hover:text-accent">
+              Panel ekspertów <Icon name="arrow" className="h-4 w-4" />
+            </Link>
           </div>
         </aside>
       </div>

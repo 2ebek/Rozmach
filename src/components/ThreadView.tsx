@@ -8,11 +8,21 @@ import { Status, btnCls, inputCls } from "./ui";
 
 const fmt = (iso: string) => new Date(iso).toLocaleString("pl-PL", { timeZone: "Europe/Warsaw", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
 
+type Role = "author" | "admin" | "expert";
+
+const BUBBLE: Record<ThreadMessage["from"], { box: string; meta: string }> = {
+  admin: { box: "rounded-tl-sm bg-brand-900 text-white", meta: "text-slate-300" },
+  author: { box: "rounded-tr-sm bg-mist text-ink", meta: "text-slate-600" },
+  expert: { box: "rounded-tl-sm bg-emerald-50 text-ink ring-1 ring-emerald-200", meta: "text-emerald-900" },
+};
+
+const who = (m: ThreadMessage) => (m.from === "admin" ? "Zespół Hubu" : m.from === "expert" ? `Ekspert Hubu · ${m.name ?? "mentor"}` : "Autor zgłoszenia");
+
 /**
- * Wątek zgłoszenia (ścieżka odpowiedzi). Ten sam komponent dla autora i administratora –
- * różni się tylko adres API i podpis "kto pisze".
+ * Wątek zgłoszenia (ścieżka odpowiedzi). Ten sam komponent dla autora, administratora i eksperta –
+ * różni się tylko adres API i podpis "kto pisze". Ekspert podpisuje komentarz (np. specjalizacją).
  */
-export function ThreadView({ code, thread, as }: { code: string; thread: ThreadMessage[]; as: "author" | "admin" }) {
+export function ThreadView({ code, thread, as, expertName }: { code: string; thread: ThreadMessage[]; as: Role; expertName?: string }) {
   const router = useRouter();
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -22,11 +32,9 @@ export function ThreadView({ code, thread, as }: { code: string; thread: ThreadM
     e.preventDefault();
     setBusy(true);
     setError(null);
-    const res = await fetch(as === "admin" ? "/api/admin" : "/api/status", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(as === "admin" ? { action: "reply", code, text } : { code, text }),
-    });
+    const [url, body] =
+      as === "admin" ? ["/api/admin", { action: "reply", code, text }] : as === "expert" ? ["/api/ekspert", { code, text, name: expertName ?? "" }] : ["/api/status", { code, text }];
+    const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     setBusy(false);
     if (!res.ok) {
       setError(((await res.json().catch(() => ({}))) as { error?: string }).error ?? "Nie udało się wysłać.");
@@ -37,6 +45,7 @@ export function ThreadView({ code, thread, as }: { code: string; thread: ThreadM
   }
 
   const mine = (m: ThreadMessage) => m.from === as;
+  const label = as === "admin" ? "Odpowiedz autorowi" : as === "expert" ? "Komentarz eksperta dla autora" : "Twoja odpowiedź";
 
   return (
     <div className="space-y-4">
@@ -47,10 +56,10 @@ export function ThreadView({ code, thread, as }: { code: string; thread: ThreadM
       ) : (
         <ol className="space-y-3">
           {thread.map((m, i) => (
-            <li key={i} className={`flex ${mine(m) ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${m.from === "admin" ? "rounded-tl-sm bg-brand-900 text-white" : "rounded-tr-sm bg-mist text-ink"}`}>
-                <p className={`mb-1 text-xs font-bold ${m.from === "admin" ? "text-slate-300" : "text-slate-600"}`}>
-                  {m.from === "admin" ? "Zespół Hubu" : "Autor zgłoszenia"} · {fmt(m.createdAt)}
+            <li key={i} className={`flex ${mine(m) ? "justify-end" : "justify-start"}`} data-from={m.from}>
+              <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${BUBBLE[m.from].box}`}>
+                <p className={`mb-1 text-xs font-bold ${BUBBLE[m.from].meta}`}>
+                  {who(m)} · {fmt(m.createdAt)}
                 </p>
                 <p>{m.text}</p>
               </div>
@@ -61,7 +70,7 @@ export function ThreadView({ code, thread, as }: { code: string; thread: ThreadM
       <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex-1">
           <label htmlFor={`reply-${code}`} className="mb-1 block text-sm font-bold text-brand-900">
-            {as === "admin" ? "Odpowiedz autorowi" : "Twoja odpowiedź"}
+            {label}
           </label>
           <textarea id={`reply-${code}`} required rows={2} maxLength={1000} value={text} onChange={(e) => setText(e.target.value)} className={inputCls} />
         </div>

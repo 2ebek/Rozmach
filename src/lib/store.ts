@@ -5,7 +5,7 @@ import { challenges as seedChallenges, innovations as seedInnovations, nabory as
 import { sendWebhook } from "./notify";
 import { loadData, saveData } from "./persist";
 import { pushNewIdea } from "./push";
-import { createPostgresRepo, threadHref } from "./store-pg";
+import { createPostgresRepo, threadEventText, threadHref } from "./store-pg";
 import type {
   Application,
   Challenge,
@@ -195,7 +195,8 @@ function createInMemoryRepo(): HubRepository {
       if (!target) return false;
       target.thread.push({ ...msg, createdAt: now() });
       persist();
-      if (msg.from === "author") emit("reply", `Autor odpowiedział w wątku „${target.title}”`, threadHref(idea));
+      const note = threadEventText(msg, target.title);
+      if (note) emit("reply", note, threadHref(idea));
       return true;
     },
 

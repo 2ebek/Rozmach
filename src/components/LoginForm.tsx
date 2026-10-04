@@ -4,7 +4,8 @@ import { useState } from "react";
 import { postJson } from "@/lib/client";
 import { Field, Status, btnCls, inputCls } from "./ui";
 
-export function LoginForm({ next }: { next: string }) {
+/** Logowanie administratora (domyślnie) albo eksperta – różni się adres API i etykieta. */
+export function LoginForm({ next, endpoint = "/api/auth/login", label = "Hasło administratora" }: { next: string; endpoint?: string; label?: string }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -14,7 +15,7 @@ export function LoginForm({ next }: { next: string }) {
     setBusy(true);
     setError(null);
     try {
-      await postJson("/api/auth/login", { password });
+      await postJson(endpoint, { password });
       // Pełne przejście zamiast router.push/refresh: pamięć routera po stronie klienta trzyma
       // przekierowanie /admin → /logowanie sprzed zalogowania, przez co panel nigdy się nie pojawiał.
       window.location.assign(next);
@@ -26,7 +27,7 @@ export function LoginForm({ next }: { next: string }) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-5">
-      <Field id="password" label="Hasło administratora">
+      <Field id="password" label={label}>
         <input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} className={inputCls} />
       </Field>
       <button type="submit" disabled={busy} className={`${btnCls} w-full`}>

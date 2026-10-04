@@ -32,6 +32,7 @@
     "vision": "Po roku testów chcemy otworzyć punkty w kolejnych osiedlach spółdzielni i przygotować instrukcję dla innych spółdzielni w regionie.",
     "authors": "Rada Osiedla (przykład)",
     "thread": [
+      { "from": "expert", "name": "Ekspertka ds. ekonomii współdzielenia", "text": "Dobry pomysł! Zaplanujcie od początku regulamin wypożyczeń i prosty system rezerwacji – w podobnych bibliotekach rzeczy najczęściej giną drobne elementy. Warto też policzyć w pkt 7, ile rodzina oszczędza na jednym wypożyczeniu.", "daysAgo": 2 },
       { "from": "admin", "text": "Dziękujemy za fiszkę! Czy spółdzielnia potwierdziła, że lokal będzie dostępny bezpłatnie przez cały okres testów?", "daysAgo": 2 },
       { "from": "author", "text": "Tak, mamy wstępną zgodę zarządu na 12 miesięcy. Czy możemy w pkt 8 dopisać współpracę z ośrodkiem pomocy społecznej?", "daysAgo": 1 }
     ]

@@ -1,4 +1,4 @@
-import type { Challenge, IdeaCard, Innovation, Nabor, Resource } from "../types";
+import type { Challenge, IdeaCard, Innovation, Nabor, Resource, ThreadMessage } from "../types";
 import { challengeIndicator } from "../ioss";
 import { iwsQuestions } from "../iws";
 import { AREAS } from "../labels";
@@ -189,6 +189,11 @@ export function exampleIdeas(): IdeaCard[] {
     ...(authors ? { authors } : {}),
     ...(adminComment ? { adminComment } : {}),
     createdAt: daysAgo(d),
-    thread: thread.map((m) => ({ from: m.from as "admin" | "author", text: m.text, createdAt: daysAgo(m.daysAgo) })),
+    thread: thread.map((m) => ({
+      from: m.from as ThreadMessage["from"],
+      ...("name" in m && m.name ? { name: m.name } : {}),
+      text: m.text,
+      createdAt: daysAgo(m.daysAgo),
+    })),
   }));
 }

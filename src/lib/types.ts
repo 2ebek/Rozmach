@@ -136,7 +136,10 @@ export interface IdeaCard {
 
 /** Wiadomość w wątku zgłoszenia (ścieżka odpowiedzi admin ↔ autor). */
 export interface ThreadMessage {
-  from: "admin" | "author";
+  /** „expert” – ekspert/mentor Hubu (feedback dla autora fiszki). */
+  from: "admin" | "author" | "expert";
+  /** Podpis eksperta, np. „Ekspertka ds. ekonomii społecznej” (tylko from: "expert"). */
+  name?: string;
   text: string;
   createdAt: string;
 }

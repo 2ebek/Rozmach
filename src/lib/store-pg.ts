@@ -5,10 +5,17 @@ import { challenges, innovations as seedInnovations, nabory as seedNabory, resou
 import { sendWebhook } from "./notify";
 import { pushNewIdea } from "./push";
 import type { HubRepository } from "./store";
-import type { Application, HubEvent, IdeaCard, Innovation, Nabor } from "./types";
+import type { Application, HubEvent, IdeaCard, Innovation, Nabor, ThreadMessage } from "./types";
 
 /** Link do kolejki w panelu, w której jest teraz fiszka (albo do wniosków). */
 export const threadHref = (idea?: Pick<IdeaCard, "status">) => (idea ? `/admin?kolejka=${idea.status}#kolejka` : "/admin/nabory");
+
+/** Treść powiadomienia dla zespołu Hubu o nowej wiadomości w wątku (autor albo ekspert); null – bez powiadomienia. */
+export function threadEventText(msg: Omit<ThreadMessage, "createdAt">, title: string): string | null {
+  if (msg.from === "author") return `Autor odpowiedział w wątku „${title}”`;
+  if (msg.from === "expert") return `Ekspert (${msg.name ?? "mentor"}) skomentował fiszkę „${title}”`;
+  return null;
+}
 
 /**
  * Repozytorium danych w Postgresie (Vercel + Neon) – ten sam interfejs co wersja w pamięci, więc UI i API się nie zmieniają.
@@ -171,7 +178,8 @@ export function createPostgresRepo(docs: Docs): HubRepository {
       const row = rows[0];
       if (!row) return false;
       const target = row.data as IdeaCard | Application;
-      if (msg.from === "author") await emit("reply", `Autor odpowiedział w wątku „${target.title}”`, threadHref(row.kind === "idea" ? (target as IdeaCard) : undefined));
+      const note = threadEventText(msg, target.title);
+      if (note) await emit("reply", note, threadHref(row.kind === "idea" ? (target as IdeaCard) : undefined));
       return true;
     },
 

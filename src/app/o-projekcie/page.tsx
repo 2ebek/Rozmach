@@ -10,7 +10,7 @@ const MODULES = [
   { no: "II", name: "Zasobnik wiedzy", req: "", href: "/zasobnik", what: "Wyzwania z prawdziwymi wskaźnikami z Obserwatora Statystyk Społecznych ROPS, Biblioteka Innowacji z filtrem i miejscem na filmy, materiały. Trendy potrzeb tylko dla administratora." },
   { no: "III", name: "Kreator pomysłów", req: "", href: "/kreator", what: "Fiszka z kodem zgłoszenia i danymi IOSS dla gminy do diagnozy problemu, Canva innowacji, asystent kreatora, generator wniosków dopasowany do pytań każdego naboru." },
   { no: "IV", name: "Tester innowacji", req: "", href: "/tester", what: "Zgłoszenie do testów, ocena gwiazdkowa, uwagi i propozycje usprawnień." },
-  { no: "V", name: "Platforma aktywnej komunikacji", req: "", href: "/komunikacja", what: "Forum z rolami (ROPS, mentorzy, JST, NGO, mieszkańcy), giełda partnerstw, wątki zgłoszeń admin ↔ autor." },
+  { no: "V", name: "Platforma aktywnej komunikacji", req: "", href: "/komunikacja", what: "Forum z rolami (ROPS, mentorzy, JST, NGO, mieszkańcy), giełda partnerstw, wątki zgłoszeń admin ↔ autor, panel ekspertów z feedbackiem do fiszek." },
   { no: "VI", name: "Panel administratora", req: "", href: "/admin", what: "Logowanie, powiadomienia, moderacja fiszek i wniosków z odpowiedzią do autora, edycja wiedzy, otwieranie naborów." },
   { no: "VII", name: "Middleman Innowacji", req: "", href: "/middleman", what: "Asystent dopasowujący innowację do formy usługi dla konkretnej instytucji." },
 ];
@@ -212,6 +212,15 @@ export default function Page() {
               </table>
             </div>
             <p className="mt-3 text-sm text-slate-600">Szacunek orientacyjny (ceny netto, 2026) – do weryfikacji przy wyborze dostawcy i skali ruchu.</p>
+            <div className="mt-5 rounded-2xl border-l-4 border-emerald-600 bg-emerald-50 p-5 text-emerald-950" data-demo-cost>
+              <p className="font-black">Demo działa dziś za 0 zł miesięcznie</p>
+              <p className="mt-1 text-[0.95rem]">
+                Wersja demonstracyjna korzysta z darmowych planów: hosting <strong>Vercel Hobby</strong> (serwer we Frankfurcie), baza{" "}
+                <strong>Neon Postgres Free</strong> i model AI <strong>Gemini (plan bezpłatny)</strong>. Ograniczenia: dzienny limit zapytań AI (po jego
+                wyczerpaniu strona działa w trybie podstawowym, bez AI), limity darmowej bazy i brak generowania obrazów. Przy wdrożeniu produkcyjnym
+                wystarczy przejść na płatne plany tych samych usług – bez zmian w kodzie.
+              </p>
+            </div>
           </div>
           <div className="rounded-3xl bg-brand-50 p-8">
             <h3 className="text-xl font-black text-brand-900">Niezbędne zasoby</h3>
