@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Rozmach – ściąga do obrony</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 13mm 14mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 9.6pt/1.42 "Segoe UI", Arial, sans-serif; color: #111; }
+  h1 { font-size: 17pt; margin: 0 0 2pt; color: #13214f; }
+  h2 { font-size: 11.5pt; margin: 9pt 0 4pt; color: #13214f; border-bottom: 1pt solid #13214f; padding-bottom: 2pt; }
+  p { margin: 0 0 4pt; }
+  .sub { color: #444; margin-bottom: 6pt; }
+  .pitch { background: #13214f; color: #fff; border-radius: 6pt; padding: 6pt 10pt; font-size: 10.2pt; }
+  ol, ul { margin: 0 0 4pt; padding-left: 15pt; }
+  li { margin-bottom: 1.5pt; }
+  .qa { display: grid; grid-template-columns: 1fr 1fr; gap: 5pt 12pt; }
+  .q { break-inside: avoid; }
+  .q b { color: #13214f; display: block; }
+  code { font: 8.8pt Consolas, monospace; background: #eef3fa; padding: 0 2pt; border-radius: 2pt; }
+  .box { border-left: 3pt solid #db1e56; background: #fdf0f4; padding: 4pt 8pt; margin-top: 6pt; }
+</style>
+</head>
+<body>
+<h1>Rozmach – ściąga do obrony</h1>
+<p class="sub">Nie musisz znać każdej funkcji. Wystarczy przekaz, jedna ścieżka demo i spokojne odpowiedzi na typowe pytania.</p>
+
+<div class="pitch"><b>W jednym zdaniu:</b> Rozmach łączy problemy zgłaszane przez mieszkańców ze sprawdzonymi innowacjami z Biblioteki ROPS i z ludźmi, którzy pomogą je wdrożyć – a nowy pomysł prowadzi od krótkiej fiszki do wniosku o grant.</div>
+
+<h2>Demo na żywo (ok. 3 min) – zawsze ta sama ścieżka</h2>
+<ol>
+  <li><b>Strona główna → „Co chcesz zmienić?”</b>: wpisz <i>Samotni seniorzy na wsi</i>, kategoria <i>Seniorzy</i>, kliknij <b>Dalej</b>. Pokaż propozycje i „Dlaczego ta propozycja?”. <i>Powiedz: AI dobiera sprawdzone rozwiązania i tłumaczy wybór.</i></li>
+  <li><b>„Sprawdź status zgłoszenia”</b> (góra strony) → kod <code>HUB-KAWA26</code>: zaakceptowana fiszka, komentarz zespołu, przycisk „Przygotuj wniosek”. <i>Powiedz: autor nie zakłada konta – ma kod.</i></li>
+  <li>Kod <code>HUB-TEKST5</code>: odrzucona fiszka na czerwono z uzasadnieniem. <i>Powiedz: autor zawsze wie, dlaczego.</i></li>
+  <li><b>/admin</b> (hasło zespołu): powiadomienia, trendy potrzeb, kolejki fiszek. <i>Powiedz: zespół Hubu ma wszystko w jednym miejscu.</i></li>
+</ol>
+<p>Jeśli zostanie czas: menu → <b>Rozwiązania</b> (Biblioteka z filmami), <b>Kreator</b> (fiszka z danymi o gminie), stopka → <b>Dla ekspertów</b> (hasło <code>ekspert</code>).</p>
+
+<h2>Pytania, które jury najpewniej zada</h2>
+<div class="qa">
+  <div class="q"><b>1. Jaki problem rozwiązujecie?</b>Potrzeby, wiedza i ludzie są rozproszeni. Mieszkaniec nie wie, że rozwiązanie już istnieje, a droga do grantu jest trudna. Rozmach to łączy w jednym miejscu.</div>
+  <div class="q"><b>2. Gdzie jest AI i czy można mu ufać?</b>Dobiera innowacje do opisu problemu, ocenia fiszkę jak komisja i pomaga w opisie. Zawsze pokazuje uzasadnienie, wybiera tylko z Biblioteki ROPS, nie wymyśla liczb. Decyzje podejmuje człowiek.</div>
+  <div class="q"><b>3. Co, jeśli AI nie działa?</b>Strona działa dalej w trybie podstawowym – wyszukiwanie po słowach kluczowych. Nic się nie psuje, wyniki są tylko mniej „inteligentne”.</div>
+  <div class="q"><b>4. Skąd macie dane?</b>114 prawdziwych innowacji z publicznej Biblioteki ROPS i wskaźniki z Obserwatora Statystyk Społecznych ROPS (GUS). Zgłoszenia i rozmowy w demo są przykładowe.</div>
+  <div class="q"><b>5. A dane osobowe?</b>Zgłoszenie nie wymaga konta ani danych – autor dostaje kod. Dane osobowe są tylko we wniosku o grant i widzi je wyłącznie zespół Hubu. Nie trafiają do AI.</div>
+  <div class="q"><b>6. Jak Hub dowiaduje się o nowym pomyśle?</b>Od razu: powiadomienie w panelu, powiadomienie push na telefon i opcjonalnie webhook (np. e-mail, Teams). Odpowiedź wraca do autora w rozmowie przy kodzie.</div>
+  <div class="q"><b>7. Czy to jest dostępne dla seniorów i osób z niepełnosprawnościami?</b>Tak – projektowane pod WCAG 2.1 AA: powiększanie tekstu, wersja kontrastowa, obsługa klawiaturą i czytnikami. Automatyczny audyt nie znalazł żadnych błędów.</div>
+  <div class="q"><b>8. Ile to kosztuje i czy da się wdrożyć?</b>Demo działa za 0 zł na darmowych planach. Produkcyjnie ok. 700–1 650 zł miesięcznie (hosting, baza, AI). Działa już w internecie na bazie danych – wystarczy przejść na płatne plany.</div>
+  <div class="q"><b>9. Czy połączy się z innymi systemami?</b>Tak – otwarte API (innowacje, wyzwania, nabory) i webhook dla systemu grantowego. Formularz wniosku odpowiada formularzowi ROPS „Inkubator Włączenia Społecznego 2.0”.</div>
+  <div class="q"><b>10. Co jest w tym nowego?</b>Nie tylko katalog: AI z uzasadnieniem, prawdziwe dane o gminie wstawiane do pomysłu, prowadzenie od potrzeby do grantu, feedback ekspertów i dostępność dla każdego.</div>
+</div>
+
+<h2>Wszystkie moduły z zadania – jednym tchem</h2>
+<p><b>Matchmaking</b> (obowiązkowy) · <b>Zasobnik wiedzy</b> (Mapa Wyzwań, Biblioteka z filmami, materiały) · <b>Kreator pomysłów</b> (fiszka, asystent AI, Canva, wniosek) · <b>Tester</b> (ocena i zgłoszenie do testów) · <b>Komunikacja</b> (forum, giełda partnerstw, eksperci) · <b>Panel administratora</b> · <b>Middleman</b> (innowacja jako usługa dla instytucji).</p>
+
+<div class="box"><b>Gdy nie znasz odpowiedzi:</b> „To szczegół techniczny – mamy go opisany w dokumentacji, chętnie doślemy.” Dokumentacja: <code>docs/Rozmach-dokumentacja.pdf</code>. Przed pokazem otwórz stronę raz i sprawdź, że dopasowanie pokazuje „Dopasowanie AI”.</div>
+</body>
+</html>
