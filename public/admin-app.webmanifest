@@ -1,17 +1,33 @@
 {
-  "name": "Hub Innowacji – administrator",
+  "name": "Hub Admin – Małopolski Hub Innowacji Społecznych",
   "short_name": "Hub Admin",
-  "description": "Nowe pomysły zgłoszone w Hubie Innowacji Społecznych Małopolski – lista, szczegóły i powiadomienia.",
+  "description": "Nowe pomysły zgłoszone w Hubie Innowacji Społecznych Małopolski – powiadomienia, decyzje i rozmowy z autorami.",
   "id": "/admin/app",
   "start_url": "/admin/app",
   "scope": "/admin/app",
   "display": "standalone",
   "lang": "pl",
-  "background_color": "#ffffff",
+  "dir": "ltr",
+  "categories": ["productivity", "business"],
+  "background_color": "#f3f6fb",
   "theme_color": "#000f37",
   "icons": [
     { "src": "/icons/admin-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icons/admin-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "/icons/admin-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nowe pomysły",
+      "short_name": "Pomysły",
+      "url": "/admin/app",
+      "icons": [{ "src": "/icons/admin-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Zainstaluj na innym urządzeniu",
+      "short_name": "Instalacja",
+      "url": "/admin/app/pobierz",
+      "icons": [{ "src": "/icons/admin-192.png", "sizes": "192x192" }]
+    }
   ]
 }

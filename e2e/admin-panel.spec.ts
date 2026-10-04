@@ -36,7 +36,7 @@ test.describe("Panel administratora – ładowanie i logowanie", () => {
     for (const [tab, heading] of [
       ["Zarządzanie wiedzą", "Zarządzanie wiedzą"],
       ["Nabory i wnioski", "Nabory i wnioski"],
-      ["Aplikacja na telefon", "Nowe pomysły"],
+      ["Pobierz aplikację", "Aplikacja Hub Admin"],
     ] as const) {
       await open(page, "/admin");
       await page.getByRole("link", { name: tab }).click();

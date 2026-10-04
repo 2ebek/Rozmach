@@ -1,8 +1,34 @@
 /* Service worker aplikacji administratora (zakres: /admin/app).
-   Odbiera powiadomienia push o nowych pomysłach i otwiera ich szczegóły po kliknięciu. */
+   Odbiera powiadomienia push o nowych pomysłach, otwiera ich szczegóły po kliknięciu
+   i bez sieci pokazuje stronę „Brak połączenia”. Danych panelu nie zapisuje na urządzeniu. */
 
-self.addEventListener("install", () => self.skipWaiting());
-self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
+const CACHE = "hub-admin-v2";
+const OFFLINE_URL = "/admin-offline.html";
+const PRECACHE = [OFFLINE_URL, "/icons/admin-192.png"];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches
+      .open(CACHE)
+      .then((cache) => cache.addAll(PRECACHE))
+      .then(() => self.skipWaiting()),
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim()),
+  );
+});
+
+// Nawigacja zawsze z sieci (aktualne dane); tylko gdy sieci brak – strona offline z pamięci.
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode !== "navigate") return;
+  event.respondWith(fetch(event.request).catch(() => caches.match(OFFLINE_URL)));
+});
 
 self.addEventListener("push", (event) => {
   let data = {};

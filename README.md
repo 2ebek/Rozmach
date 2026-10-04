@@ -40,9 +40,14 @@ Szczegóły:
 ## Aplikacja administratora (telefon / komputer)
 
 `/admin/app` – PWA tylko dla zalogowanych administratorów (ten sam mechanizm logowania co panel):
-lista nowych pomysłów, podgląd szczegółów i powiadomienia push o każdym nowym pomyśle.
+pomysły w zakładkach według statusu z wyszukiwarką, decyzje (akceptuj / do weryfikacji / odrzuć), komentarz dla autora,
+rozmowa z autorem i powiadomienia push o każdym nowym pomyśle. Lista odświeża się sama, licznik nowych pomysłów
+widać na ikonie aplikacji, a bez sieci pojawia się strona „Brak połączenia” (danych panelu nie zapisujemy na urządzeniu).
 
-- **Komputer (Edge/Chrome):** otwórz `/admin/app`, kliknij ikonę instalacji w pasku adresu, potem „Włącz powiadomienia”.
+Pobieranie: panel → **„Pobierz aplikację”** (`/admin/app/pobierz`) – przycisk instalacji dla bieżącego urządzenia,
+instrukcja dla komputera i kod QR dla telefonu.
+
+- **Komputer (Edge/Chrome):** „Zainstaluj na komputerze” albo ikona instalacji w pasku adresu, potem „Włącz powiadomienia”.
 - **Android (Chrome):** menu ⋮ → „Zainstaluj aplikację”, potem „Włącz powiadomienia”.
 - **iPhone (iOS 16.4+):** Udostępnij → „Do ekranu początkowego”, otwórz aplikację z ekranu i włącz powiadomienia.
 

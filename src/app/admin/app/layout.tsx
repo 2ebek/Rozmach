@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 
 // Aplikacja administratora (PWA): instalowalna na telefonie i komputerze, zakres /admin/app.
-// Dostęp chroni istniejący middleware (/admin/*).
+// Dostęp chroni istniejący middleware (/admin/*). Strona pobierania (/admin/app/pobierz) leży w zakresie
+// aplikacji, bo przeglądarki proponują instalację tylko na stronach z tego zakresu.
 export const metadata: Metadata = {
   title: "Hub Admin – nowe pomysły",
   manifest: "/admin-app.webmanifest",
@@ -12,5 +13,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#000f37" };
 
 export default function AdminAppLayout({ children }: { children: React.ReactNode }) {
-  return <div className="mx-auto max-w-3xl py-6">{children}</div>;
+  return children;
 }

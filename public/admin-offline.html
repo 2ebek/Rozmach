@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000f37">
+<title>Hub Admin – brak połączenia</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f3f6fb; color: #000f37;
+         font: 17px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif; padding: 24px; box-sizing: border-box; }
+  main { max-width: 26rem; text-align: center; background: #fff; border-radius: 24px; padding: 32px 24px; box-shadow: 0 16px 40px -20px rgba(19,33,79,.25); }
+  img { width: 72px; height: 72px; border-radius: 18px; }
+  h1 { font-size: 1.6rem; margin: 16px 0 8px; }
+  p { margin: 0 0 20px; color: #334155; }
+  button { font: inherit; font-weight: 700; color: #fff; background: #db1e56; border: 0; border-radius: 999px; padding: 12px 24px; cursor: pointer; }
+  button:hover { background: #b8174a; }
+  button:focus-visible { outline: 3px solid #000f37; outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <img src="/icons/admin-192.png" alt="">
+  <h1>Brak połączenia</h1>
+  <p>Hub Admin potrzebuje internetu, żeby pokazać aktualne pomysły. Sprawdź Wi-Fi lub dane komórkowe – aplikacja odświeży się sama po odzyskaniu połączenia.</p>
+  <button type="button" onclick="location.reload()">Spróbuj ponownie</button>
+</main>
+<script>window.addEventListener("online", function () { location.reload(); });</script>
+</body>
+</html>

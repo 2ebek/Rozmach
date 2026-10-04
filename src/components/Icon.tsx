@@ -30,6 +30,11 @@ const PATHS = {
   source: "M5 4h10l4 4v12H5zM9 12h6m-6 4h6M9 8h3",
   share: "M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 13.5l6.8 4m0-11-6.8 4",
   message: "M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z",
+  monitor: "M3 4h18v12H3zm5 16h8m-4-4v4",
+  phone: "M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm4 16h2",
+  download: "M12 3v12m-5-5 5 5 5-5M4 21h16",
+  refresh: "M20 11a8 8 0 0 0-14.6-4.5L3 9m0-5v5h5m-4 4a8 8 0 0 0 14.6 4.5L21 15m0 5v-5h-5",
+  offline: "M2 8.5a15 15 0 0 1 4.3-2.8m4-1.1a15 15 0 0 1 11.7 3.9M5 12.4a10 10 0 0 1 3.5-2.1M16 10.6a10 10 0 0 1 3 1.8M8.5 16a5 5 0 0 1 7 0M12 20h.01M3 3l18 18",
 } as const;
 
 export type IconName = keyof typeof PATHS;

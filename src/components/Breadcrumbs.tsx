@@ -20,6 +20,7 @@ const NAMES: Record<string, string> = {
   logowanie: "Logowanie",
   "o-projekcie": "O projekcie",
   app: "Aplikacja administratora",
+  pobierz: "Pobierz aplikację",
 };
 
 /** Segment bez nazwy (np. identyfikator) – opis zależny od sekcji, nigdy surowe id. */

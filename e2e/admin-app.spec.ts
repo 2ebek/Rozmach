@@ -10,24 +10,71 @@ test.describe("Aplikacja administratora (PWA) – dostęp, lista, szczegóły", 
     await expect(page).toHaveURL(/\/logowanie\?next=%2Fadmin%2Fapp/);
     await submitLogin(page);
     await expect(page).toHaveURL(/\/admin\/app$/);
-    await expect(page.getByRole("heading", { level: 1, name: "Nowe pomysły" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "Pomysły do przejrzenia" })).toBeVisible();
   });
 
-  test("nowy pomysł jest na liście „Do przejrzenia” i ma podgląd szczegółów", async ({ page, request }) => {
+  test("nowy pomysł jest w zakładce „Nowe”, a decyzję i komentarz można dodać w aplikacji", async ({ page, request }) => {
     const title = unique("Pomysł e2e");
     const res = await request.post("/api/ideas", { data: { title, essence: "Opis pomysłu do testu aplikacji", audience: "testerzy", stage: "pomysl" } });
     expect(res.status()).toBe(201);
     const { code } = (await res.json()) as { code: string };
 
     await loginAsAdmin(page, "/admin/app");
-    const fresh = page.locator("section", { has: page.getByRole("heading", { name: /Do przejrzenia/ }) });
-    await fresh.getByRole("link", { name: new RegExp(title) }).click();
+    await expect(page.getByRole("tab", { name: /Nowe/ })).toHaveAttribute("aria-selected", "true");
+    await page.getByRole("tabpanel").getByRole("link", { name: new RegExp(title) }).click();
 
     await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
     await expect(page.getByText("Opis pomysłu do testu aplikacji")).toBeVisible();
-    await expect(page.getByText(code)).toBeVisible();
-    await page.getByRole("link", { name: "Wszystkie pomysły" }).click();
+    await expect(page.getByText(code).first()).toBeVisible();
+
+    // decyzja bez przechodzenia do pełnego panelu
+    const decision = page.locator("[data-decision]");
+    await decision.getByRole("button", { name: "Do weryfikacji" }).click();
+    await expect(page.locator("main").getByText("W weryfikacji", { exact: true }).first()).toBeVisible();
+    await decision.getByRole("button", { name: "Dodaj komentarz" }).click();
+    await decision.getByLabel("Komentarz zespołu do fiszki").fill("Prosimy o doprecyzowanie budżetu.");
+    await decision.getByRole("button", { name: "Zapisz komentarz" }).click();
+    await expect(decision.getByText("Prosimy o doprecyzowanie budżetu.")).toBeVisible();
+
+    // pomysł przeszedł do zakładki „Do weryfikacji” i da się go znaleźć wyszukiwarką
+    await page.getByRole("link", { name: "Pomysły" }).click();
     await expect(page).toHaveURL(/\/admin\/app$/);
+    await page.getByRole("tab", { name: /Do weryfikacji/ }).click();
+    await page.getByRole("searchbox", { name: "Szukaj pomysłu" }).fill(code);
+    await expect(page.getByRole("tabpanel").getByRole("link")).toHaveCount(1);
+    await expect(page.getByRole("tabpanel").getByRole("link", { name: new RegExp(title) })).toBeVisible();
+    await page.getByRole("searchbox", { name: "Szukaj pomysłu" }).fill("zzz-nie-ma-takiego");
+    await expect(page.getByText("Nic nie pasuje do wyszukiwania.")).toBeVisible();
+  });
+
+  test("strona „Pobierz aplikację” – instalacja na komputerze i kod QR dla telefonu", async ({ page }) => {
+    await loginAsAdmin(page, "/admin");
+    await page.getByRole("link", { name: "Pobierz aplikację" }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Aplikacja Hub Admin" })).toBeVisible();
+    await expect(page.locator("link[rel=manifest]")).toHaveAttribute("href", "/admin-app.webmanifest");
+    await expect(page.locator("[data-install]")).toContainText("To urządzenie: komputer");
+    await expect(page.getByRole("heading", { name: "Na komputer" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Na telefon" })).toBeVisible();
+    await expect(page.getByRole("img", { name: /Kod QR z adresem aplikacji: http:\/\/.+\/admin\/app$/ })).toBeVisible();
+    await expect(page.locator("[data-qr] svg path").first()).toBeAttached();
+    await page.getByRole("link", { name: "Otwórz aplikację w przeglądarce" }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Pomysły do przejrzenia" })).toBeVisible();
+  });
+
+  // Playwright nie odcina sieci service workerowi, więc sprawdzamy, że strona offline jest w jego pamięci.
+  test("bez sieci aplikacja ma stronę „Brak połączenia” (w pamięci service workera)", async ({ page }) => {
+    await loginAsAdmin(page, "/admin/app");
+    await page.evaluate(async () => {
+      await navigator.serviceWorker.ready;
+    });
+    const cached = await page.evaluate(async () => {
+      const res = await caches.match("/admin-offline.html");
+      return res ? await res.text() : null;
+    });
+    expect(cached).toContain("Brak połączenia");
+    await page.goto("/admin-offline.html");
+    await expect(page.getByRole("heading", { name: "Brak połączenia" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Spróbuj ponownie" })).toBeVisible();
   });
 
   test("nieistniejący pomysł → 404", async ({ page }) => {

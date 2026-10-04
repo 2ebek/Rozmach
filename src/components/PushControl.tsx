@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Icon } from "./Icon";
 import { btnCls, btnSecondaryCls } from "./ui";
@@ -36,11 +35,9 @@ async function sendToServer(sub: PushSubscription) {
 
 /**
  * Rejestruje service worker aplikacji administratora i zarządza subskrypcją Web Push.
- * Przy każdym otwarciu odnawia subskrypcję na serwerze (prototyp trzyma je w pamięci),
- * a gdy przyjdzie push przy otwartej aplikacji – odświeża listę pomysłów.
+ * Przy każdym otwarciu odnawia subskrypcję na serwerze.
  */
 export function PushControl() {
-  const router = useRouter();
   const [state, setState] = useState<State>("loading");
   const [message, setMessage] = useState<string | null>(null);
 
@@ -72,14 +69,9 @@ export function PushControl() {
       setState(ios ? "ios-install" : "unsupported");
       return;
     }
+    // odświeżanie listy po pushu obsługuje pasek aplikacji (AdminAppBar)
     ensure(false).catch(() => setState("off"));
-
-    const onMessage = (e: MessageEvent) => {
-      if ((e.data as { type?: string })?.type === "new-idea") router.refresh();
-    };
-    navigator.serviceWorker.addEventListener("message", onMessage);
-    return () => navigator.serviceWorker.removeEventListener("message", onMessage);
-  }, [ensure, router]);
+  }, [ensure]);
 
   async function enable() {
     setMessage(null);

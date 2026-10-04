@@ -9,8 +9,8 @@ const TABS = [
   { href: "/admin/wiedza", label: "Zarządzanie wiedzą" },
   { href: "/admin/pomysly", label: "Pomysły" },
   { href: "/admin/nabory", label: "Nabory i wnioski" },
-  { href: "/admin/app", label: "Aplikacja na telefon" },
-];
+  { href: "/admin/app/pobierz", label: "Pobierz aplikację", icon: "download" },
+] as const;
 
 export function AdminNav({ unread }: { unread: number }) {
   const pathname = usePathname();
@@ -34,6 +34,7 @@ export function AdminNav({ unread }: { unread: number }) {
                   aria-current={active ? "page" : undefined}
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold no-underline shadow-sm ${active ? "bg-brand-900 text-white" : "bg-white text-brand-900 hover:text-accent"}`}
                 >
+                  {"icon" in t && <Icon name={t.icon} className="h-4 w-4" />}
                   {t.label}
                   {t.href === "/admin" && unread > 0 && (
                     <span className="grid h-5 min-w-5 place-items-center rounded-full bg-accent px-1.5 text-xs text-white">
