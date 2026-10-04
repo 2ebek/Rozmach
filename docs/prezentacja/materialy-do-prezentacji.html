@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Rozmach – materiały do prezentacji</title>
+<style>
+  @page { size: A4; margin: 16mm 16mm 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 10.5pt/1.5 "Segoe UI", Arial, sans-serif; color: #111; }
+  h1 { font-size: 21pt; margin: 0 0 4pt; color: #13214f; }
+  h2 { font-size: 14pt; margin: 18pt 0 7pt; padding-bottom: 3pt; border-bottom: 1.2pt solid #13214f; color: #13214f; break-after: avoid; }
+  p { margin: 0 0 6pt; }
+  ul { margin: 0 0 7pt; padding-left: 16pt; }
+  li { margin-bottom: 2pt; }
+  .sub { color: #444; font-size: 10pt; margin-bottom: 10pt; }
+  .pitch { background: #13214f; color: #fff; border-radius: 8pt; padding: 10pt 13pt; font-size: 11.5pt; margin: 8pt 0 4pt; }
+  .pitch b { color: #ff9cb8; }
+  .slide { display: grid; grid-template-columns: 26pt 1fr 150pt; gap: 9pt; padding: 8pt 0; border-bottom: 0.6pt solid #ccc; break-inside: avoid; }
+  .no { width: 22pt; height: 22pt; border-radius: 50%; background: #db1e56; color: #fff; font-weight: 700; text-align: center; line-height: 22pt; }
+  .slide h3 { margin: 0 0 2pt; font-size: 11.5pt; color: #13214f; }
+  .slide .msg { font-weight: 600; margin-bottom: 3pt; }
+  .slide img { width: 150pt; border: 0.6pt solid #bbb; border-radius: 4pt; }
+  .slide .noimg { width: 150pt; height: 84pt; border: 0.8pt dashed #bbb; border-radius: 4pt; display: flex; align-items: center; justify-content: center; color: #777; font-size: 8.5pt; text-align: center; padding: 4pt; }
+  .file { font: 8pt Consolas, monospace; color: #555; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.8pt; margin: 4pt 0 8pt; }
+  th, td { border: 0.6pt solid #999; padding: 4pt 6pt; text-align: left; vertical-align: top; }
+  th { background: #eef3fa; }
+  .nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6pt; margin: 4pt 0 8pt; }
+  .num { border: 0.8pt solid #ccd; border-radius: 6pt; padding: 6pt; break-inside: avoid; }
+  .num b { display: block; font-size: 15pt; color: #13214f; }
+  .num span { font-size: 8.8pt; color: #333; }
+  .note { border-left: 3pt solid #f59e0b; background: #fff7e6; padding: 5pt 9pt; margin: 6pt 0; font-size: 9.8pt; }
+  code { font: 9pt Consolas, monospace; background: #eef3fa; padding: 0 3pt; border-radius: 2pt; }
+  .pb { break-before: page; }
+</style>
+</head>
+<body>
+
+<h1>Rozmach – materiały do prezentacji</h1>
+<p class="sub">Ściąga dla zespołu: przekaz, układ slajdów (maks. 10 – wymóg formalny), liczby, odniesienie do kryteriów oceny i dane do demo. Zrzuty ekranu: folder <code>docs/prezentacja/</code>.</p>
+
+<div class="pitch">
+  <b>Jednym zdaniem:</b> Rozmach to cyfrowe serce Małopolskiego Hubu Innowacji Społecznych – łączy zgłoszone potrzeby mieszkańców ze sprawdzonymi innowacjami z Biblioteki ROPS i z ludźmi, którzy pomogą je wdrożyć, a nowy pomysł prowadzi od krótkiej fiszki do wniosku o grant.
+</div>
+<ul>
+  <li><b>Problem:</b> potrzeby, wiedza o sprawdzonych rozwiązaniach i ludzie są rozproszeni; droga od pomysłu do grantu jest długa i sformalizowana.</li>
+  <li><b>Wyróżniki:</b> AI z uzasadnieniem (człowiek decyduje), prawdziwe dane ROPS (Biblioteka + Obserwator Statystyk), zgodność z formularzem IWS 2.0, kod zgłoszenia zamiast konta, pełna dostępność (WCAG 2.1 AA).</li>
+</ul>
+
+<h2>Proponowany układ prezentacji (10 slajdów)</h2>
+
+<div class="slide"><div class="no">1</div><div><h3>Tytuł</h3><p class="msg">Rozmach – cyfrowe serce Małopolskiego Hubu Innowacji Społecznych.</p><p>Hasło: „Lokalne potrzeby. Wspólne możliwości.” Nazwa zespołu, link do demo.</p></div><div><img src="01-strona-glowna.png" alt=""><div class="file">01-strona-glowna.png</div></div></div>
+
+<div class="slide"><div class="no">2</div><div><h3>Problem</h3><p class="msg">Dobre inicjatywy są, ale potrzeby, wiedza i ludzie są rozproszeni.</p><p>Wyzwania z briefu: starzenie się, samotność, wykluczenie cyfrowe, dostęp do usług. Ok. 200 innowacji ROPS – trudno je znaleźć i przenieść do swojej gminy.</p></div><div><div class="noimg">grafika / ikony:<br>potrzeba · wiedza · ludzie<br>(bez zrzutu)</div></div></div>
+
+<div class="slide"><div class="no">3</div><div><h3>Rozwiązanie w skrócie</h3><p class="msg">Zgłoś potrzebę → AI znajdzie sprawdzone rozwiązanie → Hub pomoże z wdrożeniem i grantem.</p><p>Dla kogo: mieszkańcy i NGO, samorządy, zespół ROPS, eksperci. Bez zakładania konta.</p></div><div><div class="noimg">schemat 4 kroków<br>(sekcja „Jak działa Rozmach”<br>na stronie głównej)</div></div></div>
+
+<div class="slide"><div class="no">4</div><div><h3>Matchmaking z AI (moduł obowiązkowy)</h3><p class="msg">Opis własnymi słowami → sprawdzone innowacje z wyjaśnieniem „dlaczego”.</p><p>Plus podobne zgłoszenia innych osób i prawdziwe dane o wyzwaniu. Gdy AI niedostępne – wyszukiwanie po słowach kluczowych.</p></div><div><img src="02-dopasowanie.png" alt=""><div class="file">02-dopasowanie.png</div></div></div>
+
+<div class="slide"><div class="no">5</div><div><h3>Zasobnik wiedzy</h3><p class="msg">Mapa Wyzwań na prawdziwych danych ROPS + 114 innowacji z filmami.</p><p>Wskaźniki z Obserwatora Statystyk Społecznych dla 22 powiatów i gmin; karty innowacji z odtwarzaczem filmu i materiałami; trendy potrzeb tylko dla admina.</p></div><div><img src="03-mapa-wyzwan.png" alt=""><div class="file">03-mapa-wyzwan.png · 04-karta-z-filmem.png</div></div></div>
+
+<div class="slide"><div class="no">6</div><div><h3>Od pomysłu do grantu</h3><p class="msg">Fiszka → asystent AI → dane o gminie → kod → wniosek IWS 2.0 jednym kliknięciem.</p><p>Pytania z formularza ROPS; AI ocenia jak komisja i nie wymyśla liczb; zaakceptowana fiszka sama wypełnia wniosek. Canva i wizualizacja pomysłu.</p></div><div><img src="05-fiszka-dane-ioss.png" alt=""><div class="file">05-fiszka-dane-ioss.png · 10-wniosek-iws.png</div></div></div>
+
+<div class="slide"><div class="no">7</div><div><h3>Komunikacja</h3><p class="msg">Autor zawsze wie, co dzieje się z jego zgłoszeniem.</p><p>Status po kodzie, rozmowa z Hubem, komentarz z uzasadnieniem decyzji, feedback ekspertów, forum i giełda partnerstw.</p></div><div><img src="06-status-zaakceptowana.png" alt=""><div class="file">06-status-zaakceptowana.png · 07-status-odrzucona.png · 09-panel-ekspertow.png</div></div></div>
+
+<div class="slide"><div class="no">8</div><div><h3>Panel Hubu</h3><p class="msg">Wszystko w jednym miejscu: powiadomienia, kolejki, trendy, wiedza, nabory.</p><p>Powiadomienia w panelu, push na telefon i webhook; kolejki fiszek według statusu; Middleman i Tester jako osobne moduły.</p></div><div><img src="08-panel-hubu.png" alt=""><div class="file">08-panel-hubu.png</div></div></div>
+
+<div class="slide"><div class="no">9</div><div><h3>Gotowe do wdrożenia</h3><p class="msg">Dostępne, bezpieczne, skalowalne, tanie w utrzymaniu.</p><p>WCAG 2.1 AA (audyt axe: 0 naruszeń, także wersja kontrastowa); Vercel + Postgres; otwarte API i webhook; brak danych osobowych w zgłoszeniach; demo 0 zł, produkcja ok. 700–1 650 zł/mies.</p></div><div><div class="noimg">ikony: dostępność · API · bezpieczeństwo · koszt<br>(strona „O projekcie”)</div></div></div>
+
+<div class="slide"><div class="no">10</div><div><h3>Podsumowanie i demo</h3><p class="msg">7 z 7 modułów działa – zobacz sam.</p><p>Link do demo, kody przykładowych fiszek, QR do strony, film (2:04).</p></div><div><div class="noimg">QR do demo<br>+ lista 7 modułów</div></div></div>
+
+<h2 class="pb">Liczby do wykorzystania</h2>
+<div class="nums">
+  <div class="num"><b>7 / 7</b><span>modułów z briefu działa (w tym obowiązkowy matchmaking)</span></div>
+  <div class="num"><b>114</b><span>prawdziwych innowacji z Biblioteki ROPS, 9 kategorii</span></div>
+  <div class="num"><b>33</b><span>innowacje z filmem odtwarzanym na karcie</span></div>
+  <div class="num"><b>16</b><span>wskaźników z Obserwatora Statystyk Społecznych ROPS</span></div>
+  <div class="num"><b>201</b><span>powiatów i gmin z danymi (22 powiaty + 179 gmin)</span></div>
+  <div class="num"><b>0</b><span>naruszeń WCAG 2.1 A/AA w audycie axe (komputer, telefon, kontrast)</span></div>
+  <div class="num"><b>189</b><span>testów automatycznych (134 jednostkowe + 55 end-to-end)</span></div>
+  <div class="num"><b>0 zł</b><span>miesięcznie za demo; produkcja ok. 700–1 650 zł</span></div>
+</div>
+
+<h2>Odniesienie do kryteriów oceny</h2>
+<table>
+  <tr><th style="width:30%">Kryterium (waga)</th><th>Co podkreślić</th></tr>
+  <tr><td>Stopień spełnienia wyzwania (40%)</td><td>Obowiązkowy matchmaking (10%) + 6 dodatkowych modułów (6 × 5%) – wszystkie działają w demo; slajdy 4–8.</td></tr>
+  <tr><td>Potencjał wdrożeniowy (20%)</td><td>Działa produkcyjnie (Vercel + Postgres), API i webhook do systemu grantowego, formularz zgodny z IWS 2.0, niski koszt, AI z trybem awaryjnym; slajd 9.</td></tr>
+  <tr><td>Dostępność i intuicyjność (20%)</td><td>WCAG 2.1 AA (audyt axe 0 naruszeń), wersja kontrastowa, powiększanie tekstu, prosty język, bez konta; zgłoszenie potrzeby w 2 krokach.</td></tr>
+  <tr><td>Atrakcyjność i pomysłowość interfejsu (10%)</td><td>Makiety UX/UI (Wasze), AI z uzasadnieniem, prawdziwe dane o gminie w fiszce, filmy w Bibliotece, panel ekspertów.</td></tr>
+  <tr><td>Jakość materiałów i MVP (10%)</td><td>Działające demo, film, dokumentacja funkcji (PDF), README, testy.</td></tr>
+</table>
+
+<h2>Dane do demo (do slajdu 10 i na pytania jury)</h2>
+<table>
+  <tr><th style="width:30%">Co</th><th>Gdzie / jak</th></tr>
+  <tr><td>Demo</td><td><b>https://rozmach-coral.vercel.app</b></td></tr>
+  <tr><td>Film (do 3 min)</td><td><code>film/Rozmach-prezentacja.mp4</code> – 2:04, lektorka (ElevenLabs)</td></tr>
+  <tr><td>Kody fiszek (strona „Sprawdź status”)</td><td><code>HUB-KAWA26</code> zaakceptowana z komentarzem · <code>HUB-TEKST5</code> odrzucona · <code>HUB-RZECZ2</code> z komentarzem eksperta · <code>HUB-CYFRA7</code>, <code>HUB-CHMURA</code> nowe · <code>HUB-DACH38</code> w testach</td></tr>
+  <tr><td>Panel Hubu</td><td><code>/admin</code> – hasło ustawione w Vercelu (<code>ADMIN_DEMO_PASSWORD</code>) – przekażcie je jury osobno</td></tr>
+  <tr><td>Panel ekspertów</td><td><code>/ekspert</code> – hasło demo <code>ekspert</code></td></tr>
+  <tr><td>Kod i dokumentacja</td><td>github.com/2ebek/Rozmach · <code>docs/Rozmach-dokumentacja.pdf</code></td></tr>
+  <tr><td>Makiety UX/UI</td><td>link do Waszych makiet (wymóg formalny – dodajcie do zgłoszenia)</td></tr>
+</table>
+<div class="note"><b>Wskazówki:</b> maks. 10 slajdów (wymóg formalny); jeden przekaz na slajd; zrzuty zamiast długich opisów. Podczas demo na żywo zacznijcie od zgłoszenia potrzeby na stronie głównej – to najmocniejszy moment (AI w kilka sekund). Darmowy plan AI ma dzienny limit – przed pokazem sprawdźcie, że dopasowanie zwraca „Dopasowanie AI”; jeśli nie, strona działa w trybie podstawowym.</div>
+
+</body>
+</html>
