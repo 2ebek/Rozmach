@@ -10,10 +10,13 @@ import * as z from "zod/v4";
  */
 
 export const CLAUDE_MODEL = "claude-opus-5-5";
-/** Domyślny model Gemini; zmiana przez GEMINI_MODEL (3.8-flash w testach 10.2026 bywał przeciążony – 503). */
-export const GEMINI_DEFAULT_MODEL = "gemini-3.5-flash";
-/** Model zapasowy przy przeciążeniu (503/429/500); zmiana przez GEMINI_FALLBACK_MODEL. */
-export const GEMINI_FALLBACK_MODEL = "gemini-2.5-flash";
+/**
+ * Domyślny model Gemini; zmiana przez GEMINI_MODEL. Wersja „lite” – szybka, z wyższym dziennym limitem w planie
+ * bezpłatnym (modele flash wyczerpywały limit w trakcie dnia demo).
+ */
+export const GEMINI_DEFAULT_MODEL = "gemini-3.5-flash-lite";
+/** Model zapasowy przy przeciążeniu lub limicie (503/429/500); zmiana przez GEMINI_FALLBACK_MODEL. */
+export const GEMINI_FALLBACK_MODEL = "gemini-2.5-flash-lite";
 const geminiModel = () => process.env.GEMINI_MODEL || GEMINI_DEFAULT_MODEL;
 const geminiFallbackModel = () => process.env.GEMINI_FALLBACK_MODEL || GEMINI_FALLBACK_MODEL;
 const GEMINI_RETRYABLE = new Set([429, 500, 503]);
