@@ -25,3 +25,6 @@ film/
 
 .vercel
 .env*
+
+# zrzuty ekranu całej aplikacji (duże pliki – do prezentacji, poza repozytorium)
+zrzuty-ekranu/
