@@ -75,6 +75,15 @@ export default async function Page({ params }: { params: { id: string } }) {
               <figcaption className="mt-2 text-sm text-slate-600">Film o innowacji z materiałów Biblioteki Innowacji Społecznych ROPS.</figcaption>
             </figure>
           )}
+          {!video && (
+            <p className="mb-8 flex items-start gap-3 rounded-xl bg-mist p-4 text-sm text-slate-700" data-no-video>
+              <Icon name="play" className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" />
+              <span>
+                Do tej innowacji Biblioteka ROPS nie udostępnia filmu. Opis znajdziesz poniżej, a folder i materiały – w panelu „Materiały”. Innowacje z filmem
+                pokażesz w Zasobniku przyciskiem „Tylko z filmem”.
+              </span>
+            </p>
+          )}
           <dl className="space-y-7">
             {SECTIONS.map(([q, v], i) => (
               <div key={q}>

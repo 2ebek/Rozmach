@@ -400,6 +400,23 @@ test.describe("Kluczowe scenariusze", () => {
     }
   });
 
+  test("Zasobnik: filtr „Tylko z filmem”, odtwarzacz na karcie z filmem i informacja na karcie bez filmu", async ({ page }) => {
+    await open(page, "/zasobnik");
+    const lib = page.locator("#biblioteka");
+    await lib.getByRole("button", { name: /Tylko z filmem/ }).click();
+    await expect(lib.getByRole("button", { name: /Tylko z filmem/ })).toHaveAttribute("aria-pressed", "true");
+    const cards = lib.locator("li:has(h3)");
+    const n = await cards.count();
+    expect(n).toBeGreaterThan(20);
+    await expect(lib.locator("li:has(h3)", { hasNotText: "film" })).toHaveCount(0);
+
+    await open(page, "/zasobnik/rops-bawita");
+    await expect(page.locator("iframe[src*='youtube-nocookie.com/embed/']")).toHaveCount(1);
+    await open(page, "/zasobnik/rops-therapy-set");
+    await expect(page.locator("iframe")).toHaveCount(0);
+    await expect(page.locator("[data-no-video]")).toContainText("nie udostępnia filmu");
+  });
+
   test("Zasobnik: link z kategorią ROPS otwiera przefiltrowaną Bibliotekę", async ({ page }) => {
     await open(page, "/zasobnik?kategoria=dla-osob-w-kryzysie-bezdomnosci");
     await expect(page.getByRole("button", { name: /^Osoby w kryzysie bezdomności/ })).toHaveAttribute("aria-pressed", "true");
