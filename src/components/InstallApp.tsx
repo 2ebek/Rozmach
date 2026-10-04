@@ -59,21 +59,33 @@ export function InstallApp() {
     // service worker jest potrzebny do powiadomień i pracy bez sieci – rejestrujemy go już tutaj
     navigator.serviceWorker?.register(SW_URL, { scope: SW_SCOPE }).catch(() => undefined);
 
-    const onPrompt = (e: Event) => {
-      e.preventDefault();
-      setPrompt(e as InstallPromptEvent);
+    // zdarzenie przechwycone przez skrypt w layoucie aplikacji (mogło przyjść przed hydratacją)
+    const w = window as Window & { __hubInstallPrompt?: InstallPromptEvent };
+    const onPrompt = () => {
+      if (!w.__hubInstallPrompt) return;
+      setPrompt(w.__hubInstallPrompt);
       setState("ready");
     };
     const onInstalled = () => {
+      w.__hubInstallPrompt = undefined;
       setPrompt(null);
       setState("done");
     };
-    window.addEventListener("beforeinstallprompt", onPrompt);
+    // przy przejściu z innej strony panelu skrypt z layoutu się nie wykonuje – nasłuchujemy też bezpośrednio
+    const onNative = (e: Event) => {
+      e.preventDefault();
+      w.__hubInstallPrompt = e as InstallPromptEvent;
+      onPrompt();
+    };
+    onPrompt();
+    window.addEventListener("hub-install-ready", onPrompt);
+    window.addEventListener("beforeinstallprompt", onNative);
     window.addEventListener("appinstalled", onInstalled);
     // gdy przeglądarka nie zaproponuje instalacji (Safari, Firefox, aplikacja już zainstalowana) – instrukcja
     const t = window.setTimeout(() => setState((s) => (s === "detecting" ? "manual" : s)), 1500);
     return () => {
-      window.removeEventListener("beforeinstallprompt", onPrompt);
+      window.removeEventListener("hub-install-ready", onPrompt);
+      window.removeEventListener("beforeinstallprompt", onNative);
       window.removeEventListener("appinstalled", onInstalled);
       window.clearTimeout(t);
     };
@@ -83,6 +95,8 @@ export function InstallApp() {
     if (!prompt) return;
     await prompt.prompt();
     const { outcome } = await prompt.userChoice;
+    // zdarzenia można użyć tylko raz
+    (window as Window & { __hubInstallPrompt?: InstallPromptEvent }).__hubInstallPrompt = undefined;
     setPrompt(null);
     setState(outcome === "accepted" ? "done" : "manual");
   }
